@@ -92,156 +92,277 @@ class Transformer:
         self.hdim = modelinfos['hdim']
         self.ff_scale = modelinfos['ff_scale']
         self.dtype = modelinfos['dtype']
+        self.moe = modelinfos['moe']
+        if self.moe: 
+            self.num_experts = modelinfos['num_experts']
+            self.activated_experts = modelinfos['activated_experts']
+            self.shared_experts = modelinfos['shared_experts']
         self.dhead = int(self.hdim / self.num_heads)
         self.tp = tensor_parallel
 
     def build(self, batch, lin, lout, attn_on_hetero=False):
         self.sum_decoder = []
         self.gen_decoder = []
-
-        # Summarization
-        self.sum_decoder.append(
-            Layer('sum', 'qkv', LayerType.FC, True, self.dtype, batch * lin,
-                  3 * int(self.hdim / self.tp), self.hdim, 1))
-        if (attn_on_hetero):
-            # send kv matrices
+        if not self.moe:
+            # Summarization
             self.sum_decoder.append(
-                Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
-                      batch * lin, 2 * int(self.hdim / self.tp), 1, 1))
-        self.sum_decoder.append(
-            Layer('sum', 'score', LayerType.MATMUL, False, self.dtype, lin,
-                  lin, self.dhead,
-                  int(self.num_heads / self.tp) * batch))
-        self.sum_decoder.append(
-            Layer('sum', 'softmax', LayerType.SOFTMAX, False, self.dtype, lin,
-                  lin, 1,
-                  int(self.num_heads / self.tp) * batch))
-        self.sum_decoder.append(
-            Layer('sum', 'context', LayerType.MATMUL, False, self.dtype, lin,
-                  self.dhead, lin,
-                  int(self.num_heads / self.tp) * batch))
-        self.sum_decoder.append(
-            Layer('sum', 'proj', LayerType.FC, True, self.dtype, batch * lin,
-                  self.hdim, int(self.hdim / self.tp), 1))
-        self.sum_decoder.append(
-            Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
-                  self.hdim, 1, 1))
-        self.sum_decoder.append(
-            Layer('sum', 'norm1', LayerType.NORM, False, self.dtype, batch * lin,
-                  self.hdim, 1, 1))
-        if 'LLAMA' in self.name:
-            self.sum_decoder.append(
-                Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
-                      self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
-            self.sum_decoder.append(
-                Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
-                      self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
-            self.sum_decoder.append(
-                Layer('sum', 'glu', LayerType.ACT, False, self.dtype, batch * lin,
-                      self.ff_scale * int(self.hdim / self.tp), 1, 1))
-            self.sum_decoder.append(
-                Layer('sum', 'ff3', LayerType.FC, True, self.dtype, batch * lin,
-                      self.hdim, self.ff_scale * int(self.hdim / self.tp), 1))
-        else:
-            self.sum_decoder.append(
-                Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
-                      self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
-            if 'OPT' in self.name:
-                self.sum_decoder.append(
-                    Layer('sum', 'relu', LayerType.ACT, False,
-                          self.dtype, batch * lin,
-                          self.ff_scale * int(self.hdim / self.tp), 1, 1))
-            else:
-                self.sum_decoder.append(
-                    Layer('sum', 'gelu', LayerType.ACT, False,
-                          self.dtype, batch * lin,
-                          self.ff_scale * int(self.hdim / self.tp), 1, 1))
-            self.sum_decoder.append(
-                Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
-                      self.hdim, self.ff_scale * int(self.hdim / self.tp), 1))
-        self.sum_decoder.append(
-            Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
-                  self.hdim, 1, 1))
-        self.sum_decoder.append(
-            Layer('sum', 'norm2', LayerType.NORM, False, self.dtype, batch * lin,
-                  self.hdim, 1, 1))
-        # Generation
-        for stage in range(1, lout, 1):
-            decoder = []
-            decoder.append(
-                Layer('gen', 'qkv', LayerType.FC, True, self.dtype, batch,
+                Layer('sum', 'qkv', LayerType.FC, True, self.dtype, batch * lin,
                       3 * int(self.hdim / self.tp), self.hdim, 1))
             if (attn_on_hetero):
-                decoder.append(
-                    Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
-                          batch, 3 * int(self.hdim / self.tp), 1, 1))
-            decoder.append(
-                Layer('gen', 'score', LayerType.MATMUL, False, self.dtype, 1,
-                      lin + stage, self.dhead,
+                # send kv matrices
+                self.sum_decoder.append(
+                    Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                          batch * lin, 2 * int(self.hdim / self.tp), 1, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'score', LayerType.MATMUL, False, self.dtype, lin,
+                      lin, self.dhead,
                       int(self.num_heads / self.tp) * batch))
-            decoder.append(
-                Layer('gen', 'softmax', LayerType.SOFTMAX, False, self.dtype,
-                      1, lin + stage, 1,
+            self.sum_decoder.append(
+                Layer('sum', 'softmax', LayerType.SOFTMAX, False, self.dtype, lin,
+                      lin, 1,
                       int(self.num_heads / self.tp) * batch))
-            decoder.append(
-                Layer('gen', 'context', LayerType.MATMUL, False, self.dtype,
-                      1, self.dhead, lin + stage,
+            self.sum_decoder.append(
+                Layer('sum', 'context', LayerType.MATMUL, False, self.dtype, lin,
+                      self.dhead, lin,
                       int(self.num_heads / self.tp) * batch))
-            if (attn_on_hetero):
-                decoder.append(
-                    Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype, 1,
-                          self.dhead, 1,
-                          int(self.num_heads / self.tp) * batch))
-            decoder.append(
-                Layer('gen', 'proj', LayerType.FC, True, self.dtype, batch,
+            self.sum_decoder.append(
+                Layer('sum', 'proj', LayerType.FC, True, self.dtype, batch * lin,
                       self.hdim, int(self.hdim / self.tp), 1))
-            decoder.append(
-                Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
+            self.sum_decoder.append(
+                Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
                       self.hdim, 1, 1))
-            decoder.append(
-                Layer('gen', 'norm1', LayerType.NORM, False, self.dtype, batch,
+            self.sum_decoder.append(
+                Layer('sum', 'norm1', LayerType.NORM, False, self.dtype, batch * lin,
                       self.hdim, 1, 1))
             if 'LLAMA' in self.name:
-                decoder.append(
-                    Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
-                          self.ff_scale * int(self.hdim / self.tp), self.hdim,
-                          1))
-                decoder.append(
-                    Layer('gen', 'ff2', LayerType.FC, True, self.dtype, batch,
-                          self.ff_scale * int(self.hdim / self.tp), self.hdim,
-                          1))
-                decoder.append(
-                    Layer('gen', 'glu', LayerType.ACT, False, self.dtype, batch,
+                self.sum_decoder.append(
+                    Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
+                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
+                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'glu', LayerType.ACT, False, self.dtype, batch * lin,
                           self.ff_scale * int(self.hdim / self.tp), 1, 1))
-                decoder.append(
-                    Layer('gen', 'ff3', LayerType.FC, True, self.dtype,
-                          batch, self.hdim,
-                          self.ff_scale * int(self.hdim / self.tp), 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'ff3', LayerType.FC, True, self.dtype, batch * lin,
+                          self.hdim, self.ff_scale * int(self.hdim / self.tp), 1))
             else:
-                decoder.append(
-                    Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
-                          self.ff_scale * int(self.hdim / self.tp), self.hdim,
-                          1))
+                self.sum_decoder.append(
+                    Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
+                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
                 if 'OPT' in self.name:
-                    decoder.append(
-                        Layer('gen', 'relu', LayerType.ACT, False,
-                              self.dtype, batch,
+                    self.sum_decoder.append(
+                        Layer('sum', 'relu', LayerType.ACT, False,
+                              self.dtype, batch * lin,
                               self.ff_scale * int(self.hdim / self.tp), 1, 1))
                 else:
-                    decoder.append(
-                        Layer('gen', 'gelu', LayerType.ACT, False,
-                              self.dtype, batch,
+                    self.sum_decoder.append(
+                        Layer('sum', 'gelu', LayerType.ACT, False,
+                              self.dtype, batch * lin,
                               self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
+                          self.hdim, self.ff_scale * int(self.hdim / self.tp), 1))
+            self.sum_decoder.append(
+                Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
+                      self.hdim, 1, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'norm2', LayerType.NORM, False, self.dtype, batch * lin,
+                      self.hdim, 1, 1))
+            # Generation
+            for stage in range(1, lout, 1):
+                decoder = []
                 decoder.append(
-                    Layer('gen', 'ff2', LayerType.FC, True, self.dtype,
-                          batch, self.hdim,
-                          self.ff_scale * int(self.hdim / self.tp), 1))
+                    Layer('gen', 'qkv', LayerType.FC, True, self.dtype, batch,
+                          3 * int(self.hdim / self.tp), self.hdim, 1))
+                if (attn_on_hetero):
+                    decoder.append(
+                        Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                              batch, 3 * int(self.hdim / self.tp), 1, 1))
+                decoder.append(
+                    Layer('gen', 'score', LayerType.MATMUL, False, self.dtype, 1,
+                          lin + stage, self.dhead,
+                          int(self.num_heads / self.tp) * batch))
+                decoder.append(
+                    Layer('gen', 'softmax', LayerType.SOFTMAX, False, self.dtype,
+                          1, lin + stage, 1,
+                          int(self.num_heads / self.tp) * batch))
+                decoder.append(
+                    Layer('gen', 'context', LayerType.MATMUL, False, self.dtype,
+                          1, self.dhead, lin + stage,
+                          int(self.num_heads / self.tp) * batch))
+                if (attn_on_hetero):
+                    decoder.append(
+                        Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype, 1,
+                              self.dhead, 1,
+                              int(self.num_heads / self.tp) * batch))
+                decoder.append(
+                    Layer('gen', 'proj', LayerType.FC, True, self.dtype, batch,
+                          self.hdim, int(self.hdim / self.tp), 1))
+                decoder.append(
+                    Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+                decoder.append(
+                    Layer('gen', 'norm1', LayerType.NORM, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+                if 'LLAMA' in self.name:
+                    decoder.append(
+                        Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              1))
+                    decoder.append(
+                        Layer('gen', 'ff2', LayerType.FC, True, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              1))
+                    decoder.append(
+                        Layer('gen', 'glu', LayerType.ACT, False, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                    decoder.append(
+                        Layer('gen', 'ff3', LayerType.FC, True, self.dtype,
+                              batch, self.hdim,
+                              self.ff_scale * int(self.hdim / self.tp), 1))
+                else:
+                    decoder.append(
+                        Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              1))
+                    if 'OPT' in self.name:
+                        decoder.append(
+                            Layer('gen', 'relu', LayerType.ACT, False,
+                                  self.dtype, batch,
+                                  self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                    else:
+                        decoder.append(
+                            Layer('gen', 'gelu', LayerType.ACT, False,
+                                  self.dtype, batch,
+                                  self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                    decoder.append(
+                        Layer('gen', 'ff2', LayerType.FC, True, self.dtype,
+                              batch, self.hdim,
+                              self.ff_scale * int(self.hdim / self.tp), 1))
 
-            decoder.append(
-                Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
-                      self.hdim, 1, 1))
-            decoder.append(
-                Layer('gen', 'norm2', LayerType.NORM, False, self.dtype, batch,
-                      self.hdim, 1, 1))
+                decoder.append(
+                    Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+                decoder.append(
+                    Layer('gen', 'norm2', LayerType.NORM, False, self.dtype, batch,
+                          self.hdim, 1, 1))
 
-            self.gen_decoder.append(copy.deepcopy(decoder))
+                self.gen_decoder.append(copy.deepcopy(decoder))
+        else:
+            # Summarization
+            self.sum_decoder.append(
+                Layer('sum', 'qkv', LayerType.FC, True, self.dtype, batch * lin,
+                      3 * int(self.hdim / self.tp), self.hdim, 1))
+            if (attn_on_hetero):
+                # send kv matrices
+                self.sum_decoder.append(
+                    Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                          batch * lin, 2 * int(self.hdim / self.tp), 1, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'score', LayerType.MATMUL, False, self.dtype, lin,
+                      lin, self.dhead,
+                      int(self.num_heads / self.tp) * batch))
+            self.sum_decoder.append(
+                Layer('sum', 'softmax', LayerType.SOFTMAX, False, self.dtype, lin,
+                      lin, 1,
+                      int(self.num_heads / self.tp) * batch))
+            self.sum_decoder.append(
+                Layer('sum', 'context', LayerType.MATMUL, False, self.dtype, lin,
+                      self.dhead, lin,
+                      int(self.num_heads / self.tp) * batch))
+            self.sum_decoder.append(
+                Layer('sum', 'proj', LayerType.FC, True, self.dtype, batch * lin,
+                      self.hdim, int(self.hdim / self.tp), 1))
+            self.sum_decoder.append(
+                Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
+                      self.hdim, 1, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'norm1', LayerType.NORM, False, self.dtype, batch * lin,
+                      self.hdim, 1, 1))
+            # 假设所有专家权重都在CPU Memory
+            self.sum_decoder.append(
+                Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                      self.activated_experts * self.hdim, batch * int(self.hdim * self.ff_scale / self.tp), 1, 1))
+            # Mixture of Experts FFN
+            for _ in (self.activated_experts + self.shared_experts):
+                self.sum_decoder.append(
+                    Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
+                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
+                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'silu', LayerType.ACT, False, self.dtype, batch * lin,
+                          self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                self.sum_decoder.append(
+                    Layer('sum', 'ff3', LayerType.FC, True, self.dtype, batch * lin,
+                          self.hdim, self.ff_scale * int(self.hdim / self.tp), 1))
+            self.sum_decoder.append(
+                Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
+                      self.hdim, 1, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'norm2', LayerType.NORM, False, self.dtype, batch * lin,
+                      self.hdim, 1, 1))
+            # Generation
+            for stage in range(1, lout, 1):
+                decoder = []
+                decoder.append(
+                    Layer('gen', 'qkv', LayerType.FC, True, self.dtype, batch,
+                          3 * int(self.hdim / self.tp), self.hdim, 1))
+                if (attn_on_hetero):
+                    decoder.append(
+                        Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                              batch, 3 * int(self.hdim / self.tp), 1, 1))
+                decoder.append(
+                    Layer('gen', 'score', LayerType.MATMUL, False, self.dtype, 1,
+                          lin + stage, self.dhead,
+                          int(self.num_heads / self.tp) * batch))
+                decoder.append(
+                    Layer('gen', 'softmax', LayerType.SOFTMAX, False, self.dtype,
+                          1, lin + stage, 1,
+                          int(self.num_heads / self.tp) * batch))
+                decoder.append(
+                    Layer('gen', 'context', LayerType.MATMUL, False, self.dtype,
+                          1, self.dhead, lin + stage,
+                          int(self.num_heads / self.tp) * batch))
+                # 假设MoE层在PIM上执行，则不需要传递计算结果
+                # if (attn_on_hetero):
+                #     decoder.append(
+                #         Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype, 1,
+                #               self.dhead, 1,
+                #               int(self.num_heads / self.tp) * batch))
+                decoder.append(
+                    Layer('gen', 'proj', LayerType.FC, True, self.dtype, batch,
+                          self.hdim, int(self.hdim / self.tp), 1))
+                decoder.append(
+                    Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+                decoder.append(
+                    Layer('gen', 'norm1', LayerType.NORM, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+                for _ in (self.activated_experts + self.shared_experts):
+                    decoder.append(
+                        Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              1))
+                    decoder.append(
+                        Layer('gen', 'ff2', LayerType.FC, True, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              1))
+                    decoder.append(
+                        Layer('gen', 'silu', LayerType.ACT, False, self.dtype, batch,
+                              self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                    decoder.append(
+                        Layer('gen', 'ff3', LayerType.FC, True, self.dtype,
+                              batch, self.hdim,
+                              self.ff_scale * int(self.hdim / self.tp), 1))
+                decoder.append(
+                    Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+                decoder.append(
+                    Layer('gen', 'norm2', LayerType.NORM, False, self.dtype, batch,
+                          self.hdim, 1, 1))
+
+                self.gen_decoder.append(copy.deepcopy(decoder))

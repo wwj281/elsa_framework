@@ -201,29 +201,52 @@ def make_pim_config(pim_type: PIMType,
     return config
 
 
-def make_model_config(name, dtype):
-    model_table = {}
-    model_table['GPT-175B'] = [96, 12288, 96, 128, 4, 1]
-    model_table['GPT-89B'] = [48, 12288, 96, 128, 4, 1]
-    model_table['GPT-13B'] = [40, 5120, 40, 128, 4, 1]
-    model_table['LLAMA-7B'] = [32, 4096, 32, 128, 8 / 3, 1]
-    model_table['LLAMA-65B'] = [80, 8192, 64, 128, 8 / 3, 1]
-    model_table['MT-76B'] = [60, 10240, 40, 128, 4, 1]
-    model_table['MT-146B'] = [80, 12288, 80, 128, 4, 1]
-    model_table['MT-310B'] = [96, 16384, 128, 128, 4, 1]
-    model_table['MT-530B'] = [105, 20480, 128, 160, 4, 1]
-    model_table['MT-1008B'] = [128, 25600, 160, 160, 4, 1]
-    model_table['OPT-66B'] = [64, 9216, 72, 128, 4, 1]
+def make_model_config(name, dtype, moe=False):
+    if not moe:
+        model_table = {}
+        model_table['GPT-175B'] = [96, 12288, 96, 128, 4, 1]
+        model_table['GPT-89B'] = [48, 12288, 96, 128, 4, 1]
+        model_table['GPT-13B'] = [40, 5120, 40, 128, 4, 1]
+        model_table['LLAMA-7B'] = [32, 4096, 32, 128, 8 / 3, 1]
+        model_table['LLAMA-65B'] = [80, 8192, 64, 128, 8 / 3, 1]
+        model_table['MT-76B'] = [60, 10240, 40, 128, 4, 1]
+        model_table['MT-146B'] = [80, 12288, 80, 128, 4, 1]
+        model_table['MT-310B'] = [96, 16384, 128, 128, 4, 1]
+        model_table['MT-530B'] = [105, 20480, 128, 160, 4, 1]
+        model_table['MT-1008B'] = [128, 25600, 160, 160, 4, 1]
+        model_table['OPT-66B'] = [64, 9216, 72, 128, 4, 1]
 
-    ndec, hdim, nheads, dhead, ff_scale, gqa_size = model_table[name]
-    config = {
-        'name': name,
-        'ndec': ndec,
-        'hdim': hdim,
-        'num_heads': nheads,
-        'dhead': dhead,
-        'ff_scale': ff_scale,
-        'gqa_size': gqa_size,
-        'dtype': dtype
-    }
+        ndec, hdim, nheads, dhead, ff_scale, gqa_size = model_table[name]
+        config = {
+            'name': name,
+            'ndec': ndec,
+            'hdim': hdim,
+            'num_heads': nheads,
+            'dhead': dhead,
+            'ff_scale': ff_scale,
+            'gqa_size': gqa_size,
+            'moe': False,
+            'dtype': dtype
+        }
+    else:
+        moe_model_table = {}
+        moe_model_table['DeepSeek-16B'] = [28, 2048, 16, 128, 1.455, 1, 64, 6, 2]
+        moe_model_table['Mixtral-8x7B'] = [32, 4096, 32, 128, 3.5, 1, 8, 2, 0]
+        moe_model_table['Qwen-2.7B'] = [24, 2048, 16, 128, 1.455, 1, 60, 4, 1]
+
+        ndec, hdim, nheads, dhead, ff_scale, gqa_size, num_experts, activated_experts, shared_experts = model_table[name]
+        config = {
+            'name': name,
+            'ndec': ndec,
+            'hdim': hdim,
+            'num_heads': nheads,
+            'dhead': dhead,
+            'ff_scale': ff_scale,
+            'gqa_size': gqa_size,
+            'num_experts': num_experts,
+            'activated_experts': activated_experts,
+            'shared_experts': shared_experts,
+            'moe': True,
+            'dtype': dtype
+        }
     return config
