@@ -1,7 +1,7 @@
-from src.type import *
-from src.model import *
+from courier_src.type import *
+from courier_src.model import *
 import math
-from src.ramulator_wrapper import *
+from courier_src.ramulator_wrapper import *
 
 
 class xPU:

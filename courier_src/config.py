@@ -1,4 +1,4 @@
-from src.type import *
+from courier_src.type import *
 
 SCALING_FACTOR = {}
 SCALING_FACTOR['MAX_COMPUTE_UTIL'] = 0.8
@@ -146,6 +146,10 @@ def make_xpu_config(gpu_type: GPUType,
         config['CPU']["INTERFACE_BW"] = 4 * 128 * 1000 * 1000 * 1000
         config['CPU']["ENERGY_TABLE"] = ENERGY_TABLE['CPU']
 
+    elif gpu_type == GPUType.RTX4090:
+        # Ref: RTX4090 whitepaper
+        config['GPU']["NUM_CORE"] = 144
+        config['GPU']["FLOPS_PER_DEVICE"] = 82.6 * 1000 * 1000 * 1000 * 1000
     return config
 
 

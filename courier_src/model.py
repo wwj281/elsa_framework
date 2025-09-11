@@ -285,6 +285,10 @@ class Transformer:
             self.sum_decoder.append(
                 Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
                       self.activated_experts * self.hdim, batch * int(self.hdim * self.ff_scale / self.tp), 1, 1))
+            # 模拟Gate函数
+            self.sum_decoder.append(
+                Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
+                      self.num_experts, self.hdim, 1))
             # Mixture of Experts FFN
             for _ in (self.activated_experts + self.shared_experts):
                 self.sum_decoder.append(
@@ -342,6 +346,10 @@ class Transformer:
                 decoder.append(
                     Layer('gen', 'norm1', LayerType.NORM, False, self.dtype, batch,
                           self.hdim, 1, 1))
+                # 模拟Gate函数
+                decoder.append(
+                    Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
+                          self.num_experts, self.hdim, 1))
                 for _ in (self.activated_experts + self.shared_experts):
                     decoder.append(
                         Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,

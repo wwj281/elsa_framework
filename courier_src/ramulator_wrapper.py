@@ -2,9 +2,9 @@ import pandas as pd
 import subprocess
 import math
 import os
-from src.config import *
-from src.model import *
-from src.type import *
+from courier_src.config import *
+from courier_src.model import *
+from courier_src.type import *
 
 
 class Ramulator:
