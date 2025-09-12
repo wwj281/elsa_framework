@@ -348,6 +348,11 @@ class PIM:
                 return time, energies
             else:
                 return 0, [0, 0, 0, 0, 0, 0]
+            
+        elif layer.type == LayerType.FC:
+            # ToDo
+            time, traffic = self.ramulator.output(
+                    self.pim_type, layer, self.power_constraint)
 
         elif layer.type == LayerType.SOFTMAX:
             # Execution time
