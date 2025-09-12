@@ -67,7 +67,8 @@ class System:
                  pipe=False,
                  parallel_ff=False,
                  power_constraint=False,
-                 num_reqs=0):
+                 num_reqs=0,
+                 act_on_hetero=False):
 
         def add_infos(name, infos, time, energy, bound):
             new_name = name
@@ -188,7 +189,7 @@ class System:
 
         assert self.model_set, "Need to set_model"
         self.model.build(batch_size, lin, lout, self.hetero_name
-                         in [DeviceType.CPU, DeviceType.PIM])
+                         in [DeviceType.CPU, DeviceType.PIM], act_on_hetero=act_on_hetero)
         second_batch_size = num_reqs % batch_size
         num_batches = 1
         target_bs = [batch_size]
@@ -247,7 +248,11 @@ class System:
                         exec_time, energy = self.devices[
                             'Acc'].get_time_and_energy(layer)
                     else:
-                        exec_time, energy = self.devices[
+                        if layer.name in ['ff1', 'ff2', 'ff3'] or (layer.type == LayerType.ACT and not act_on_hetero):
+                            exec_time, energy = self.devices[
+                            'Acc'].get_time_and_energy(layer)
+                        else:
+                            exec_time, energy = self.devices[
                             'GPU'].get_time_and_energy(layer)
                     layer.exec_time = exec_time
                     layer.energy = energy
@@ -357,8 +362,9 @@ class System:
                             g_perf['norm'] += exec_time
                     elif layer.type == LayerType.SOFTMAX:
                         g_perf['softmax'] += exec_time
-
-            g_perf = {k: v / (lout - 1) for k, v in g_perf.items()}
+            
+            # 计算整体延迟而不是输出单个Token的延迟
+            # g_perf = {k: v / (lout - 1) for k, v in g_perf.items()}
 
             energies = [
                 unit_energy['g_all'], unit_energy['g_offmem'],
@@ -377,7 +383,8 @@ class System:
             comm_energy = sum([v['comm'] for k, v in gen_energies.items()])
             energies.append(comm_energy)
 
-            energies = [i / (lout - 1) for i in energies]
+            # 计算整体能耗而不是输出单个Token的能耗
+            # energies = [i / (lout - 1) for i in energies]
 
             perf = list(s_perf.values()) + list(g_perf.values())
 
@@ -455,7 +462,7 @@ class System:
                                           ] else 1
         l = lin + lout - 1
 
-        if 'LLAMA' in self.model.name:
+        if 'LLAMA' in self.model.name or self.model.moe:
             weight_memory = ndec * hdim * (2 * hdim + 2 * (hdim) +
                                            3 * ff_scale * hdim) * w_byte
         else:

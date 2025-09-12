@@ -100,7 +100,7 @@ class Transformer:
         self.dhead = int(self.hdim / self.num_heads)
         self.tp = tensor_parallel
 
-    def build(self, batch, lin, lout, attn_on_hetero=False):
+    def build(self, batch, lin, lout, attn_on_hetero=False, act_on_hetero=False):
         self.sum_decoder = []
         self.gen_decoder = []
         if not self.moe:
@@ -359,6 +359,10 @@ class Transformer:
                         Layer('gen', 'ff2', LayerType.FC, True, self.dtype, batch,
                               self.ff_scale * int(self.hdim / self.tp), self.hdim,
                               1))
+                    if act_on_hetero:
+                        decoder.append(
+                            Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                                  batch, self.ff_scale * int(self.hdim / self.tp), 1, 1))
                     decoder.append(
                         Layer('gen', 'silu', LayerType.ACT, False, self.dtype, batch,
                               self.ff_scale * int(self.hdim / self.tp), 1, 1))

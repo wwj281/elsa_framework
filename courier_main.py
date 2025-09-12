@@ -47,7 +47,8 @@ def run(system: System,
         power_constraint=False,
         pipe=0,
         parallel=False,
-        output_file=None):
+        output_file=None,
+        act_on_hetero=False):
     print("---Run simple mode Batch {} Lin {} Lout {} pipe {} parall {}---".
           format(batch, lin, lout, pipe, parallel))
     assert system.model_set, "Need to SetModel"
@@ -58,7 +59,8 @@ def run(system: System,
                     perfs=perfs,
                     pipe=pipe,
                     parallel_ff=parallel,
-                    power_constraint=power_constraint)
+                    power_constraint=power_constraint,
+                    act_on_hetero=act_on_hetero)
     if output_file is not None:
         write_csv(output_file, perfs)
 
@@ -132,6 +134,10 @@ def main():
         help=
         "batch size, default = 1"
     )
+    parser.add_argument("--act_on_hetero",
+                        type=bool,
+                        default=False,
+                        help="whether to activate on heterogeneous devices")
 
     args = parser.parse_args()
 
@@ -190,7 +196,8 @@ def main():
         pipe=args.pipeopt,
         parallel=args.ffopt,
         output_file=output_path,
-        power_constraint=args.powerlimit)
+        power_constraint=args.powerlimit,
+        act_on_hetero=args.act_on_hetero)
 
 
 if __name__ == "__main__":
