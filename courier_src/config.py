@@ -150,6 +150,29 @@ def make_xpu_config(gpu_type: GPUType,
         # Ref: RTX4090 whitepaper
         config['GPU']["NUM_CORE"] = 144
         config['GPU']["FLOPS_PER_DEVICE"] = 82.6 * 1000 * 1000 * 1000 * 1000
+        config['GPU']["MEM_CAPACITY_PER_DEVICE"] = 24 * 1024 * 1024 * 1024 \
+                                                    if mem_cap is None else mem_cap
+
+        config['GPU']["OFF_MEM_BW_PER_DEVICE"] = 1008 * 1000 * 1000 * 1000 \
+                                                  if mem_bw is None else mem_bw
+        config['GPU']["L2_MEM_BW_PER_DEVICE"] = float('inf')
+        #config['GPU']["L2_MEM_BW_PER_DEVICE"] = 3.8 * 1000 * 1000 * 1000 * 1000
+        config['GPU']["L1_CAP_PER_CORE"] = 16384 * 1024
+        config['GPU']["L2_CAP_PER_DEVICE"] = 73728 * 1024
+        config['GPU']["INTERFACE_BW"] = 32 * 1000 * 1000 * 1000
+        config['GPU']["ENERGY_TABLE"] = ENERGY_TABLE['GPU']
+
+        config['CPU']["NUM_DEVICE"] = 2
+        config['CPU']["NUM_CORE"] = 64
+        config['CPU']["FLOPS_PER_DEVICE"] = 4 * 1000 * 1000 * 1000 * 1000
+        config['CPU']["MEM_CAPACITY_PER_DEVICE"] = 1024 * 1024 * 1024 * 1024
+        config['CPU']["OFF_MEM_BW_PER_DEVICE"] = 200 * 1000 * 1000 * 1000
+        config['CPU']["L2_MEM_BW_PER_DEVICE"] = float('inf')
+        # TODO: Modify it
+        config['CPU']["L1_CAP_PER_CORE"] = 96 * 1024
+        config['CPU']["L2_CAP_PER_DEVICE"] = 256 * 1024 * 1024
+        config['CPU']["INTERFACE_BW"] = 4 * 64 * 1000 * 1000 * 1000
+        config['CPU']["ENERGY_TABLE"] = ENERGY_TABLE['CPU']
     return config
 
 
