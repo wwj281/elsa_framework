@@ -4,7 +4,7 @@ import copy
 import numpy as np
 
 
-model = "gpt-3-175B"
+model = "deepseek-moe-16B"
 
 num_experts = 64
 token_experts = 6
@@ -130,7 +130,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
                         for acc_idx in range((n_rank * n_bg - 1) * n_bank):
                             acc_addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + acc_idx * DIMM_GS['col']
                             hex_addr = hex(acc_addr)[2:]
-                            total_cmd[itr].append("PIM_acc 0x{0:0>8}".format(hex_addr))
+                            total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
         
         # gate mac计算完后，以DIMM为单位合并中间结果，然后计算激活函数
@@ -155,7 +155,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
                         for acc_idx in range((n_rank * n_bg - 1) * n_bank):
                             acc_addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + acc_idx * DIMM_GS['col']
                             hex_addr = hex(acc_addr)[2:]
-                            total_cmd[itr].append("PIM_acc 0x{0:0>8}".format(hex_addr))
+                            total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
 
     def ewmul(addr_offset):
@@ -179,7 +179,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
                         for acc_idx in range((n_bank - 1) * (n_rank * n_bg)):
                             acc_addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + acc_idx * DIMM_GS['col']
                             hex_addr = hex(acc_addr)[2:]
-                            total_cmd[itr].append("PIM_acc 0x{0:0>8}".format(hex_addr))
+                            total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
     def barrier():
         for dimm_idx in range(n_dimm):
