@@ -58,7 +58,10 @@ class PIMLoadStoreTrace : public IFrontEnd, public Implementation {
           case 10: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SFM}); break;
           case 11: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SET_MODEL}); break;
           case 12: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SET_HEAD}); break;
-          case 13: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_BARRIER}); break;
+          case 13: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_ACC}); break;
+          case 14: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_AF}); break;
+          case 15: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_EWMUL}); break;
+          case 16: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_BARRIER}); break;
           default:;
         }
         if (request_sent) {
@@ -117,8 +120,14 @@ class PIMLoadStoreTrace : public IFrontEnd, public Implementation {
           req_type = 11;
         } else if (tokens[0] == "PIM_SET_HEAD") {
           req_type = 12;
-        } else if (tokens[0] == "PIM_BARRIER") {
+        } else if (tokens[0] == "PIM_ACC") {
           req_type = 13;
+        } else if (tokens[0] == "PIM_AF") {
+          req_type = 14;
+        } else if (tokens[0] == "PIM_EWMUL") {
+          req_type = 15;
+        } else if (tokens[0] == "PIM_BARRIER") {
+          req_type = 16;
         } else {
           throw ConfigurationError("Trace {} format invalid!", file_path_str);
         }

@@ -106,7 +106,8 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
     # cmd_down_acc.append([])
 
     valid_dimms.append(valid_dimm)
-
+    # Attacc中每个Channel处理的head数量是相同的，因此源代码中每次迭代需要向所有Channel发送相同的指令，
+    # 但是当前映射模式下，各DIMM处理的专家数可能不同，因此只需要向被激活的DIMM发送指令，下面的代码可能需要修改
     def gate_cpvec(addr_offset):
         for ba_idx in range(n_bank): 
             for col_idx in range(math.ceil(hidden_size / n_bank / n_chip / n_mac)):
@@ -124,7 +125,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
                     addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
                     hex_addr = hex(addr)[2:]
                     total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
-                    # 假设register能暂存16*col个结果，accumulator一次可以合并16*col个中间结果
+                    # 假设register能暂存16*col*n_bank(DIMM)个结果，accumulator一次可以合并16*col个中间结果
                     if idx % 16 == 15:
                         total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
                         for acc_idx in range((n_rank * n_bg - 1) * n_bank):
@@ -207,9 +208,9 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
     barrier()
 
 
-
+# 暂时假设以DIMM为单位分配专家，可能导致DIMM之间负载不均，某些DIMM可能处于闲置状态
 def run_attention(n_expert_per_channel, trace_file_name):
-    # 暂时假设共享专家和不同专家的形状相同
+    # 暂时假设共享专家和普通专家的形状相同
     partition_size = math.ceil(hidden_size * moe_intermediate_size / (n_rank * n_bg * n_bank))
     # 这里的实际大小还需要再考察一下
     weight_offset = pow(2, 23) 
