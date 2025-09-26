@@ -125,7 +125,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm = n_dimm):
                     addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
                     hex_addr = hex(addr)[2:]
                     total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
-                    # 假设register能暂存16*col*n_bank(DIMM)个结果，accumulator一次可以合并16*col个中间结果
+                    # 假设register能暂存16*col个结果，accumulator一次可以合并16*col个中间结果
                     if idx % 16 == 15:
                         total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
                         for acc_idx in range((n_rank * n_bg - 1) * n_bank):
