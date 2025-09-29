@@ -399,15 +399,15 @@ class DDR4PIM : public IDRAM, public Implementation {
           /*** PIM-MAC-All-Bank ***/ 
           /// 2-cycle ACT command (for row commands)
           {.level = "channel", .preceding = {"ACTAB"}, .following = {"ACTAB", "ACT", "PRE", "PREA", "REFab"}, .latency = 2},
-          /// All banks in a channel 
-          {.level = "channel", .preceding = {"MACAB"}, .following = {"MACAB"}, .latency = V("nCCDL")},          
-          {.level = "channel", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nRC")},  
-          {.level = "channel", .preceding = {"ACTAB"}, .following = {"MACAB"}, .latency = V("nRCD")},  
-          {.level = "channel", .preceding = {"ACTAB"}, .following = {"PREA"}, .latency = V("nRAS")},  
-          {.level = "channel", .preceding = {"MACAB"},  .following = {"PREA"}, .latency = V("nRTP")},  
-          {.level = "channel", .preceding = {"PREA"}, .following = {"ACTAB"}, .latency = V("nRP")},  
+          /// All banks in a dimm 
+          {.level = "dimm", .preceding = {"MACAB"}, .following = {"MACAB"}, .latency = V("nCCDL")},          
+          //{.level = "dimm", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nRC")},
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nFAW") * size_t(m_organization.count[m_levels["bankgroup"]]) * size_t(m_organization.count[m_levels["bank"]]) / (4 * size_t(m_organization.count[m_levels["rank"]]))},  
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"MACAB"}, .latency = V("nRCD")},  
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"PREA"}, .latency = V("nRAS")},  
+          {.level = "dimm", .preceding = {"MACAB"},  .following = {"PREA"}, .latency = V("nRTP")},  
+          {.level = "dimm", .preceding = {"PREA"}, .following = {"ACTAB"}, .latency = V("nRP")},  
           /// RAS <-> REF
-          {.level = "rank", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nFAW") * size_t(m_organization.count[m_levels["bankgroup"]]) * size_t(m_organization.count[m_levels["bank"]]) / 4},
           {.level = "rank", .preceding = {"ACTAB"}, .following = {"REFab"}, .latency = V("nRC")},          
           {.level = "rank", .preceding = {"PREA"}, .following = {"REFab"}, .latency = V("nRP")},          
           {.level = "rank", .preceding = {"REFab"}, .following = {"ACTAB"}, .latency = V("nRFC")},          
