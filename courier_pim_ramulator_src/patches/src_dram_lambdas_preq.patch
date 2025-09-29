@@ -8,9 +8,9 @@ index 843f966..6f3c0e2 100644
 +int RequireAllBanksRowOpen(typename T::Node* node, int cmd, int target_id, Clk_t clk) {
 +  // For HBM3
 +  if constexpr (T::m_levels["bank"] - T::m_levels["channel"] == 4) {
-+    typename T::Node* channel = node->m_parent_node->m_parent_node->m_parent_node->m_parent_node;
-+    for (auto pc : channel->m_child_nodes) {
-+      for (auto rank : pc->m_child_nodes) {
++    typename T::Node* dimm = node->m_parent_node->m_parent_node->m_parent_node;
++    for (auto rank : dimm->m_child_nodes) {
++      for (int i = 0; i < 1; ++i) {
 +        for (auto bg : rank->m_child_nodes) {
 +          for (auto bank: bg->m_child_nodes) {
 +            switch (bank->m_state) {
@@ -40,9 +40,9 @@ index 843f966..6f3c0e2 100644
 +int RequirePIMSameBanksRowOpen(typename T::Node* node, int cmd, int target_id, Clk_t clk) {
 +  // For HBM3
 +  if constexpr (T::m_levels["bank"] - T::m_levels["channel"] == 4) {
-+    typename T::Node* ch = node->m_parent_node->m_parent_node->m_parent_node->m_parent_node;
-+    for (auto pch : ch->m_child_nodes) {
-+      for (auto rank : pch->m_child_nodes) {
++    typename T::Node* dimm = node->m_parent_node->m_parent_node->m_parent_node;
++    for (auto rank : dimm->m_child_nodes) {
++      for (int i = 0; i < 1; ++i) {
 +        for (auto bg : rank->m_child_nodes) {
 +          for (auto bank: bg->m_child_nodes) {
 +            if (bank->m_node_id == node->m_node_id) {
@@ -74,9 +74,9 @@ index 843f966..6f3c0e2 100644
 +int RequirePIMPerBanksRowOpen(typename T::Node* node, int cmd, int target_id, Clk_t clk) {
 +  // For HBM3
 +  if constexpr (T::m_levels["bank"] - T::m_levels["channel"] == 4) {
-+    typename T::Node* ch = node->m_parent_node->m_parent_node->m_parent_node->m_parent_node;
-+    for (auto pch : ch->m_child_nodes) {
-+      for (auto rank : pch->m_child_nodes) {
++    typename T::Node* dimm = node->m_parent_node->m_parent_node->m_parent_node;
++    for (auto rank : dimm->m_child_nodes) {
++      for (int i = 0; i < 1; ++i) {
 +        if (rank->m_node_id == node->m_parent_node->m_parent_node->m_node_id) {
 +          for (auto bg : rank->m_child_nodes) {
 +            if (bg->m_node_id == node->m_parent_node->m_node_id) {
@@ -113,8 +113,8 @@ index 843f966..6f3c0e2 100644
 +
 @@ -108,0 +216,14 @@ namespace Channel {
 +  } else if constexpr (T::m_levels["bank"] - T::m_levels["channel"] == 4) {
-+    for (auto pc : node->m_child_nodes) {
-+      for (auto rank : pc->m_child_nodes) {
++    for (int i = 0; i < 0; ++i) {
++      for (auto rank : node->m_child_nodes) {
 +        for (auto bg : rank->m_child_nodes) {
 +          for (auto bank: bg->m_child_nodes) {
 +            if (bank->m_state == T::m_states["Closed"]) {

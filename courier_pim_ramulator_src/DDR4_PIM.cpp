@@ -536,7 +536,7 @@ class DDR4PIM : public IDRAM, public Implementation {
       m_actions.resize(m_levels.size(), std::vector<ActionFunc_t<Node>>(m_commands.size()));
 
       // Pseudo Channel Actions
-      m_actions[m_levels["channel"]][m_commands["PREA"]] = Lambdas::Action::Channel::PREA<DDR4PIM>;
+      m_actions[m_levels["dimm"]][m_commands["PREA"]] = Lambdas::Action::Channel::PREA<DDR4PIM>;
 
       // Same-Bank Actions.
       m_actions[m_levels["bank"]][m_commands["PRESB"]] = Lambdas::Action::Bank::PRESB<DDR4PIM>;
@@ -563,7 +563,7 @@ class DDR4PIM : public IDRAM, public Implementation {
       m_preqs.resize(m_levels.size(), std::vector<PreqFunc_t<Node>>(m_commands.size()));
 
       // Pseudo Channel Preqs
-      m_preqs[m_levels["channel"]][m_commands["REFab"]] = Lambdas::Preq::Channel::RequireAllBanksClosed<DDR4PIM>;
+      m_preqs[m_levels["dimm"]][m_commands["REFab"]] = Lambdas::Preq::Channel::RequireAllBanksClosed<DDR4PIM>;
 
       // Bank Preqs
       m_preqs[m_levels["bank"]][m_commands["RD"]] = Lambdas::Preq::Bank::RequireRowOpen<DDR4PIM>;
