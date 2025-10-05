@@ -48,6 +48,7 @@ def run(system: System,
         pipe=0,
         parallel=False,
         output_file=None,
+        attn_on_hetero=False,
         act_on_hetero=False):
     print("---Run simple mode Batch {} Lin {} Lout {} pipe {} parall {}---".
           format(batch, lin, lout, pipe, parallel))
@@ -60,6 +61,7 @@ def run(system: System,
                     pipe=pipe,
                     parallel_ff=parallel,
                     power_constraint=power_constraint,
+                    attn_on_hetero=attn_on_hetero,
                     act_on_hetero=act_on_hetero)
     if output_file is not None:
         write_csv(output_file, perfs)
@@ -74,7 +76,7 @@ def main():
     parser.add_argument(
         "--system",
         type=str,
-        default="dgx",
+        default="dgx-attacc",
         help="dgx (each GPU has 80GB HBM), \
               dgx-cpu (In dgx, offloading the attention layer to cpu), \
               dgx-attacc (dgx + attacc)")
@@ -134,6 +136,10 @@ def main():
         help=
         "batch size, default = 1"
     )
+    parser.add_argument("--attn_on_hetero",
+                        type=bool,
+                        default=False,
+                        help="whether to do attention on heterogeneous devices")
     parser.add_argument("--act_on_hetero",
                         type=bool,
                         default=False,
@@ -197,6 +203,7 @@ def main():
         parallel=args.ffopt,
         output_file=output_path,
         power_constraint=args.powerlimit,
+        attn_on_hetero=args.act_on_hetero,
         act_on_hetero=args.act_on_hetero)
 
 

@@ -63,7 +63,7 @@ class Layer:
         out = self.numOp * self.m * self.n * self.dbyte
 
         if self.type in [
-                LayerType.SOFTMAX, LayerType.ACT, LayerType.G2G, LayerType.X2G
+            LayerType.SOFTMAX, LayerType.ACT, LayerType.G2G, LayerType.X2G
         ]:
             in1 = self.numOp * self.m * self.n * self.dbyte
             in2 = 0
@@ -93,7 +93,7 @@ class Transformer:
         self.ff_scale = modelinfos['ff_scale']
         self.dtype = modelinfos['dtype']
         self.moe = modelinfos['moe']
-        if self.moe: 
+        if self.moe:
             self.num_experts = modelinfos['num_experts']
             self.activated_experts = modelinfos['activated_experts']
             self.shared_experts = modelinfos['shared_experts']
@@ -108,7 +108,7 @@ class Transformer:
             self.sum_decoder.append(
                 Layer('sum', 'qkv', LayerType.FC, True, self.dtype, batch * lin,
                       3 * int(self.hdim / self.tp), self.hdim, 1))
-            if (attn_on_hetero):
+            if attn_on_hetero:
                 # send kv matrices
                 self.sum_decoder.append(
                     Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
@@ -176,7 +176,7 @@ class Transformer:
                 decoder.append(
                     Layer('gen', 'qkv', LayerType.FC, True, self.dtype, batch,
                           3 * int(self.hdim / self.tp), self.hdim, 1))
-                if (attn_on_hetero):
+                if attn_on_hetero:
                     decoder.append(
                         Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
                               batch, 3 * int(self.hdim / self.tp), 1, 1))
@@ -192,7 +192,7 @@ class Transformer:
                     Layer('gen', 'context', LayerType.MATMUL, False, self.dtype,
                           1, self.dhead, lin + stage,
                           int(self.num_heads / self.tp) * batch))
-                if (attn_on_hetero):
+                if attn_on_hetero:
                     decoder.append(
                         Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype, 1,
                               self.dhead, 1,
@@ -255,7 +255,7 @@ class Transformer:
             self.sum_decoder.append(
                 Layer('sum', 'qkv', LayerType.FC, True, self.dtype, batch * lin,
                       3 * int(self.hdim / self.tp), self.hdim, 1))
-            if (attn_on_hetero):
+            if attn_on_hetero:
                 # send kv matrices
                 self.sum_decoder.append(
                     Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
@@ -315,7 +315,7 @@ class Transformer:
                 decoder.append(
                     Layer('gen', 'qkv', LayerType.FC, True, self.dtype, batch,
                           3 * int(self.hdim / self.tp), self.hdim, 1))
-                if (attn_on_hetero):
+                if attn_on_hetero:
                     decoder.append(
                         Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
                               batch, 3 * int(self.hdim / self.tp), 1, 1))

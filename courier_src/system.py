@@ -2,6 +2,7 @@ from .type import *
 from .model import *
 from .devices import *
 from .config import *
+
 RAMPATH = "./ramulator2"
 RAMLOG = "./ramulator.out"
 
@@ -68,6 +69,7 @@ class System:
                  parallel_ff=False,
                  power_constraint=False,
                  num_reqs=0,
+                 attn_on_hetero=False,
                  act_on_hetero=False):
 
         def add_infos(name, infos, time, energy, bound):
@@ -126,7 +128,7 @@ class System:
 
             minimum_ratio = 1 / (self.model.num_heads / self.GPU.num_xpu)
             if level == False:
-                #softmax_time = 0
+                # softmax_time = 0
                 attn_time = score_time + context_time + softmax_time
                 if attn_time > x2g_time:
                     x2g_time *= minimum_ratio
@@ -134,7 +136,7 @@ class System:
                     x2g_time -= attn_time * (1 - minimum_ratio)
 
             else:
-                #softmax_time = 0
+                # softmax_time = 0
                 fc_time = qkv_time + prj_time
                 attn_time = score_time + context_time + softmax_time
                 if attn_time > fc_time:
@@ -174,22 +176,21 @@ class System:
                 if "ff" in layer.name:
                     if layer.bound == "compute":
                         attn_flops = self.devices[
-                            'GPU'].peak_memory_bandwidth / layer.dbyte * 2 * bw_scale
+                                         'GPU'].peak_memory_bandwidth / layer.dbyte * 2 * bw_scale
                         ratio = self.devices['GPU'].peak_flops / (
-                            self.devices['GPU'].peak_flops + attn_flops)
+                                self.devices['GPU'].peak_flops + attn_flops)
                         layer.exec_time *= ratio
 
                     elif layer.bound == "memory":
                         attn_eff_bw = self.devices[
-                            'GPU'].peak_memory_bandwidth * bw_scale / bs
+                                          'GPU'].peak_memory_bandwidth * bw_scale / bs
                         ratio = self.devices['GPU'].peak_memory_bandwidth / (
-                            self.devices['GPU'].peak_memory_bandwidth +
-                            attn_eff_bw)
+                                self.devices['GPU'].peak_memory_bandwidth +
+                                attn_eff_bw)
                         layer.exec_time *= ratio
 
         assert self.model_set, "Need to set_model"
-        self.model.build(batch_size, lin, lout, self.hetero_name
-                         in [DeviceType.CPU, DeviceType.PIM], act_on_hetero=act_on_hetero)
+        self.model.build(batch_size, lin, lout, attn_on_hetero=attn_on_hetero, act_on_hetero=act_on_hetero)
         second_batch_size = num_reqs % batch_size
         num_batches = 1
         target_bs = [batch_size]
@@ -226,7 +227,7 @@ class System:
                 # Get execution time and energy
                 exec_time, energy = self.devices['GPU'].get_time_and_energy(
                     layer)
-
+                print('GPU', layer.name, exec_time, energy)
                 # Time to transfer KV matrices to memory (PCIe bandwidth)
                 if layer.type == LayerType.X2G:
                     exec_time += max(wrt_io_busy - time, 0)
@@ -243,24 +244,26 @@ class System:
                 for l_idx, layer in enumerate(decoder_block):
                     # Get execution time and energy
                     if layer.type in [
-                            LayerType.MATMUL, LayerType.SOFTMAX, LayerType.X2G
+                        LayerType.MATMUL, LayerType.SOFTMAX, LayerType.X2G
                     ]:
                         exec_time, energy = self.devices[
-                            'Acc'].get_time_and_energy(layer)
+                            'GPU'].get_time_and_energy(layer)
+                        print('GPU', layer.name, exec_time, energy)
                     else:
                         if layer.name in ['ff1', 'ff2', 'ff3'] or (layer.type == LayerType.ACT and not act_on_hetero):
                             exec_time, energy = self.devices[
-                            'Acc'].get_time_and_energy(layer)
+                                'Acc'].get_time_and_energy(layer)
+                            print('PIM', layer.name, exec_time, energy)
                         else:
                             exec_time, energy = self.devices[
-                            'GPU'].get_time_and_energy(layer)
+                                'GPU'].get_time_and_energy(layer)
+                            print('GPU', layer.name, exec_time, energy)
                     layer.exec_time = exec_time
                     layer.energy = energy
                     g_flops += layer.get_flops() * self.devices['GPU'].num_xpu
                     time += exec_time
                     if gen_stage == 0:
                         _opb_print(layer, 'gen')
-
                     # energy
                     if layer.type in gen_energies:
                         gen_energies[layer.type]['mem'] += layer.energy[0]
@@ -362,7 +365,7 @@ class System:
                             g_perf['norm'] += exec_time
                     elif layer.type == LayerType.SOFTMAX:
                         g_perf['softmax'] += exec_time
-            
+
             # 计算整体延迟而不是输出单个Token的延迟
             # g_perf = {k: v / (lout - 1) for k, v in g_perf.items()}
 
@@ -443,8 +446,8 @@ class System:
         output = [tag, config, perf_all, energy_all]
         print(
             "    Batch: {}, Throughput: {:.2f} tokens/s Latency: {:.2f}ms, pipe/ff_parallel: {}/{}, powerlimit: {}"
-            .format(batch_size, batch_size / ((perf_all[len(s_perf)]) / 1000),
-                    perf_all[len(s_perf)], pipe, parallel_ff, power_constraint))
+                .format(batch_size, batch_size / ((perf_all[len(s_perf)]) / 1000),
+                        perf_all[len(s_perf)], pipe, parallel_ff, power_constraint))
 
         if perfs is not None:
             perfs.append(output)
@@ -457,9 +460,9 @@ class System:
         nhead = self.model.num_heads
         ff_scale = self.model.ff_scale
         w_byte = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8
-                                          ] else 1
+                                           ] else 1
         a_byte = 2 if self.model.dtype in [DataType.W16A16, DataType.W8A16
-                                          ] else 1
+                                           ] else 1
         l = lin + lout - 1
 
         if 'LLAMA' in self.model.name or self.model.moe:
@@ -475,4 +478,3 @@ class System:
         kv_memory = ndec * 2 * l * (hdim) * a_byte
 
         return weight_memory, kv_memory * batch_size, temp_memory * batch_size
-
