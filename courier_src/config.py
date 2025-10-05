@@ -261,7 +261,7 @@ def make_model_config(name, dtype, moe=False):
         moe_model_table['Mixtral-8x7B'] = [32, 4096, 32, 128, 3.5, 1, 8, 2, 0]
         moe_model_table['Qwen-2.7B'] = [24, 2048, 16, 128, 1.455, 1, 60, 4, 1]
 
-        ndec, hdim, nheads, dhead, ff_scale, gqa_size, num_experts, activated_experts, shared_experts = model_table[name]
+        ndec, hdim, nheads, dhead, ff_scale, gqa_size, num_experts, activated_experts, shared_experts = moe_model_table[name]
         config = {
             'name': name,
             'ndec': ndec,

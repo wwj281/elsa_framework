@@ -331,8 +331,9 @@ class PIM:
             ## operational granularity = the attention layer
             if 'score' in layer.name:
                 m, n, k, numOp, dbyte = layer.get_infos()
-                time, traffic = self.ramulator.output(
-                    self.pim_type, layer, self.power_constraint)
+                # time, traffic = self.ramulator.output(
+                #     self.pim_type, layer, self.power_constraint)
+                time, traffic = 0, 0
                 io_energy = 0
                 for i in range(len(self.io_energy_table)):
                     io_energy += traffic[i] * self.io_energy_table[i]
@@ -351,8 +352,9 @@ class PIM:
             
         elif layer.type == LayerType.FC:
             # ToDo
-            time, traffic = self.ramulator.output(
-                    self.pim_type, layer, self.power_constraint)
+            # time, traffic = self.ramulator.output(
+            #         self.pim_type, layer, self.power_constraint)
+            time, traffic = 0, 0
 
         elif layer.type == LayerType.SOFTMAX:
             # Execution time

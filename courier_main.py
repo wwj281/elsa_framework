@@ -85,7 +85,7 @@ def main():
         help="GPU type (A100a , H100 and RTX4090), A100a is A100 with HBM3")
     parser.add_argument("--ngpu",
                         type=int,
-                        default=8,
+                        default=1,
                         help="number of GPUs in DGX system. default=8")
     parser.add_argument("--gmemcap",
                         type=int,
@@ -113,8 +113,8 @@ def main():
     parser.add_argument(
         "--model",
         type=str,
-        default='GPT-175B',
-        help="model list: GPT-175B, LLAMA-65B, MT-530B, OPT-66B, Deepseek-16B, Qwen-2.7B, Mixtral-8x7B")
+        default='DeepSeek-16B',
+        help="model list: GPT-175B, LLAMA-65B, MT-530B, OPT-66B, DeepSeek-16B, Qwen-2.7B, Mixtral-8x7B")
     parser.add_argument("--word",
                         type=int,
                         default='2',
@@ -168,7 +168,7 @@ def main():
 
     # set system
     dtype = DataType.W16A16 if args.word == 2 else DataType.W8A8
-    moe = True if args.model in ['Deepseek-16B, Qwen-2.7B, Mixtral-8x7B'] else False
+    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B'] else False
     modelinfos = make_model_config(args.model, dtype, moe=moe)
     xpu_config = make_xpu_config(gpu_device, num_gpu=num_gpu, mem_cap=gmem_cap)
     system = System(xpu_config['GPU'], modelinfos)

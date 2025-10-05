@@ -290,7 +290,7 @@ class Transformer:
                 Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
                       self.num_experts, self.hdim, 1))
             # Mixture of Experts FFN
-            for _ in (self.activated_experts + self.shared_experts):
+            for _ in range(self.activated_experts + self.shared_experts):
                 self.sum_decoder.append(
                     Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
                           self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
@@ -350,7 +350,7 @@ class Transformer:
                 decoder.append(
                     Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
                           self.num_experts, self.hdim, 1))
-                for _ in (self.activated_experts + self.shared_experts):
+                for _ in range(self.activated_experts + self.shared_experts):
                     decoder.append(
                         Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
                               self.ff_scale * int(self.hdim / self.tp), self.hdim,
