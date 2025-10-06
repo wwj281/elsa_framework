@@ -186,7 +186,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
         for dimm_idx in range(n_dimm):
             addr = dimm_idx * DIMM_GS['dimm']
             hex_addr = hex(addr)[2:]
-            total_cmd.append("PIM_BARRIER 0x{0:0>8}".format(hex_addr))
+            total_cmd[itr].append("PIM_BARRIER 0x{0:0>8}".format(hex_addr))
 
     # 目前假设没有流水线，所有操作都是顺序执行的，每一阶段计算完成后强制用barrier进行数据同步
     gate_cpvec(gate_addr)
@@ -222,7 +222,7 @@ def run_attention(n_expert_per_channel, trace_file_name):
     num_itr = (token_experts + shared_experts) * batch_size
     for itr in range(num_itr):
         remainder = 0
-        if (n_expert_per_channel / ((itr + 1) * n_dimm) < 1):
+        if n_expert_per_channel / ((itr + 1) * n_dimm) < 1:
             remainder = n_expert_per_channel % n_dimm
         gate_addr = itr * partition_size
         up_addr = gate_addr + weight_offset
@@ -262,7 +262,7 @@ def main():
                         help="Batch size, default = 1")
     parser.add_argument("-db", "--dbyte", type=int, default=2,
                         help="data type (B), default = 2")
-    parser.add_argument("-o", "--output", type=str, default="attacc_bank.trace",
+    parser.add_argument("-o", "--output", type=str, default="courier_pim.trace",
                         help="output path")
 
     args = parser.parse_args()
