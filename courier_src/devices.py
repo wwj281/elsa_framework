@@ -323,7 +323,7 @@ class PIM:
 
         return [e_off, 0, 0, 0, e_flop, 0]
 
-    def get_time_and_energy(self, layer: Layer):
+    def get_time_and_energy(self, layer: Layer, batch_size):
         if layer.type == LayerType.X2G:
             return self._io_time_energy(layer)
 
@@ -332,7 +332,7 @@ class PIM:
             if 'score' in layer.name:
                 m, n, k, numOp, dbyte = layer.get_infos()
                 time, traffic = self.ramulator.output(
-                    self.pim_type, layer, self.power_constraint)
+                    self.pim_type, layer, self.power_constraint, batch_size)
                 io_energy = 0
                 for i in range(len(self.io_energy_table)):
                     io_energy += traffic[i] * self.io_energy_table[i]
@@ -350,9 +350,8 @@ class PIM:
                 return 0, [0, 0, 0, 0, 0, 0]
             
         elif layer.type == LayerType.FC or layer.type == LayerType.ACT:
-            # ToDo
-            # time, traffic = self.ramulator.output(
-            #         self.pim_type, layer, self.power_constraint)
+            time, traffic = self.ramulator.output(
+                    self.pim_type, layer, self.power_constraint, batch_size)
             return 0, [0, 0, 0, 0, 0, 0]
 
         elif layer.type == LayerType.SOFTMAX:

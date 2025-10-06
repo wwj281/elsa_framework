@@ -43,7 +43,8 @@ class System:
     def set_accelerator(self, modelinfos, name: DeviceType, config):
         self.hetero_name = name
         if self.hetero_name == DeviceType.PIM:
-            ramulator = Ramulator(modelinfos, "ramulator2", "ramulator.out")
+            # ramulator = Ramulator(modelinfos, "ramulator2", "ramulator.out")
+            ramulator = Ramulator(modelinfos, "courier_pim_ramulator_src", "ramulator.out")
             self.devices['Acc'] = PIM(config,
                                       self.scaling_factor,
                                       ramulator)
@@ -252,7 +253,7 @@ class System:
                     else:
                         if layer.name in ['ff1', 'ff2', 'ff3'] or (layer.type == LayerType.ACT and not act_on_hetero):
                             exec_time, energy = self.devices[
-                                'Acc'].get_time_and_energy(layer)
+                                'Acc'].get_time_and_energy(layer, batch_size)
                             print('PIM', layer.name, exec_time, energy)
                         else:
                             exec_time, energy = self.devices[

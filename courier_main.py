@@ -127,7 +127,7 @@ def main():
                         help="input sequence length")
     parser.add_argument("--lout",
                         type=int,
-                        default=128,
+                        default=2,
                         help="number of generated tokens")
     parser.add_argument(
         "--batch",

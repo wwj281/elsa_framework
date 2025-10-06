@@ -24,6 +24,13 @@ class Ramulator:
         self.num_hbm = num_hbm
         self.nhead = modelinfos['num_heads']
         self.dhead = modelinfos['dhead']
+        if modelinfos['moe']:
+            self.num_experts = modelinfos['num_experts']
+            self.token_experts = modelinfos['activated_experts']
+            self.shared_experts = modelinfos['shared_experts']
+            self.hidden_size = modelinfos['hdim']
+            self.moe_intermediate_size = math.ceil(modelinfos['hdim'] * modelinfos['ff_scale'])
+            self.shared_moe_intermediate_size = math.ceil(modelinfos['hdim'] * modelinfos['ff_scale'])
         self.fast_mode = fast_mode
 
     def make_yaml_file(self, yaml_file, file_name, power_constraint):
@@ -89,18 +96,22 @@ class Ramulator:
         self.df = df
         self.df.to_csv(self.output_log, index=False)
 
-    #def run_ramulator(self):
+    # def run_ramulator(self):
     def run_ramulator(self, pim_type: PIMType, l, num_ops_per_hbm, dbyte,
-                      yaml_file, file_name):
+                      yaml_file, file_name, batch_size):
         pim_type_name = pim_type.name.lower(
         ) if not pim_type == PIMType.BA else "bank"
         trace_file = os.path.join(self.ramulator_dir, file_name + '.trace')
 
-        trace_exc = os.path.join(
-            self.ramulator_dir,
-            "trace_gen/gen_trace_attacc_{}.py".format(pim_type_name))
-        trace_args = "--dhead {} --nhead {} --seqlen {} --dbyte {} --output {}".format(
-            self.dhead, num_ops_per_hbm, l, dbyte, trace_file)
+        # trace_exc = os.path.join(
+        #     self.ramulator_dir,
+        #     "trace_gen/gen_trace_attacc_{}.py".format(pim_type_name))
+        # trace_args = "--dhead {} --nhead {} --seqlen {} --dbyte {} --output {}".format(
+        #     self.dhead, num_ops_per_hbm, l, dbyte, trace_file)
+        trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_naive.py")
+        trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {}".format(
+            self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
+            self.shared_experts, batch_size, dbyte, trace_file)
 
         gen_trace_cmd = f"python {trace_exc} {trace_args}"
 
@@ -109,7 +120,7 @@ class Ramulator:
             os.system(gen_trace_cmd)
         except Exception as e:
             print(f"Error: {e}")
-
+        return 0
         # run ramulator
         ramulator_file = os.path.join(self.ramulator_dir, "ramulator2")
         run_ramulator_cmd = f"{ramulator_file} -f {yaml_file}"
@@ -154,7 +165,7 @@ class Ramulator:
         ]
         return out
 
-    def run(self, pim_type: PIMType, layer: Layer, power_constraint=True):
+    def run(self, pim_type: PIMType, layer: Layer, power_constraint=True, batch_size=1):
         if os.path.exists(self.ramulator_dir):
             l = layer.n
             dhead = self.dhead
@@ -173,7 +184,7 @@ class Ramulator:
             self.make_yaml_file(yaml_file, file_name, power_constraint)
 
             result = self.run_ramulator(pim_type, l, num_ops_per_hbm,
-                                        layer.dbyte, yaml_file, file_name)
+                                        layer.dbyte, yaml_file, file_name, batch_size)
 
             # remove trace
             rm_yaml_cmd = f"rm {yaml_file}"
@@ -184,6 +195,7 @@ class Ramulator:
 
             # post processing
             # 32: read granularity
+            return 0, [0, 0, 0, 0, 0]
             cycle, mac, sfm, mvgb, mvsb, wrgb = result
             si_io = wrgb * 32  # 256 bit
             tsv_io = (wrgb + mvsb + mvgb) * 32
@@ -202,9 +214,9 @@ class Ramulator:
             ## update log file
 
             log = [
-                l, num_ops_per_hbm, dhead, dbyte, pim_type.name,
-                power_constraint
-            ] + result
+                      l, num_ops_per_hbm, dhead, dbyte, pim_type.name,
+                      power_constraint
+                  ] + result
             self.update_log_file(log)
 
             ## si, tsv, giomux to bgmux, bgmux to column decoder, bank RD
@@ -217,9 +229,9 @@ class Ramulator:
         else:
             assert 0, "Need to install ramulator"
 
-    def output(self, pim_type: PIMType, layer: Layer, power_constraint=True):
+    def output(self, pim_type: PIMType, layer: Layer, power_constraint=True, batch_size=1):
         if self.df.empty:
-            self.run(pim_type, layer, power_constraint)
+            self.run(pim_type, layer, power_constraint, batch_size)
 
         num_ops_per_attacc = layer.numOp
         num_ops_per_hbm = math.ceil(num_ops_per_attacc / self.num_hbm)
@@ -234,10 +246,10 @@ class Ramulator:
         dbyte = layer.dbyte
         row = self.df[(self.df['L'] == l) & (self.df['nhead'] == num_ops_per_hbm) & \
                       (self.df['dbyte'] == dbyte) & (self.df['dhead'] == dhead) & \
-                      (self.df['power_constraint'] == power_constraint) &  \
+                      (self.df['power_constraint'] == power_constraint) & \
                       (self.df['pim_type'] == pim_type.name)]
         if row.empty:
-            return self.run(pim_type, layer, power_constraint)
+            return self.run(pim_type, layer, power_constraint, batch_size)
 
         else:
             cycle = int(row.iloc[0]['cycle'])
