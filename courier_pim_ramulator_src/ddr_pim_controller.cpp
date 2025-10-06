@@ -4,7 +4,7 @@
 namespace Ramulator {
 
 class HBM3PIMController final : public IDRAMController, public Implementation {
-  RAMULATOR_REGISTER_IMPLEMENTATION(IDRAMController, HBM3PIMController, "DDR-PIM", "A HBM3-PIM controller.");
+  RAMULATOR_REGISTER_IMPLEMENTATION(IDRAMController, HBM3PIMController, "DDR-PIM", "A DDR-PIM controller.");
   private:
     std::deque<Request> pending;          // A queue for read requests that are about to finish (callback after RL)
 
