@@ -1,12 +1,17 @@
 diff --git a/src/memory_system/impl/generic_DRAM_system.cpp b/src/memory_system/impl/generic_DRAM_system.cpp
-index a7cce15..343adcb 100644
+index a7cce15..9e8a437 100644
 --- a/src/memory_system/impl/generic_DRAM_system.cpp
 +++ b/src/memory_system/impl/generic_DRAM_system.cpp
-@@ -85 +85 @@ class GenericDRAMSystem final : public IMemorySystem, public Implementation {
+@@ -82,11 +82,18 @@ class GenericDRAMSystem final : public IMemorySystem, public Implementation {
+ 
+     float get_tCK() override {
+       return m_dram->m_timing_vals("tCK_ps") / 1000.0f;
 -    }
 +    };
-@@ -89,0 +90,8 @@ class GenericDRAMSystem final : public IMemorySystem, public Implementation {
-+
+ 
+     // const SpecDef& get_supported_requests() override {
+     //   return m_dram->m_requests;
+     // };
 +    bool is_pending() override {
 +      bool is_pending = false;
 +      for (auto controller : m_controllers) {
@@ -14,3 +19,6 @@ index a7cce15..343adcb 100644
 +      }
 +      return is_pending;
 +    };
+ };
+   
+ }   // namespace 
