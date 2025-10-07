@@ -15,7 +15,7 @@ cp -r courier_pim_ramulator_src/patches1 ramulator2/
 # Apply patches
 cd ramulator2;
 
-for f in ./patches/*.patch
+for f in ./patches1/*.patch
 do
     patch -p1 < $f
 done
