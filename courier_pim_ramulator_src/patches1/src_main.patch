@@ -1,0 +1,22 @@
+diff --git a/src/main.cpp b/src/main.cpp
+index f5412be..5b46477 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -102,13 +102,13 @@ int main(int argc, char* argv[]) {
+       frontend->tick();
+     }
+ 
+-    if (frontend->is_finished()) {
+-      break;
+-    }
+-
+     if ((i % tick_mult) % frontend_tick == 0) {
+       memory_system->tick();
+     }
++
++    if (frontend->is_finished() & !memory_system->is_pending()) {
++      break;
++    }
+   }
+ 
+   // Finalize the simulation. Recursively print all statistics from all components
