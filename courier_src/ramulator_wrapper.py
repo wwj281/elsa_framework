@@ -120,7 +120,6 @@ class Ramulator:
             os.system(gen_trace_cmd)
         except Exception as e:
             print(f"Error: {e}")
-        return 0
         # run ramulator
         ramulator_file = os.path.join(self.ramulator_dir, "ramulator2")
         run_ramulator_cmd = f"{ramulator_file} -f {yaml_file}"
@@ -195,7 +194,6 @@ class Ramulator:
 
             # post processing
             # 32: read granularity
-            return 0, [0, 0, 0, 0, 0]
             cycle, mac, sfm, mvgb, mvsb, wrgb = result
             si_io = wrgb * 32  # 256 bit
             tsv_io = (wrgb + mvsb + mvgb) * 32

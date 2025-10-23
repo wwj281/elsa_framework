@@ -43,8 +43,7 @@ class System:
     def set_accelerator(self, modelinfos, name: DeviceType, config):
         self.hetero_name = name
         if self.hetero_name == DeviceType.PIM:
-            # ramulator = Ramulator(modelinfos, "ramulator2", "ramulator.out")
-            ramulator = Ramulator(modelinfos, "courier_pim_ramulator_src", "ramulator.out")
+            ramulator = Ramulator(modelinfos, "ramulator2", "ramulator.out")
             self.devices['Acc'] = PIM(config,
                                       self.scaling_factor,
                                       ramulator)
@@ -228,7 +227,7 @@ class System:
                 # Get execution time and energy
                 exec_time, energy = self.devices['GPU'].get_time_and_energy(
                     layer)
-                print('GPU', layer.name, exec_time, energy)
+                # print('GPU', layer.name, exec_time, energy)
                 # Time to transfer KV matrices to memory (PCIe bandwidth)
                 if layer.type == LayerType.X2G:
                     exec_time += max(wrt_io_busy - time, 0)
@@ -249,16 +248,16 @@ class System:
                     ]:
                         exec_time, energy = self.devices[
                             'GPU'].get_time_and_energy(layer)
-                        print('GPU', layer.name, exec_time, energy)
+                        # print('GPU', layer.name, exec_time, energy)
                     else:
                         if layer.name in ['ff1', 'ff2', 'ff3'] or (layer.type == LayerType.ACT and not act_on_hetero):
                             exec_time, energy = self.devices[
                                 'Acc'].get_time_and_energy(layer, batch_size)
-                            print('PIM', layer.name, exec_time, energy)
+                            # print('PIM', layer.name, exec_time, energy)
                         else:
                             exec_time, energy = self.devices[
                                 'GPU'].get_time_and_energy(layer)
-                            print('GPU', layer.name, exec_time, energy)
+                            # print('GPU', layer.name, exec_time, energy)
                     layer.exec_time = exec_time
                     layer.energy = energy
                     g_flops += layer.get_flops() * self.devices['GPU'].num_xpu
