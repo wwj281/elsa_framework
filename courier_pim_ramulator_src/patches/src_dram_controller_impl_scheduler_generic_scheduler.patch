@@ -1,8 +1,11 @@
 diff --git a/src/dram_controller/impl/scheduler/generic_scheduler.cpp b/src/dram_controller/impl/scheduler/generic_scheduler.cpp
-index 2d0b389..2b779b7 100644
+index 2d0b389..c8c5c5c 100644
 --- a/src/dram_controller/impl/scheduler/generic_scheduler.cpp
 +++ b/src/dram_controller/impl/scheduler/generic_scheduler.cpp
-@@ -20,0 +21,11 @@ class FRFCFS : public IScheduler, public Implementation {
+@@ -18,6 +18,16 @@ class FRFCFS : public IScheduler, public Implementation {
+       m_dram = cast_parent<IDRAMController>()->m_dram;
+     };
+ 
 +    std::vector<AddrVec_t> rowhit_list;
 + 
 +    AddrVec_t get_bank_addr_vec (Request req) {
@@ -13,8 +16,13 @@ index 2d0b389..2b779b7 100644
 +      return bank_addr_vec;
 +    };
 +
-+
-@@ -28 +39,7 @@ class FRFCFS : public IScheduler, public Implementation {
+     ReqBuffer::iterator compare(ReqBuffer::iterator req1, ReqBuffer::iterator req2) override {
+       bool ready1 = m_dram->check_ready(req1->command, req1->addr_vec);
+       bool ready2 = m_dram->check_ready(req2->command, req2->addr_vec);
+@@ -25,7 +35,13 @@ class FRFCFS : public IScheduler, public Implementation {
+       if (ready1 ^ ready2) {
+         if (ready1) {
+           return req1;
 -        } else {
 +        }
 +        else {
@@ -23,9 +31,13 @@ index 2d0b389..2b779b7 100644
 +              return req1;
 +            }
 +          }
-@@ -40,0 +58 @@ class FRFCFS : public IScheduler, public Implementation {
-+
-@@ -49,0 +68,8 @@ class FRFCFS : public IScheduler, public Implementation {
+           return req2;
+         }
+       }
+@@ -47,6 +63,14 @@ class FRFCFS : public IScheduler, public Implementation {
+         req.command = m_dram->get_preq_command(req.final_command, req.addr_vec);
+       }
+ 
 +      // Store row buffer hit history
 +      rowhit_list.clear();
 +      for (auto& req : buffer) {
@@ -34,5 +46,6 @@ index 2d0b389..2b779b7 100644
 +        }
 +      }
 +
-@@ -50,0 +77 @@ class FRFCFS : public IScheduler, public Implementation {
-+
+       auto candidate = buffer.begin();
+       for (auto next = std::next(buffer.begin(), 1); next != buffer.end(); next++) {
+         candidate = compare(candidate, next);
