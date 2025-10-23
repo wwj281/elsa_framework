@@ -17,5 +17,5 @@ cd ramulator2;
 
 for f in ./patches/*.patch
 do
-    git apply --ignore-space-change --ignore-whitespace $f
+    patch --binary --ignore-whitespace -p1 < $f
 done
