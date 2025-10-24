@@ -106,7 +106,7 @@ class DDR4PIM : public IDRAM, public Implementation {
 
     inline static constexpr ImplDef m_requests = {
       // DRAM requests
-      "read", "write", "all-bank-refresh"
+      "read", "write", "all-bank-refresh",
       // PIM requests
       "pim-mac-all-bank", "pim-mac-same-bank", "pim-mac-per-bank",
       "pim-write-to-gemv-buffer", "pim-move-to-softmax-buffer", "pim-move-to-gemv-buffer",

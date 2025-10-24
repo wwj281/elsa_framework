@@ -2,6 +2,7 @@
 ## Generate models
 from .type import *
 import copy
+import math
 
 
 class Layer:
@@ -284,7 +285,7 @@ class Transformer:
             # 假设所有专家权重都在CPU Memory
             self.sum_decoder.append(
                 Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
-                      self.activated_experts * self.hdim, batch * int(self.hdim * self.ff_scale / self.tp), 1, 1))
+                      self.activated_experts * self.hdim, batch * int(math.ceil(self.hdim * self.ff_scale / self.tp)), 1, 1))
             # 模拟Gate函数
             self.sum_decoder.append(
                 Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
@@ -293,16 +294,16 @@ class Transformer:
             for _ in range(self.activated_experts + self.shared_experts):
                 self.sum_decoder.append(
                     Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
-                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
+                          math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim, 1))
                 self.sum_decoder.append(
                     Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
-                          self.ff_scale * int(self.hdim / self.tp), self.hdim, 1))
+                          math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim, 1))
                 self.sum_decoder.append(
                     Layer('sum', 'silu', LayerType.ACT, False, self.dtype, batch * lin,
-                          self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                          math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1, 1))
                 self.sum_decoder.append(
                     Layer('sum', 'ff3', LayerType.FC, True, self.dtype, batch * lin,
-                          self.hdim, self.ff_scale * int(self.hdim / self.tp), 1))
+                          self.hdim, math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1))
             self.sum_decoder.append(
                 Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
                       self.hdim, 1, 1))
@@ -353,23 +354,23 @@ class Transformer:
                 for _ in range(self.activated_experts + self.shared_experts):
                     decoder.append(
                         Layer('gen', 'ff1', LayerType.FC, True, self.dtype, batch,
-                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim,
                               1))
                     decoder.append(
                         Layer('gen', 'ff2', LayerType.FC, True, self.dtype, batch,
-                              self.ff_scale * int(self.hdim / self.tp), self.hdim,
+                              math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim,
                               1))
                     if act_on_hetero:
                         decoder.append(
                             Layer('gen', 'comm_x2g', LayerType.X2G, False, self.dtype,
-                                  batch, self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                                  batch, math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1, 1))
                     decoder.append(
                         Layer('gen', 'silu', LayerType.ACT, False, self.dtype, batch,
-                              self.ff_scale * int(self.hdim / self.tp), 1, 1))
+                              math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1, 1))
                     decoder.append(
                         Layer('gen', 'ff3', LayerType.FC, True, self.dtype,
                               batch, self.hdim,
-                              self.ff_scale * int(self.hdim / self.tp), 1))
+                              math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1))
                 decoder.append(
                     Layer('gen', 'comm_g2g', LayerType.G2G, False, self.dtype, batch,
                           self.hdim, 1, 1))
