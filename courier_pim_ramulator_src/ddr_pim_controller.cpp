@@ -394,7 +394,7 @@ class HBM3PIMController final : public IDRAMController, public Implementation {
       else if (command == m_dram->m_commands("RD"))    return 1; // Col command
       else if (command == m_dram->m_commands("WR"))    return 1; // Col command
       else if (command == m_dram->m_commands("REFab")) return 0; // Row command
-      else if (command == m_dram->m_commands("REFsb")) return 0; // Row command
+      //else if (command == m_dram->m_commands("REFsb")) return 0; // Row command
       else if (command == m_dram->m_commands("ACTAB")) return 0; // Row command
       else if (command == m_dram->m_commands("ACTSB")) return 0; // Row command
       else if (command == m_dram->m_commands("ACTPB")) return 0; // Row command

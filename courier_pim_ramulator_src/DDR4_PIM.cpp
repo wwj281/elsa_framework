@@ -14,8 +14,8 @@ class DDR4PIM : public IDRAM, public Implementation {
       // 1/2/3/4R means 1/2/3/4 ranks for 4/8/12/16-Hi stack
       // We refer to JEDEC Standard (JESD238A).
       //   name          density  DQ  Ch Dimm Ra Bg  Ba   Ro     Co
-      {"DDR4_32Gb_x16", {32<<10,  16, {1, 1, 2, 8, 4, 1<<14, 1<<11}}},
-      {"DDR4_64Gb_x16", {64<<10,  16, {1, 2, 2, 8, 4, 1<<14, 1<<11}}},
+      {"DDR4_256Gb_x16", {256<<10,  16, {1, 1, 2, 8, 4, 1<<14, 1<<11}}},
+      {"DDR4_512Gb_x16", {512<<10,  16, {1, 2, 2, 8, 4, 1<<14, 1<<11}}},
     };
 
     inline static const std::map<std::string, std::vector<int>> timing_presets = {
@@ -247,7 +247,9 @@ class DDR4PIM : public IDRAM, public Implementation {
       }
 
       // Sanity check: is the calculated channel density the same as the provided one?
-      size_t _density = size_t(m_organization.count[m_levels["bankgroup"]]) *
+      size_t _density = size_t(m_organization.count[m_levels["dimm"]]) *
+                        size_t(m_organization.count[m_levels["rank"]]) *
+                        size_t(m_organization.count[m_levels["bankgroup"]]) *
                         size_t(m_organization.count[m_levels["bank"]]) *
                         size_t(m_organization.count[m_levels["row"]]) *
                         size_t(m_organization.count[m_levels["column"]]) *
@@ -421,7 +423,7 @@ class DDR4PIM : public IDRAM, public Implementation {
           {.level = "bank", .preceding = {"ACTSB"}, .following = {"ACTSB"}, .latency = V("nRC")},  
           {.level = "bank", .preceding = {"ACTSB"}, .following = {"MACSB"}, .latency = V("nRCD")},
           {.level = "bank", .preceding = {"ACTSB"}, .following = {"PRESB"}, .latency = V("nRAS")},  
-          {.level = "bank", .preceding = {"MACSB"},  .following = {"PRESB"}, .latency = V("nRTPL")},  
+          {.level = "bank", .preceding = {"MACSB"},  .following = {"PRESB"}, .latency = V("nRTP")},  
           {.level = "bank", .preceding = {"PRESB"}, .following = {"ACTSB"}, .latency = V("nRP")},     
           /// RAS <-> REF
           {.level = "rank", .preceding = {"ACTSB"}, .following = {"REFab"}, .latency = V("nRC")},
@@ -439,11 +441,11 @@ class DDR4PIM : public IDRAM, public Implementation {
           {.level = "bank", .preceding = {"ACTPB"}, .following = {"ACTPB"}, .latency = V("nRC")},  
           {.level = "bank", .preceding = {"ACTPB"}, .following = {"MACPB"}, .latency = V("nRCD")},  
           {.level = "bank", .preceding = {"ACTPB"}, .following = {"PREPB"}, .latency = V("nRAS")},  
-          {.level = "bank", .preceding = {"MACPB"},  .following = {"PREPB"}, .latency = V("nRTPL")},  
+          {.level = "bank", .preceding = {"MACPB"},  .following = {"PREPB"}, .latency = V("nRTP")},  
           {.level = "bank", .preceding = {"PREPB"}, .following = {"ACTPB"}, .latency = V("nRP")},  
           /// RAS <-> REF
           {.level = "rank", .preceding = {"ACTPB"}, .following = {"REFab"}, .latency = V("nRC")},
-          {.level = "pseudochannel", .preceding = {"PREPB"}, .following = {"REFab"}, .latency = V("nRP")},                       
+          {.level = "rank", .preceding = {"PREPB"}, .following = {"REFab"}, .latency = V("nRP")},                       
           {.level = "rank", .preceding = {"REFab"}, .following = {"ACTPB"}, .latency = V("nRFC")},          
 
 
