@@ -114,7 +114,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
         for ba_idx in range(n_bank):
             for col_idx in range(math.ceil(hidden_size / n_bank / n_chip / n_mac)):
                 for dimm_idx in range(math.ceil(valid_dimm)):
-                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + ba_idx * DIMM_GS['ba'] + col_idx
+                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + ba_idx * DIMM_GS['ba'] + col_idx * DIMM_GS['col']
                     hex_addr = hex(addr)[2:]
                     total_cmd[itr].append("PIM_WR_GB 0x{0:0>8}".format(hex_addr))
 
