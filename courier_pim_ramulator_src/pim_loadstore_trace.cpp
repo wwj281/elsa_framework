@@ -103,31 +103,31 @@ class PIMLoadStoreTrace : public IFrontEnd, public Implementation {
         } else if (tokens[0] == "ST") {
           req_type = 1;
         } else if (tokens[0] == "PIM_MAC_AB") {
-          req_type = 4;
+          req_type = 3;
         } else if (tokens[0] == "PIM_MAC_SB") {
-          req_type = 5;
+          req_type = 4;
         } else if (tokens[0] == "PIM_MAC_PB") {
-          req_type = 6;
+          req_type = 5;
         } else if (tokens[0] == "PIM_WR_GB") {
-          req_type = 7;
+          req_type = 6;
         } else if (tokens[0] == "PIM_MV_SB") {
-          req_type = 8;
+          req_type = 7;
         } else if (tokens[0] == "PIM_MV_GB") {
-          req_type = 9;
+          req_type = 8;
         } else if (tokens[0] == "PIM_SFM") {
-          req_type = 10;
+          req_type = 9;
         } else if (tokens[0] == "PIM_SET_MODEL") {
-          req_type = 11;
+          req_type = 10;
         } else if (tokens[0] == "PIM_SET_HEAD") {
-          req_type = 12;
+          req_type = 11;
         } else if (tokens[0] == "PIM_ACC") {
-          req_type = 13;
+          req_type = 12;
         } else if (tokens[0] == "PIM_AF") {
-          req_type = 14;
+          req_type = 13;
         } else if (tokens[0] == "PIM_EWMUL") {
-          req_type = 15;
+          req_type = 14;
         } else if (tokens[0] == "PIM_BARRIER") {
-          req_type = 16;
+          req_type = 15;
         } else {
           throw ConfigurationError("Trace {} format invalid!", file_path_str);
         }

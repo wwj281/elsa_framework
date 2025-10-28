@@ -12,19 +12,19 @@ index 2c9d406..fa657f8 100644
 +      Write = 1,
 +
 +      // PIM requests
-+      PIM_MAC_AB = 4,
-+      PIM_MAC_SB = 5,
-+      PIM_MAC_PB = 6,
-+      PIM_WR_GB = 7,
-+      PIM_MV_SB = 8,
-+      PIM_MV_GB = 9,
-+      PIM_SFM = 10,
-+      PIM_SET_MODEL = 11,
-+      PIM_SET_HEAD = 12,
-+      PIM_ACC = 13,
-+      PIM_AF = 14,
-+      PIM_EWMUL = 15,
-+      PIM_BARRIER = 16
++      PIM_MAC_AB = 3,
++      PIM_MAC_SB = 4,
++      PIM_MAC_PB = 5,
++      PIM_WR_GB = 6,
++      PIM_MV_SB = 7,
++      PIM_MV_GB = 8,
++      PIM_SFM = 9,
++      PIM_SET_MODEL = 10,
++      PIM_SET_HEAD = 11,
++      PIM_ACC = 12,
++      PIM_AF = 13,
++      PIM_EWMUL = 14,
++      PIM_BARRIER = 15
      };
    };
  
