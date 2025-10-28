@@ -56,9 +56,9 @@ class DDR4PIM : public IDRAM, public Implementation {
       m_commands, m_levels, {
         // DRAM commadns
         {"ACT",   "row"},
-        {"PRE",   "bank"},   {"PREA",   "rank"}, {"PRESB", "bank"}, {"PREPB", "bank"},
+        {"PRE",   "bank"},   {"PREA",   "dimm"}, {"PRESB", "bank"}, {"PREPB", "bank"},
         {"RD",    "column"}, {"WR",     "column"}, {"RDA",   "column"}, {"WRA",   "column"},
-        {"REFab", "rank"},  
+        {"REFab", "dimm"},  
         // PIM commadns
         {"ACTAB", "row"},     {"ACTSB", "row"},     {"ACTPB", "row"},
         {"MACAB",  "column"}, {"MACSB",  "column"}, {"MACPB", "column"}, // ACTPB and MACPB are broadcasted to pCHs in a channel
@@ -110,8 +110,8 @@ class DDR4PIM : public IDRAM, public Implementation {
       // PIM requests
       "pim-mac-all-bank", "pim-mac-same-bank", "pim-mac-per-bank",
       "pim-write-to-gemv-buffer", "pim-move-to-softmax-buffer", "pim-move-to-gemv-buffer",
-      "pim-softmax", "pim-set-model", "pim-set-head", "pim-barrier",
-      "pim-accumulate", "pim-activation-function", "pim-elementwise-multiply"
+      "pim-softmax", "pim-set-model", "pim-set-head",
+      "pim-accumulate", "pim-activation-function", "pim-elementwise-multiply", "pim-barrier"
     };
 
     inline static const ImplLUT m_request_translations = LUT (
@@ -121,8 +121,8 @@ class DDR4PIM : public IDRAM, public Implementation {
         // PIM requests
         {"pim-mac-all-bank", "MACAB"}, {"pim-mac-same-bank", "MACSB"}, {"pim-mac-per-bank", "MACPB"},
         {"pim-write-to-gemv-buffer", "WRGB"}, {"pim-move-to-softmax-buffer", "MVSB"}, {"pim-move-to-gemv-buffer", "MVGB"},
-        {"pim-softmax", "SFM"}, {"pim-set-model", "SETM"}, {"pim-set-head", "SETH"}, {"pim-barrier", "BARRIER"},
-        {"pim-accumulate", "ACC"}, {"pim-activation-function", "AF"}, {"pim-elementwise-multiply", "EWMUL"}
+        {"pim-softmax", "SFM"}, {"pim-set-model", "SETM"}, {"pim-set-head", "SETH"},
+        {"pim-accumulate", "ACC"}, {"pim-activation-function", "AF"}, {"pim-elementwise-multiply", "EWMUL"}, {"pim-barrier", "BARRIER"}
       }
     );
 

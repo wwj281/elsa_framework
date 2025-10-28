@@ -49,19 +49,19 @@ class PIMLoadStoreTrace : public IFrontEnd, public Implementation {
         switch (t.req_type) {
           case  0: request_sent = m_memory_system->send({t.addr, Request::Type::Read}); break;
           case  1: request_sent = m_memory_system->send({t.addr, Request::Type::Write}); break;
-          case  4: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MAC_AB}); break;
-          case  5: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MAC_SB}); break;
-          case  6: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MAC_PB}); break;
-          case  7: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_WR_GB}); break;
-          case  8: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MV_SB}); break;
-          case  9: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MV_GB}); break;
-          case 10: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SFM}); break;
-          case 11: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SET_MODEL}); break;
-          case 12: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SET_HEAD}); break;
-          case 13: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_ACC}); break;
-          case 14: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_AF}); break;
-          case 15: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_EWMUL}); break;
-          case 16: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_BARRIER}); break;
+          case  3: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MAC_AB}); break;
+          case  4: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MAC_SB}); break;
+          case  5: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MAC_PB}); break;
+          case  6: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_WR_GB}); break;
+          case  7: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MV_SB}); break;
+          case  8: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_MV_GB}); break;
+          case  9: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SFM}); break;
+          case 10: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SET_MODEL}); break;
+          case 11: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_SET_HEAD}); break;
+          case 12: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_ACC}); break;
+          case 13: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_AF}); break;
+          case 14: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_EWMUL}); break;
+          case 15: request_sent = m_memory_system->send({t.addr, Request::Type::PIM_BARRIER}); break;
           default:;
         }
         if (request_sent) {

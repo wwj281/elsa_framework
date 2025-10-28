@@ -1,0 +1,13 @@
+diff --git a/src/dram_controller/impl/refresh/all_bank_refresh.cpp b/src/dram_controller/impl/refresh/all_bank_refresh.cpp
+index cf27477..4c02c2e 100644
+--- a/src/dram_controller/impl/refresh/all_bank_refresh.cpp
++++ b/src/dram_controller/impl/refresh/all_bank_refresh.cpp
+@@ -29,7 +29,7 @@ class AllBankRefresh : public IRefreshManager, public Implementation {
+       m_dram = m_ctrl->m_dram;
+ 
+       m_dram_org_levels = m_dram->m_levels.size();
+-      m_num_ranks = m_dram->get_level_size("rank");
++      m_num_ranks = m_dram->get_level_size("dimm");
+ 
+       m_nrefi = m_dram->m_timing_vals("nREFI");
+       m_ref_req_id = m_dram->m_requests("all-bank-refresh");
