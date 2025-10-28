@@ -52,7 +52,7 @@ class Ramulator:
         line += "  DRAM:\n"
         line += "    impl: DDR4-PIM\n"
         line += "    org:\n"
-        line += "      preset: DDR4_64Gb_x16\n"
+        line += "      preset: DDR4_512Gb_x16\n"
         line += "      channel: 8\n"
         line += "    timing:\n"
         if power_constraint:
