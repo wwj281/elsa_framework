@@ -14,8 +14,8 @@ class DDR4PIM : public IDRAM, public Implementation {
       // 1/2/3/4R means 1/2/3/4 ranks for 4/8/12/16-Hi stack
       // We refer to JEDEC Standard (JESD238A).
       //   name          density  DQ  Ch Dimm Ra Bg  Ba   Ro     Co
-      {"DDR4_256Gb_x16", {256<<10,  16, {1, 1, 2, 8, 4, 1<<14, 1<<11}}},
-      {"DDR4_512Gb_x16", {512<<10,  16, {1, 2, 2, 8, 4, 1<<14, 1<<11}}},
+      {"DDR4_256Gb_x16", {256<<10,  16, {1, 1, 2, 8, 4, 1<<14, 1<<8}}},
+      {"DDR4_512Gb_x16", {512<<10,  16, {1, 2, 2, 8, 4, 1<<14, 1<<8}}},
     };
 
     inline static const std::map<std::string, std::vector<int>> timing_presets = {
@@ -253,7 +253,7 @@ class DDR4PIM : public IDRAM, public Implementation {
                         size_t(m_organization.count[m_levels["bank"]]) *
                         size_t(m_organization.count[m_levels["row"]]) *
                         size_t(m_organization.count[m_levels["column"]]) *
-                        size_t(m_organization.dq) *
+                        m_channel_width *
                         size_t(m_internal_prefetch_size);
       _density >>= 20;
       if (m_organization.density != _density) {

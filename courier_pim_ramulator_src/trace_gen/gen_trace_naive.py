@@ -12,7 +12,7 @@ hidden_size = 2048
 moe_intermediate_size = 1408
 shared_moe_intermediate_size = 1408
 batch_size = 1
-data_size = 16  # FP 16
+data_size = 2  # FP 16
 
 n_channel = 16
 n_dimm = 2
@@ -27,7 +27,7 @@ n_mac = 8  # mac的数量就是一个物理bank一次能处理的操作数数量
 
 # Granularity size
 DIMM_GS = {}
-DIMM_GS['col'] = n_chip * prefetch_size
+DIMM_GS['col'] = n_chip * data_size * prefetch_size
 DIMM_GS['row'] = n_col * DIMM_GS['col']
 DIMM_GS['ba'] = n_row * DIMM_GS['row']  # 这里的bank是指逻辑bank，即多个chip中相同idx的所有bank
 DIMM_GS['bg'] = n_bank * DIMM_GS['ba']
