@@ -278,7 +278,6 @@ def main():
     n_expert_per_channel = (token_experts + shared_experts) * batch_size // n_channel
 
     data_size = args.dbyte
-    n_mac = int(DIMM_GS['col'] / data_size)
 
     print("------   Make a trace of naive courier mapping  ------")
 
