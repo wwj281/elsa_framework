@@ -14,7 +14,7 @@ shared_moe_intermediate_size = 1408
 batch_size = 1
 data_size = 2  # FP 16
 
-n_channel = 16
+n_channel = 8
 n_dimm = 2
 n_rank = 2
 n_bg = 8
@@ -39,7 +39,7 @@ DIMM_GS['courier'] = n_channel * DIMM_GS['ch']
 ## To do!!! 一共512GB的内存空间，单根DIMM 32GB
 ## --------------------------------------  DIMM memory space -----------------------------------------##
 ## ------|  legacy CH  |  dimm  |  rank  |   BG   |  BA  |  row index  |  column index  |  access granularity  |------ ##
-## bits  |     4       |   1    |   1    |    3   |   2  |      14     |       8        |           7          |       ##
+## bits  |     3       |   1    |   1    |    3   |   2  |      14     |       8        |           7          |       ##
 
 ## ----------------------------  Commands -------------------------------##
 ## ACT: Activate all banks in parallel
@@ -219,7 +219,7 @@ def run_attention(n_expert_per_channel, trace_file_name):
     ##-- Generate Commands --##
     # num_itr = math.ceil(n_expert_per_channel / (n_dimm))
     # 这里以处理专家数最多的DIMM作为衡量延迟的标准
-    num_itr = (token_experts + shared_experts) * batch_size
+    num_itr = math.ceil(n_expert_per_channel / n_dimm)
     for itr in range(num_itr):
         remainder = 0
         if n_expert_per_channel / ((itr + 1) * n_dimm) < 1:
@@ -248,7 +248,7 @@ def main():
 
     parser.add_argument("-ne", "--num_experts", type=int, default=64,
                         help="Number of routed experts, default = 64")
-    parser.add_argument("-te", "--token_experts", type=int, default=64,
+    parser.add_argument("-te", "--token_experts", type=int, default=6,
                         help="Number of activated experts per token, default = 6")
     parser.add_argument("-se", "--shared_experts", type=int, default=2,
                         help="Number of shared experts per token, default = 2")
@@ -275,7 +275,7 @@ def main():
     shared_moe_intermediate_size = args.shared_moe_intermediate_size
     batch_size = args.batch_size
     # 注意这里是激活的专家加上共享专家
-    n_expert_per_channel = (token_experts + shared_experts) * batch_size // n_channel
+    n_expert_per_channel = math.ceil((token_experts + shared_experts) * batch_size / n_channel)
 
     data_size = args.dbyte
 
