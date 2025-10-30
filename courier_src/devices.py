@@ -352,7 +352,7 @@ class PIM:
         elif layer.type == LayerType.FC or layer.type == LayerType.ACT:
             time, traffic = self.ramulator.output(
                     self.pim_type, layer, self.power_constraint, batch_size)
-            return 0, [0, 0, 0, 0, 0, 0]
+            return time, [0, 0, 0, 0, 0, 0]
 
         elif layer.type == LayerType.SOFTMAX:
             # Execution time

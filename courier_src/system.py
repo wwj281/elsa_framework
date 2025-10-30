@@ -216,6 +216,7 @@ class System:
 
         perf_all = []
         energy_all = []
+        ramulator_call_count = 0
         for itr, bs in enumerate(target_bs):
             time = 0
             wrt_io_busy = 0
@@ -241,6 +242,7 @@ class System:
 
             ## Generation stage
             for gen_stage, decoder_block in enumerate(g_decoder):
+                ramulator_call_count = 0
                 for l_idx, layer in enumerate(decoder_block):
                     # Get execution time and energy
                     if layer.type in [
@@ -251,8 +253,12 @@ class System:
                         # print('GPU', layer.name, exec_time, energy)
                     else:
                         if layer.name in ['ff1', 'ff2', 'ff3'] or (layer.type == LayerType.ACT and not act_on_hetero):
-                            exec_time, energy = self.devices[
+                            if layer.name == 'ff1' and ramulator_call_count == 0:
+                                exec_time, energy = self.devices[
                                 'Acc'].get_time_and_energy(layer, batch_size)
+                                ramulator_call_count += 1
+                            else:
+                                exec_time, energy = 0, [0, 0, 0, 0, 0, 0]
                             # print('PIM', layer.name, exec_time, energy)
                         else:
                             exec_time, energy = self.devices[
@@ -339,6 +345,7 @@ class System:
 
             for gen_stage, decoder_block in enumerate(g_decoder):
                 for l_idx, layer in enumerate(decoder_block):
+                    print('layer:', layer.type, 'exec_time:', layer.exec_time)
                     exec_time = layer.exec_time
                     g_perf['all'] += exec_time
                     if layer.type == LayerType.FC:

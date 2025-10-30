@@ -20,7 +20,7 @@ class Ramulator:
         self.output_log = output_log
         if os.path.exists(output_log):
             self.df = pd.read_csv(output_log)
-        self.tCK = 0.769  # ns
+        self.tCK = 0.625  # ns
         self.num_hbm = num_hbm
         self.nhead = modelinfos['num_heads']
         self.dhead = modelinfos['dhead']
@@ -111,7 +111,7 @@ class Ramulator:
         trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_naive.py")
         trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {}".format(
             self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
-            self.shared_experts, batch_size, dbyte, trace_file)
+            self.moe_intermediate_size, batch_size, dbyte, trace_file)
 
         gen_trace_cmd = f"python {trace_exc} {trace_args}"
 
@@ -166,7 +166,10 @@ class Ramulator:
 
     def run(self, pim_type: PIMType, layer: Layer, power_constraint=True, batch_size=1):
         if os.path.exists(self.ramulator_dir):
-            l = layer.n
+            if layer.type == LayerType.FC:
+                l = layer.m
+            else:
+                l = layer.n
             dhead = self.dhead
             dbyte = layer.dbyte
             num_ops_per_attacc = layer.numOp
@@ -229,6 +232,7 @@ class Ramulator:
 
     def output(self, pim_type: PIMType, layer: Layer, power_constraint=True, batch_size=1):
         if self.df.empty:
+            print('self.run 1')
             self.run(pim_type, layer, power_constraint, batch_size)
 
         num_ops_per_attacc = layer.numOp
@@ -247,6 +251,7 @@ class Ramulator:
                       (self.df['power_constraint'] == power_constraint) & \
                       (self.df['pim_type'] == pim_type.name)]
         if row.empty:
+            print('self.run 2')
             return self.run(pim_type, layer, power_constraint, batch_size)
 
         else:
