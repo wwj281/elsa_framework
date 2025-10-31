@@ -22,12 +22,12 @@ n_bank = 4
 n_row = pow(2, 14)
 n_col = pow(2, 8)
 n_chip = 8
-prefetch_size = 16  # byte
+prefetch_size = 8 
 n_mac = 8  # mac的数量就是一个物理bank一次能处理的操作数数量，在16bit DQ下，也等于BL
 
 # Granularity size
 DIMM_GS = {}
-DIMM_GS['col'] = n_chip * data_size * prefetch_size
+DIMM_GS['col'] = n_chip * data_size * prefetch_size 
 DIMM_GS['row'] = n_col * DIMM_GS['col']
 DIMM_GS['ba'] = n_row * DIMM_GS['row']  # 这里的bank是指逻辑bank，即多个chip中相同idx的所有bank
 DIMM_GS['bg'] = n_bank * DIMM_GS['ba']
@@ -128,7 +128,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
                     hex_addr = hex(addr)[2:]
                     total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
                     # 假设register能暂存16*col个结果，accumulator一次可以合并16*col个中间结果
-                    if idx % 16 == 15:
+                    if idx % 16 == 15 or k_idx == (math.ceil(hidden_size / n_bank / n_chip / n_mac) - 1):
                         total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
                         for acc_idx in range((n_rank * n_bg - 1) * n_bank):
                             acc_addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + acc_idx * DIMM_GS['col']
@@ -136,7 +136,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
                             total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
         # gate mac计算完后，以DIMM为单位合并中间结果，然后计算激活函数
-        for k_idx in range(math.ceil(hidden_size / n_bank / n_chip / n_mac)):
+        for k_idx in range(math.ceil(intermediate_size / n_bank / n_chip / n_mac)):
             for dimm_idx in range(math.ceil(valid_dimm)):
                 addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + k_idx * DIMM_GS['col']
                 hex_addr = hex(addr)[2:]
@@ -152,15 +152,15 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
                     hex_addr = hex(addr)[2:]
                     total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
                     # 假设register能暂存16*col个结果
-                    if idx % 16 == 15:
+                    if idx % 16 == 15 or k_idx == (math.ceil(hidden_size / n_bank / n_chip / n_mac) - 1):
                         total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
                         for acc_idx in range((n_rank * n_bg - 1) * n_bank):
                             acc_addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + acc_idx * DIMM_GS['col']
                             hex_addr = hex(acc_addr)[2:]
                             total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
-    def ewmul(addr_offset):
-        for k_idx in range(math.ceil(hidden_size / n_bank / n_chip / n_mac)):
+    def ewmul(addr_offset, intermediate_size):
+        for k_idx in range(math.ceil(intermediate_size / n_bank / n_chip / n_mac)):
             for dimm_idx in range(math.ceil(valid_dimm)):
                 addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + k_idx * DIMM_GS['col']
                 hex_addr = hex(addr)[2:]
@@ -175,7 +175,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
                     hex_addr = hex(addr)[2:]
                     total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
                     # 假设每个bank的register能暂存16*col个结果，accumulator一次可以合并16*col个中间结果
-                    if idx % 16 == 15:
+                    if idx % 16 == 15 or k_idx == (math.ceil(intermediate_size / (n_rank * n_bg)) - 1):
                         total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
                         for acc_idx in range((n_bank - 1) * (n_rank * n_bg)):
                             acc_addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + acc_idx * DIMM_GS['col']
@@ -199,7 +199,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, valid_dimm=n_dimm):
 
     barrier()
 
-    ewmul(up_addr)
+    ewmul(up_addr, moe_intermediate_size)
 
     barrier()
 
