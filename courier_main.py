@@ -155,6 +155,8 @@ def main():
         gpu_device = GPUType.H100
     elif args.gpu == 'A100a':
         gpu_device = GPUType.A100a
+    elif args.gpu == 'RTX4090':
+        gpu_device = GPUType.RTX4090
     else:
         assert 0
 
