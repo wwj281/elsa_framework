@@ -49,7 +49,8 @@ def run(system: System,
         parallel=False,
         output_file=None,
         attn_on_hetero=False,
-        act_on_hetero=False):
+        act_on_hetero=False,
+        moe_on_hetero=True):
     print("---Run simple mode Batch {} Lin {} Lout {} pipe {} parall {}---".
           format(batch, lin, lout, pipe, parallel))
     assert system.model_set, "Need to SetModel"
@@ -62,7 +63,8 @@ def run(system: System,
                     parallel_ff=parallel,
                     power_constraint=power_constraint,
                     attn_on_hetero=attn_on_hetero,
-                    act_on_hetero=act_on_hetero)
+                    act_on_hetero=act_on_hetero,
+                    moe_on_hetero=moe_on_hetero)
     if output_file is not None:
         write_csv(output_file, perfs)
 
@@ -206,7 +208,8 @@ def main():
         output_file=output_path,
         power_constraint=args.powerlimit,
         attn_on_hetero=args.act_on_hetero,
-        act_on_hetero=args.act_on_hetero)
+        act_on_hetero=args.act_on_hetero,
+        moe_on_hetero=args.system not in ['dgx'])
 
 
 if __name__ == "__main__":

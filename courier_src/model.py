@@ -101,7 +101,7 @@ class Transformer:
         self.dhead = int(self.hdim / self.num_heads)
         self.tp = tensor_parallel
 
-    def build(self, batch, lin, lout, attn_on_hetero=False, act_on_hetero=False):
+    def build(self, batch, lin, lout, attn_on_hetero=False, act_on_hetero=False, moe_on_hetero=True):
         self.sum_decoder = []
         self.gen_decoder = []
         if not self.moe:
@@ -285,7 +285,7 @@ class Transformer:
             # 假设所有专家权重都在CPU Memory
             self.sum_decoder.append(
                 Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
-                      self.activated_experts * self.hdim, batch * int(math.ceil(self.hdim * self.ff_scale / self.tp)), 1, 1))
+                      self.num_experts * self.hdim, 3 * batch * int(math.ceil(self.hdim * self.ff_scale / self.tp)), 1, 1))
             # 模拟Gate函数
             self.sum_decoder.append(
                 Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
@@ -347,6 +347,10 @@ class Transformer:
                 decoder.append(
                     Layer('gen', 'norm1', LayerType.NORM, False, self.dtype, batch,
                           self.hdim, 1, 1))
+                if not moe_on_hetero:
+                    decoder.append(
+                        Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
+                              self.activated_experts * self.hdim, 3 * batch * int(math.ceil(self.hdim * self.ff_scale / self.tp)), 1, 1))
                 # 模拟Gate函数
                 decoder.append(
                     Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,

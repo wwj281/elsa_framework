@@ -70,7 +70,8 @@ class System:
                  power_constraint=False,
                  num_reqs=0,
                  attn_on_hetero=False,
-                 act_on_hetero=False):
+                 act_on_hetero=False,
+                 moe_on_hetero=True):
 
         def add_infos(name, infos, time, energy, bound):
             new_name = name
@@ -190,7 +191,7 @@ class System:
                         layer.exec_time *= ratio
 
         assert self.model_set, "Need to set_model"
-        self.model.build(batch_size, lin, lout, attn_on_hetero=attn_on_hetero, act_on_hetero=act_on_hetero)
+        self.model.build(batch_size, lin, lout, attn_on_hetero=attn_on_hetero, act_on_hetero=act_on_hetero, moe_on_hetero=moe_on_hetero)
         second_batch_size = num_reqs % batch_size
         num_batches = 1
         target_bs = [batch_size]
@@ -244,26 +245,22 @@ class System:
             for gen_stage, decoder_block in enumerate(g_decoder):
                 ramulator_call_count = 0
                 for l_idx, layer in enumerate(decoder_block):
-                    # Get execution time and energy
-                    if layer.type in [
-                        LayerType.MATMUL, LayerType.SOFTMAX, LayerType.X2G
-                    ]:
-                        exec_time, energy = self.devices[
-                            'GPU'].get_time_and_energy(layer)
-                        # print('GPU', layer.name, exec_time, energy)
-                    else:
-                        if layer.name in ['ff1', 'ff2', 'ff3'] or (layer.type == LayerType.ACT and not act_on_hetero):
-                            if layer.name == 'ff1' and ramulator_call_count == 0:
-                                exec_time, energy = self.devices[
-                                'Acc'].get_time_and_energy(layer, batch_size)
-                                ramulator_call_count += 1
-                            else:
-                                exec_time, energy = 0, [0, 0, 0, 0, 0, 0]
-                            # print('PIM', layer.name, exec_time, energy)
+                    if self.hetero_name in [DeviceType.CPU, DeviceType.PIM]:
+                        if layer.name not in ['ff1', 'ff2', 'ff3'] and layer.type not in [LayerType.ACT]:
+                            exec_time, energy = self.devices['GPU'].get_time_and_energy(layer)
                         else:
-                            exec_time, energy = self.devices[
-                                'GPU'].get_time_and_energy(layer)
-                            # print('GPU', layer.name, exec_time, energy)
+                            if self.hetero_name in [DeviceType.CPU]:
+                                exec_time, energy = self.devices[
+                                    'Acc'].get_time_and_energy(layer, batch_size)
+                            else:
+                                if layer.name == 'ff1' and ramulator_call_count == 0:
+                                    exec_time, energy = self.devices[
+                                    'Acc'].get_time_and_energy(layer, batch_size)
+                                    ramulator_call_count += 1
+                                else:
+                                    exec_time, energy = 0, [0, 0, 0, 0, 0, 0]
+                    else:
+                        exec_time, energy = self.devices['GPU'].get_time_and_energy(layer)
                     layer.exec_time = exec_time
                     layer.energy = energy
                     g_flops += layer.get_flops() * self.devices['GPU'].num_xpu
@@ -307,6 +304,7 @@ class System:
                 'norm': 0
             }
             for layer in s_decoder:
+                print('Prefill layer:', layer.type, 'exec_time:', layer.exec_time)
                 exec_time = layer.exec_time
                 if layer.type == LayerType.FC:
                     s_perf['all'] += exec_time
@@ -314,7 +312,7 @@ class System:
                 elif layer.type == LayerType.MATMUL:
                     s_perf['all'] += exec_time
                     s_perf['matmul'] += exec_time
-                elif layer.type == LayerType.G2G:
+                elif layer.type in [LayerType.G2G, LayerType.X2G]:
                     s_perf['all'] += exec_time
                     s_perf['comm'] += exec_time
                 elif layer.type == LayerType.SOFTMAX:
@@ -345,7 +343,7 @@ class System:
 
             for gen_stage, decoder_block in enumerate(g_decoder):
                 for l_idx, layer in enumerate(decoder_block):
-                    print('layer:', layer.type, 'exec_time:', layer.exec_time)
+                    print('Decode layer:', layer.type, 'exec_time:', layer.exec_time)
                     exec_time = layer.exec_time
                     g_perf['all'] += exec_time
                     if layer.type == LayerType.FC:
