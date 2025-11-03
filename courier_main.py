@@ -90,7 +90,7 @@ def main():
     parser.add_argument("--ngpu",
                         type=int,
                         default=1,
-                        help="number of GPUs in DGX system. default=8")
+                        help="number of GPUs in DGX system. default=1")
     parser.add_argument("--gmemcap",
                         type=int,
                         default=80,
