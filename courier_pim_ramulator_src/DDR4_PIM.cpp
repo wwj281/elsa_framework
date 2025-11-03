@@ -405,7 +405,7 @@ class DDR4PIM : public IDRAM, public Implementation {
           {.level = "dimm", .preceding = {"MACAB"}, .following = {"MACAB"}, .latency = V("nCCDL")},          
           //{.level = "dimm", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nRC")},
           {.level = "dimm", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nFAW") * size_t(m_organization.count[m_levels["bankgroup"]]) * size_t(m_organization.count[m_levels["bank"]]) / 4},  
-          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"MACAB"}, .latency = V("nRCD")},  
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"MACAB"}, .latency = V("nFAW") * size_t(m_organization.count[m_levels["bankgroup"]]) * size_t(m_organization.count[m_levels["bank"]]) / 4},  
           {.level = "dimm", .preceding = {"ACTAB"}, .following = {"PREA"}, .latency = V("nRAS")},  
           {.level = "dimm", .preceding = {"MACAB"},  .following = {"PREA"}, .latency = V("nRTP")},  
           {.level = "dimm", .preceding = {"PREA"}, .following = {"ACTAB"}, .latency = V("nRP")},  
