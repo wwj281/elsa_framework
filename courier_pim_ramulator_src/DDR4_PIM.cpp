@@ -458,7 +458,7 @@ class DDR4PIM : public IDRAM, public Implementation {
           {.level = "dimm", .preceding = {"WRGB"}, .following = {"WRGB"}, .latency = V("nCCDL") + V("nCCDS")},
           {.level = "dimm", .preceding = {"WRGB"}, .following = {"ACTAB", "MACAB"}, .latency = V("nCCDL") + V("nCCDS")},
           // {.level = "pseudochannel", .preceding = {"WRGB", "MVSB", "MVGB", "SFM", "RD", "WR"}, .following = {"WRGB", "MVSB", "MVGB", "SFM", "RD", "WR"}, .latency = V("nBL")},
-          {.level = "dimm", .preceding = {"MVGB"}, .following = {"ACC", "AF"}, .latency = V("nCCDS") * size_t(m_organization.count[m_levels["rank"]])* size_t(m_organization.count[m_levels["bankgroup"]])  * size_t(m_organization.count[m_levels["bank"]])},
+          {.level = "dimm", .preceding = {"MVGB"}, .following = {"MVGB", "ACC", "AF"}, .latency = V("nCL") * size_t(m_organization.count[m_levels["rank"]])* size_t(m_organization.count[m_levels["bankgroup"]])  * size_t(m_organization.count[m_levels["bank"]])},
           {.level = "dimm", .preceding = {"ACC"}, .following = {"ACC", "AF"}, .latency = V("nCCDL")},
           {.level = "dimm", .preceding = {"AF"}, .following = {"AF", "EWMUL"}, .latency = V("nCCDL")},
           {.level = "dimm", .preceding = {"EWMUL"}, .following = {"EWMUL", "ACTAB", "MACAB"}, .latency = V("nCCDL")},
