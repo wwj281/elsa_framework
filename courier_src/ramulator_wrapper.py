@@ -134,12 +134,12 @@ class Ramulator:
             print(f"Error: {e}")
             assert 0
 
-        # remove trace
-        rm_trace_cmd = f"rm {trace_file}"
-        try:
-            os.system(rm_trace_cmd)
-        except Exception as e:
-            print(f"Error: {e}")
+        # # remove trace
+        # rm_trace_cmd = f"rm {trace_file}"
+        # try:
+        #     os.system(rm_trace_cmd)
+        # except Exception as e:
+        #     print(f"Error: {e}")
 
         # parsing output
         n_cmds = {"mac": 0, "sfm": 0, "mvgb": 0, "mvsb": 0, "wrgb": 0}
@@ -188,12 +188,12 @@ class Ramulator:
             result = self.run_ramulator(pim_type, l, num_ops_per_hbm,
                                         layer.dbyte, yaml_file, file_name, batch_size)
 
-            # remove trace
-            rm_yaml_cmd = f"rm {yaml_file}"
-            try:
-                os.system(rm_yaml_cmd)
-            except Exception as e:
-                print(f"Error: {e}")
+            # # remove trace
+            # rm_yaml_cmd = f"rm {yaml_file}"
+            # try:
+            #     os.system(rm_yaml_cmd)
+            # except Exception as e:
+            #     print(f"Error: {e}")
 
             # post processing
             # 32: read granularity
@@ -225,6 +225,7 @@ class Ramulator:
             traffic = [i * self.num_hbm for i in traffic]
             traffic = [i * num_ops_group for i in traffic]
             exec_time = self.tCK * cycle / 1000 / 1000 / 1000  # ns -> s
+            print('cycle:', cycle, 'exec_time:', exec_time)
             return exec_time, traffic
 
         else:

@@ -142,6 +142,7 @@ class xPU:
             core_utilization = num_threadblock / tmp
 
             flops = flops * core_utilization
+            print('    GPU flops:', flops, 'layer flops:', layer.get_flops(), 'core_utilization:', core_utilization)
 
         ## e.g., peak flops of FP8  is twice that of FP16
         flops *= int(2 / dbyte)
@@ -160,6 +161,7 @@ class xPU:
         layer.off_traffic = sum(off_data)
 
         mem_bw = self.peak_memory_bandwidth * self.max_memory_util
+        print('    mem_bw1:', mem_bw)
         if self.name == DeviceType.GPU:
             if layer.type == LayerType.ACT:
                 exec_time = (
@@ -184,6 +186,7 @@ class xPU:
                 tmp = math.ceil(num_threadblock / self.num_core) * self.num_core
                 core_utilization = num_threadblock / tmp
                 mem_bw = mem_bw * core_utilization
+                print('    off_data:', sum(off_data), 'mem_bw2:', mem_bw, 'core_utilization:', core_utilization)
 
                 return sum(off_data) / mem_bw, sum(
                     l2_data) / self.peak_l2_bandwidth, 0, 0
@@ -195,6 +198,7 @@ class xPU:
         compute_time = self._compute_time(layer)
         mem_time = max(*self._mem_time(layer))
         max_time = 0
+        print('    compute_time:', compute_time, 'mem_time:', mem_time)
         if compute_time > mem_time:
             max_time = compute_time
             layer.bound = "compute"

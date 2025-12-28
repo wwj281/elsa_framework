@@ -240,6 +240,7 @@ class System:
                 s_flops += layer.get_flops() * self.devices['GPU'].num_xpu
                 time += exec_time
                 _opb_print(layer, 'sum')
+                print('Prefill layer:', layer.type, 'exec_time:', layer.exec_time)
 
             ## Generation stage
             for gen_stage, decoder_block in enumerate(g_decoder):
@@ -265,6 +266,7 @@ class System:
                     layer.energy = energy
                     g_flops += layer.get_flops() * self.devices['GPU'].num_xpu
                     time += exec_time
+                    print('Decode layer:', layer.type, 'exec_time:', layer.exec_time)
                     if gen_stage == 0:
                         _opb_print(layer, 'gen')
                     # energy
@@ -304,7 +306,6 @@ class System:
                 'norm': 0
             }
             for layer in s_decoder:
-                print('Prefill layer:', layer.type, 'exec_time:', layer.exec_time)
                 exec_time = layer.exec_time
                 if layer.type == LayerType.FC:
                     s_perf['all'] += exec_time
@@ -343,7 +344,6 @@ class System:
 
             for gen_stage, decoder_block in enumerate(g_decoder):
                 for l_idx, layer in enumerate(decoder_block):
-                    print('Decode layer:', layer.type, 'exec_time:', layer.exec_time)
                     exec_time = layer.exec_time
                     g_perf['all'] += exec_time
                     if layer.type == LayerType.FC:
