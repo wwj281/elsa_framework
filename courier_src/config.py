@@ -12,7 +12,8 @@ ENERGY_TABLE = {
     'PIM': {
         PIMType.BA: {},
         PIMType.BG: {},
-        PIMType.BUFFER: {}
+        PIMType.BUFFER: {},
+        PIMType.DDR4: {}
     }
 }
 ENERGY_TABLE['GPU']['reg'] = 0.0675
@@ -207,12 +208,20 @@ def make_pim_config(pim_type: PIMType,
                                 if bw_scale is None else bw_scale
     config["NUM_ATTACC"] = num_attacc
     config["NUM_HBM"] = num_hbm
-    config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
-    config[
-        "MEM_BW_PER_HBM"] = 670.4 * 1000 * 1000 * 1000 * internal_bandwidth_scale
-    config["FLOPS_PER_HBM"] = config["MEM_BW_PER_HBM"] * opb
-    config["SOFTMAX_MEM_BW"] = 670.4 * 1000 * 1000 * 1000 * num_hbm
-    config["SOFTMAX_FLOPS"] = config["SOFTMAX_MEM_BW"]
+    if pim_type == PIMType.DDR4:
+        config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
+        config[
+            "MEM_BW_PER_HBM"] = 670.4 * 1000 * 1000 * 1000 * internal_bandwidth_scale
+        config["FLOPS_PER_HBM"] = config["MEM_BW_PER_HBM"] * opb
+        config["SOFTMAX_MEM_BW"] = 670.4 * 1000 * 1000 * 1000 * num_hbm
+        config["SOFTMAX_FLOPS"] = config["SOFTMAX_MEM_BW"]
+    else:
+        config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
+        config[
+            "MEM_BW_PER_HBM"] = 670.4 * 1000 * 1000 * 1000 * internal_bandwidth_scale
+        config["FLOPS_PER_HBM"] = config["MEM_BW_PER_HBM"] * opb
+        config["SOFTMAX_MEM_BW"] = 670.4 * 1000 * 1000 * 1000 * num_hbm
+        config["SOFTMAX_FLOPS"] = config["SOFTMAX_MEM_BW"]
 
     if interface_type == InterfaceType.NVLINK3:
         config["INTERFACE_BW"] = 600 * 1000 * 1000 * 1000

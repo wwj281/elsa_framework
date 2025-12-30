@@ -285,25 +285,24 @@ class Transformer:
             # 假设所有专家权重都在CPU Memory
             self.sum_decoder.append(
                 Layer('sum', 'comm_x2g', LayerType.X2G, False, self.dtype,
-                      self.num_experts * self.hdim, 3 * batch * int(math.ceil(self.hdim * self.ff_scale / self.tp)), 1, 1))
+                      self.hdim, 3 * int(math.ceil(self.hdim * self.ff_scale / self.tp)), 1, 1))
             # 模拟Gate函数
             self.sum_decoder.append(
                 Layer('gen', 'gate', LayerType.FC, True, self.dtype, batch,
                       self.num_experts, self.hdim, 1))
             # Mixture of Experts FFN
-            for _ in range(self.activated_experts + self.shared_experts):
-                self.sum_decoder.append(
-                    Layer('sum', 'ff1', LayerType.FC, True, self.dtype, batch * lin,
-                          math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim, 1))
-                self.sum_decoder.append(
-                    Layer('sum', 'ff2', LayerType.FC, True, self.dtype, batch * lin,
-                          math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim, 1))
-                self.sum_decoder.append(
-                    Layer('sum', 'silu', LayerType.ACT, False, self.dtype, batch * lin,
-                          math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1, 1))
-                self.sum_decoder.append(
-                    Layer('sum', 'ff3', LayerType.FC, True, self.dtype, batch * lin,
-                          self.hdim, math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1))
+            self.sum_decoder.append(
+                Layer('sum', 'ff1', LayerType.FC, True, self.dtype, 1,
+                      math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'ff2', LayerType.FC, True, self.dtype, 1,
+                      math.ceil(self.ff_scale * int(self.hdim / self.tp)), self.hdim, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'silu', LayerType.ACT, False, self.dtype, 1,
+                      math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1, 1))
+            self.sum_decoder.append(
+                Layer('sum', 'ff3', LayerType.FC, True, self.dtype, 1,
+                      self.hdim, math.ceil(self.ff_scale * int(self.hdim / self.tp)), 1))
             self.sum_decoder.append(
                 Layer('sum', 'comm_g2g', LayerType.G2G, False, self.dtype, batch * lin,
                       self.hdim, 1, 1))

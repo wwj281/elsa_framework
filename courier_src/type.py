@@ -29,6 +29,7 @@ class PIMType(Enum):
     BA = 0
     BG = 1
     BUFFER = 2
+    DDR4 = 3
 
 
 class InterfaceType(Enum):
