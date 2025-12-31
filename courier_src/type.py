@@ -43,3 +43,7 @@ class GPUType(Enum):
     A100a = 0
     H100 = 1
     RTX4090 = 2
+
+class MappingStrategyType(Enum):
+    NAIVE = 0
+    H2 = 1

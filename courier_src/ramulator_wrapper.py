@@ -12,11 +12,13 @@ class Ramulator:
     def __init__(self,
                  modelinfos,
                  ramulator_dir,
+                 mapping_strategy: MappingStrategyType = MappingStrategyType.NAIVE, 
                  output_log='',
                  fast_mode=False,
                  num_hbm=5):
         self.df = pd.DataFrame()
         self.ramulator_dir = ramulator_dir
+        self.mapping_strategy = mapping_strategy
         self.output_log = output_log
         if os.path.exists(output_log):
             self.df = pd.read_csv(output_log)
@@ -108,10 +110,16 @@ class Ramulator:
         #     "trace_gen/gen_trace_attacc_{}.py".format(pim_type_name))
         # trace_args = "--dhead {} --nhead {} --seqlen {} --dbyte {} --output {}".format(
         #     self.dhead, num_ops_per_hbm, l, dbyte, trace_file)
-        trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_naive.py")
-        trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {}".format(
-            self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
-            self.moe_intermediate_size, batch_size, dbyte, trace_file)
+        if self.mapping_strategy == MappingStrategyType.NAIVE:
+            trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_naive.py")
+            trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {}".format(
+                self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
+                self.moe_intermediate_size, batch_size, dbyte, trace_file)
+        else:
+            trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_h2.py")
+            trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --token_num {}".format(
+                self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
+                self.moe_intermediate_size, batch_size, dbyte, trace_file, l)
 
         gen_trace_cmd = f"python {trace_exc} {trace_args}"
 

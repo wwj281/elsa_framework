@@ -193,6 +193,7 @@ BW_SCALE = {
 
 
 def make_pim_config(pim_type: PIMType,
+                    mapping_strategy: MappingStrategyType,
                     interface_type: InterfaceType,
                     opb=1,
                     num_attacc=8,
@@ -201,6 +202,7 @@ def make_pim_config(pim_type: PIMType,
                     power_constraint=False):
     config = {}
     config["PIM_TYPE"] = pim_type
+    config["MAPPING_STRATEGY"] = mapping_strategy
     config["POWER_CONSTRAINT"] = power_constraint
     config["ENERGY_TABLE"] = ENERGY_TABLE['PIM'][pim_type]
 

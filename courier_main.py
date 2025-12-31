@@ -112,6 +112,11 @@ def main():
     parser.add_argument("--pipeopt",
                         action='store_true',
                         help="apply pipeline optimization ")
+    parser.add_argument(
+        "--mapping_strategy",
+        type=str,
+        default='NAIVE',
+        help="Mapping strategy type (NAIVE, H2)")
 
     ## set model and service environment
     parser.add_argument(
@@ -189,7 +194,12 @@ def main():
             pim_type = PIMType.BUFFER
         else:
             pim_type = PIMType.BA
-        pim_config = make_pim_config(pim_type,
+        if args.mapping_strategy == 'NAIVE':
+            mapping_strategy = MappingStrategyType.NAIVE
+        elif args.mapping_strategy == 'H2':
+            mapping_strategy = MappingStrategyType.H2
+        pim_config = make_pim_config(pim_type,  
+                                     mapping_strategy,
                                      InterfaceType.NVLINK3,
                                      power_constraint=args.powerlimit)
         system.set_accelerator(modelinfos, DeviceType.PIM, pim_config)
