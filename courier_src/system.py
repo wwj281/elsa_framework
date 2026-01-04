@@ -312,7 +312,7 @@ class System:
                                 t, e = self.devices['GPU'].get_time_and_energy(expert_layer)
                                 act_t, act_e = self.devices['GPU'].get_time_and_energy(act_layer)
                                 e = [e[i] * 3 + act_e[i] for i in range(len(e))]
-                                gpu_total_time += t * 3 + act_t # ff1, ff2, ff3
+                                gpu_total_time += t * 3 + act_t  # ff1, ff2, ff3
                                 gpu_total_energy = [a + b for a, b in zip(gpu_total_energy, e)]
                         # 分别计算加速器专家
                         for eid in acc_expert_ids:
@@ -320,7 +320,7 @@ class System:
                             if tokens > 0:
                                 expert_layer = copy.deepcopy(layer)
                                 expert_layer.m = tokens
-                                t, e = self.devices['Acc'].get_time_and_energy(expert_layer)
+                                t, e = self.devices['Acc'].get_time_and_energy(expert_layer, batch_size)
                                 acc_total_time += t
                                 acc_total_energy = [a + b for a, b in zip(acc_total_energy, e)]
                         # 取决于搬运延迟
@@ -628,7 +628,7 @@ class System:
         acc_flops = self.devices['Acc'].peak_flops * self.devices['Acc'].num_attacc
         gpu_bw = self.devices['GPU'].peak_memory_bandwidth * self.devices['GPU'].num_xpu
         acc_bw = self.devices['Acc'].peak_memory_bandwidth * self.devices['Acc'].num_attacc
-        acc_to_gpu_bw = self.devices['GPU'].max_interface_bandwidth
+        acc_to_gpu_bw = self.devices['GPU'].max_interface_bandwidth / 2
         k, n = self.model.hdim, self.model.hdim * self.model.ff_scale
         dtype_size = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8] else 1
         weight_size = k * n * 3 * dtype_size
@@ -829,7 +829,7 @@ class System:
         acc_flops = acc.peak_flops * acc.num_attacc
         gpu_bw = gpu.peak_memory_bandwidth * gpu.num_xpu
         acc_bw = acc.peak_memory_bandwidth * acc.num_attacc
-        acc_to_gpu_bw = gpu.max_interface_bandwidth
+        acc_to_gpu_bw = gpu.max_interface_bandwidth / 2
 
         k, n = self.model.hdim, self.model.hdim * self.model.ff_scale
         dtype_size = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8] else 1
