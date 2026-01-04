@@ -277,7 +277,7 @@ class PIM:
         self.num_attacc = config['NUM_ATTACC']
         self.num_hbm = config['NUM_HBM']
         self.pim_type = config['PIM_TYPE']
-        self.perk_flops = config['FLOPS_PER_HBM'] * self.num_hbm
+        self.peak_flops = config['FLOPS_PER_HBM'] * self.num_hbm
         self.peak_memory_bandwidth = config['MEM_BW_PER_HBM'] * self.num_hbm
         self.softmax_peak_flops = config['SOFTMAX_FLOPS']
         self.softmax_peak_bandwidth = config['SOFTMAX_MEM_BW']

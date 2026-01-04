@@ -51,23 +51,29 @@ ENERGY_TABLE['PIM'][PIMType.BG]['mem'] = (0.11 + 0.44 +
                                           1.01) * 8  #, (1.23 + 0.5) * 8]
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['mem'] = (0.11 + 0.44 + 1.01 + 1.23 +
                                               0.5) * 8  #, 0]
+ENERGY_TABLE['PIM'][PIMType.DDR4]['mem'] = (0.11 +
+                                          0.44) * 128
 
 ENERGY_TABLE['PIM'][PIMType.BA]['sram'] = 0.0034
 ENERGY_TABLE['PIM'][PIMType.BG]['sram'] = 0.0034
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['sram'] = 0.0034
+ENERGY_TABLE['PIM'][PIMType.DDR4]['sram'] = 0.0034
 
 ENERGY_TABLE['PIM'][PIMType.BA]['alu'] = 0.32
 ENERGY_TABLE['PIM'][PIMType.BG]['alu'] = 0.32
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['alu'] = 0.32
+ENERGY_TABLE['PIM'][PIMType.DDR4]['alu'] = 0.32
 
 ENERGY_TABLE['PIM'][PIMType.BA]['io'] = [0.3, 0.5, 1.23, 1.01]
 ENERGY_TABLE['PIM'][PIMType.BG]['io'] = [0.3, 0.5, 1.23, 1.01]
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['io'] = [0.3, 0.5, 1.23, 1.01]
+ENERGY_TABLE['PIM'][PIMType.DDR4]['io'] = [0.3, 0.5, 1.23, 1.01]
 
 # https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10067395
 ENERGY_TABLE['PIM'][PIMType.BA]['comm'] = 10.4
 ENERGY_TABLE['PIM'][PIMType.BG]['comm'] = 10.4
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['comm'] = 10.4
+ENERGY_TABLE['PIM'][PIMType.DDR4]['comm'] = 10.4
 
 
 def make_xpu_config(gpu_type: GPUType,
@@ -182,12 +188,14 @@ BW_SCALE = {
     False: {
         PIMType.BA: 2 * 4 * 4 / 2,
         PIMType.BG: 2 * 4,
-        PIMType.BUFFER: 1
+        PIMType.BUFFER: 1,
+        PIMType.DDR4: 128
     },
     True: {
         PIMType.BA: 9,
         PIMType.BG: 3,
-        PIMType.BUFFER: 1
+        PIMType.BUFFER: 1,
+        PIMType.DDR4: 128
     }
 }
 
@@ -206,17 +214,17 @@ def make_pim_config(pim_type: PIMType,
     config["POWER_CONSTRAINT"] = power_constraint
     config["ENERGY_TABLE"] = ENERGY_TABLE['PIM'][pim_type]
 
-    internal_bandwidth_scale =  BW_SCALE[power_constraint][pim_type] \
+    internal_bandwidth_scale = BW_SCALE[power_constraint][pim_type] \
                                 if bw_scale is None else bw_scale
     config["NUM_ATTACC"] = num_attacc
     config["NUM_HBM"] = num_hbm
-    if pim_type == PIMType.DDR4:
-        config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
+    if pim_type == PIMType.DDR4:  # 以下是单Channel的配置
+        config["MEM_CAPACITY_PER_HBM"] = 128 * 1024 * 1024 * 1024
         config[
-            "MEM_BW_PER_HBM"] = 670.4 * 1000 * 1000 * 1000 * internal_bandwidth_scale
-        config["FLOPS_PER_HBM"] = config["MEM_BW_PER_HBM"] * opb
-        config["SOFTMAX_MEM_BW"] = 670.4 * 1000 * 1000 * 1000 * num_hbm
-        config["SOFTMAX_FLOPS"] = config["SOFTMAX_MEM_BW"]
+            "MEM_BW_PER_HBM"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
+        config["FLOPS_PER_HBM"] = 64 * 200 * 1000 * 1000 * 128  # 单Bank一次计算处理操作数 * 计算频率 * DDR4 NMP单Channel Bank数
+        config["SOFTMAX_MEM_BW"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
+        config["SOFTMAX_FLOPS"] = 64 * 200 * 1000 * 1000 * 128
     else:
         config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
         config[

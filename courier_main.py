@@ -85,7 +85,7 @@ def main():
     parser.add_argument(
         "--gpu",
         type=str,
-        default='A100a',
+        default='RTX4090',
         help="GPU type (A100a , H100 and RTX4090), A100a is A100 with HBM3")
     parser.add_argument("--ngpu",
                         type=int,
@@ -95,14 +95,36 @@ def main():
                         type=int,
                         default=80,
                         help="memory capacity per GPU (GB). default=80")
-
+    parser.add_argument("--attn_on_hetero",
+                        type=bool,
+                        default=False,
+                        help="whether to do attention on heterogeneous devices")
+    parser.add_argument("--act_on_hetero",
+                        type=bool,
+                        default=False,
+                        help="whether to activate on heterogeneous devices")
+    parser.add_argument(
+        "--tfs_file",
+        type=str,
+        default="per_layer_expert_stats_0.05.json",
+        help="expert-token-fusion-stats file name")
+    parser.add_argument(
+        "--gss_file",
+        type=str,
+        default="expert_gate_sum_threshold_0.05.json",
+        help="expert0-gate-sum-stats file name")
+    parser.add_argument(
+        "--elp_file",
+        type=str,
+        default="expert_location_path.json",
+        help="expert-location-path file name")
 
 
     ## set attacc configuration
     parser.add_argument("--pim",
                         type=str,
-                        default='bank',
-                        help="pim mode. list: bank, bg, buffer")
+                        default='ddr4',
+                        help="pim mode. list: bank, bg, buffer, ddr4")
     parser.add_argument("--powerlimit",
                         action='store_true',
                         help="power constraint for PIM ")
@@ -115,14 +137,22 @@ def main():
     parser.add_argument(
         "--mapping_strategy",
         type=str,
-        default='NAIVE',
+        default='H2',
         help="Mapping strategy type (NAIVE, H2)")
+    parser.add_argument("--num_acc",
+                        type=int,
+                        default=1,
+                        help="number of accelerator in DGX system. default=1")
+    parser.add_argument("--num_channel",
+                        type=int,
+                        default=4,
+                        help="number of channel in accelerator. default=4")
 
     ## set model and service environment
     parser.add_argument(
         "--model",
         type=str,
-        default='DeepSeek-16B',
+        default='Qwen-2.7B',
         help="model list: GPT-175B, LLAMA-65B, MT-530B, OPT-66B, DeepSeek-16B, Qwen-2.7B, Mixtral-8x7B")
     parser.add_argument("--word",
                         type=int,
@@ -130,7 +160,7 @@ def main():
                         help="word size (precision): 1(INT8), 2(FP16)")
     parser.add_argument("--lin",
                         type=int,
-                        default=2048,
+                        default=1024,
                         help="input sequence length")
     parser.add_argument("--lout",
                         type=int,
@@ -139,18 +169,10 @@ def main():
     parser.add_argument(
         "--batch",
         type=int,
-        default=1,
+        default=16,
         help=
         "batch size, default = 1"
     )
-    parser.add_argument("--attn_on_hetero",
-                        type=bool,
-                        default=False,
-                        help="whether to do attention on heterogeneous devices")
-    parser.add_argument("--act_on_hetero",
-                        type=bool,
-                        default=False,
-                        help="whether to activate on heterogeneous devices")
 
     args = parser.parse_args()
 
@@ -177,6 +199,8 @@ def main():
             [args.lin, args.lout, args.batch]))
     num_gpu = args.ngpu
     gmem_cap = args.gmemcap * 1024 * 1024 * 1024
+    num_acc = args.num_acc
+    num_channel = args.num_channel
     output_path = "output.csv"
     if os.path.exists(output_path):
         os.system("rm " + output_path)
@@ -186,12 +210,21 @@ def main():
     moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B'] else False
     modelinfos = make_model_config(args.model, dtype, moe=moe)
     xpu_config = make_xpu_config(gpu_device, num_gpu=num_gpu, mem_cap=gmem_cap)
-    system = System(xpu_config['GPU'], modelinfos)
+    expert_token_fusion_stats_path = os.path.join("gate_weight_data", args.tfs_file)
+    expert_gate_sum_stats_path = os.path.join("gate_weight_data", args.gss_file)
+    expert_location_path = os.path.join("gate_weight_data", args.elp_file)
+    system = System(xpu_config['GPU'],
+                    modelinfos,
+                    expert_token_fusion_stats_path=expert_token_fusion_stats_path,
+                    expert_gate_sum_stats_path=expert_gate_sum_stats_path,
+                    expert_location_path=expert_location_path)
     if args.system in ['dgx-attacc']:
         if args.pim == "bg":
             pim_type = PIMType.BG
         elif args.pim == "buffer":
             pim_type = PIMType.BUFFER
+        elif args.pim == "ddr4":
+            pim_type = PIMType.DDR4
         else:
             pim_type = PIMType.BA
         if args.mapping_strategy == 'NAIVE':
@@ -201,6 +234,8 @@ def main():
         pim_config = make_pim_config(pim_type,  
                                      mapping_strategy,
                                      InterfaceType.NVLINK3,
+                                     num_attacc=num_acc,
+                                     num_hbm=num_channel,
                                      power_constraint=args.powerlimit)
         system.set_accelerator(modelinfos, DeviceType.PIM, pim_config)
 

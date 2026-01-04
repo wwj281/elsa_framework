@@ -4,6 +4,7 @@ from .devices import *
 from .config import *
 import os
 import json
+import time as sys_time
 
 RAMPATH = "./ramulator2"
 RAMLOG = "./ramulator.out"
@@ -246,7 +247,23 @@ class System:
         perf_all = []
         energy_all = []
         ramulator_call_count = 0
-        expert_schedule = self.expert_schedule_simulation()
+        start_time = sys_time.perf_counter()
+        expert_schedule = self.expert_schedule_simulation_naive()
+        #expert_schedule = self.expert_schedule_simulation()
+        end_time = sys_time.perf_counter()
+        print(f"Expert schedule simulation time: {end_time - start_time:.6f} seconds")
+        print('gpu_expert_ids:', expert_schedule['gpu_expert_ids'])
+        print('acc_expert_ids:', expert_schedule['acc_expert_ids'])
+        print('gpu_total_time:', expert_schedule['gpu_total_time'])
+        print('     c_time:', expert_schedule['gpu_latency_breakdown']['compute'])
+        print('     m_time:', expert_schedule['gpu_latency_breakdown']['mem'])
+        print('     l_time:', expert_schedule['gpu_latency_breakdown']['load'])
+        print('acc_total_time:', expert_schedule['acc_total_time'])
+        print('     c_time:', expert_schedule['acc_latency_breakdown']['compute'])
+        print('     m_time:', expert_schedule['acc_latency_breakdown']['mem'])
+        print('     l_time:', expert_schedule['acc_latency_breakdown']['load'])
+        print('total_latency:', expert_schedule['total_latency'])
+        a = 1/0
 
         for itr, bs in enumerate(target_bs):
             time = 0
@@ -261,7 +278,7 @@ class System:
                     # 统计需要搬运到GPU的专家数
                     move_to_gpu_ids = expert_schedule.get('move_to_gpu_ids', [])
                     if move_to_gpu_ids:
-                        move_expert_num = len(move_to_gpu_ids)  
+                        move_expert_num = len(move_to_gpu_ids)
                         # 构造新layer，继承原layer属性
                         new_layer = copy.deepcopy(layer)
                         new_layer.m = new_layer.m * move_expert_num  # 修改m为需要搬运的专家数
@@ -547,7 +564,7 @@ class System:
             perfs.append(output)
         else:
             perfs = [output]
-    
+
 
 
     def get_expert_token_threshold(self):
@@ -561,15 +578,15 @@ class System:
         返回：token阈值（int），大于该值建议load到GPU
         """
         # 获取硬件参数
-        gpu_flops = self.devices['GPU'].peak_flops  # FLOPS
-        acc_flops = self.devices['Acc'].peak_flops  # FLOPS
-        gpu_bw = self.devices['GPU'].peak_memory_bandwidth
-        acc_bw = self.devices['Acc'].peak_memory_bandwidth
+        gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu  # FLOPS
+        acc_flops = self.devices['Acc'].peak_flops * self.devices['Acc'].num_attacc  # FLOPS
+        gpu_bw = self.devices['GPU'].peak_memory_bandwidth * self.devices['GPU'].num_xpu
+        acc_bw = self.devices['Acc'].peak_memory_bandwidth * self.devices['Acc'].num_attacc
         acc_to_gpu_bandwidth = self.devices['GPU'].max_interface_bandwidth
         k = self.model.hdim  # 权重矩阵维度k
         n = self.model.hdim * self.model.ff_scale  # 权重矩阵维度n
 
-        dtype_size = self.model.dtype # 可根据实际类型调整
+        dtype_size = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8] else 1
         weight_size = k * n * 3 * dtype_size
 
         # 单token矩阵乘法FLOPS（假设为2*k*n*3）
@@ -584,191 +601,355 @@ class System:
         # T < [weight_size/acc_bw - weight_size/gpu_bw - weight_size/acc_to_gpu_bandwidth] / [flop_per_token*(1/gpu_flops - 1/acc_flops)]
         denom = flop_per_token * (1/gpu_flops - 1/acc_flops)
         num = weight_size/acc_bw - weight_size/gpu_bw - weight_size/acc_to_gpu_bandwidth
-        if denom <= 0:
-            return None
         threshold = num / denom
         if threshold <= 0:
             return None
         return int(threshold)
-    
 
-    def expert_schedule_simulation(self, layer_idx=0):
+
+    def expert_schedule_simulation_naive(self, layer_idx=0):
         """
-        专家调度模拟：
+        专家调度模拟（效率优化版，逻辑不变）：
         1. 获取token阈值，遍历第layer_idx层所有专家，判断其计算位置（GPU/加速器），并记录相关id。
         2. 根据分配结果模拟GPU和加速器的执行时间。
         返回：
             gpu_expert_ids, acc_expert_ids, move_to_gpu_ids, fusion_acc_expert_ids, gpu_total_time, acc_total_time
+            以及延迟构成：gpu_latency_breakdown, acc_latency_breakdown
         """
-        # 获取token阈值
         token_threshold = self.get_expert_token_threshold()
         if token_threshold is None:
             raise RuntimeError("无法获取专家load到GPU的token阈值")
 
-        # 获取第layer_idx层专家token融合统计和原始位置
         layer_key = f"model.layers.{layer_idx}.mlp"
         fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
-        expert_locs = self.expert_location.get(layer_key, {}) if self.expert_location else {}
+        expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
 
-        gpu_expert_ids = []
-        acc_expert_ids = []
-        move_to_gpu_ids = []
-        fusion_acc_expert_ids = []
+        # 预计算硬件常量
+        gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
+        acc_flops = self.devices['Acc'].peak_flops * self.devices['Acc'].num_attacc
+        gpu_bw = self.devices['GPU'].peak_memory_bandwidth * self.devices['GPU'].num_xpu
+        acc_bw = self.devices['Acc'].peak_memory_bandwidth * self.devices['Acc'].num_attacc
+        acc_to_gpu_bw = self.devices['GPU'].max_interface_bandwidth
+        k, n = self.model.hdim, self.model.hdim * self.model.ff_scale
+        dtype_size = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8] else 1
+        weight_size = k * n * 3 * dtype_size
+        flop_factor = 2 * k * n * 3
+        input_size_factor = 2 * k
 
+        weight_load_gpu = weight_size / gpu_bw
+        weight_load_acc = weight_size / acc_bw
+        weight_transfer = weight_size / acc_to_gpu_bw
+
+        # 预计算每个专家的时间信息，避免重复计算
+        # 新增：分别记录计算延迟、访存延迟、加载延迟
+        expert_time_cache = {}
+        for key, stat in fusion_stats.items():
+            eid = int(key[7:])
+            orig = stat.get('total_tokens', 0)
+            fused = stat.get('tokens_after_merge', 0)
+            on_gpu = eid in expert_locs_set
+            use_fusion = fused > 0 and fused != orig
+
+            # GPU时间分解
+            gpu_compute = (orig * flop_factor) / gpu_flops
+            gpu_mem = weight_load_gpu + (orig * input_size_factor) / gpu_bw
+            gpu_load = weight_transfer if not on_gpu else 0  # 从加速器加载权重
+            gpu_time = gpu_compute + gpu_mem + gpu_load
+
+            # 加速器时间分解
+            acc_tokens = fused if use_fusion else orig
+            acc_compute = (acc_tokens * flop_factor) / acc_flops
+            acc_mem = weight_load_acc
+            acc_load = (acc_tokens * input_size_factor) / acc_to_gpu_bw  # 从GPU加载输入矩阵
+            acc_time = acc_compute + acc_mem + acc_load
+
+            expert_time_cache[eid] = {
+                'gpu_time': gpu_time, 'acc_time': acc_time,
+                'gpu_compute': gpu_compute, 'gpu_mem': gpu_mem, 'gpu_load': gpu_load,
+                'acc_compute': acc_compute, 'acc_mem': acc_mem, 'acc_load': acc_load,
+                'orig': orig, 'fused': fused if fused > 0 else orig,
+                'on_gpu': on_gpu, 'use_fusion': use_fusion
+            }
+
+        # 初始分配（使用set加速）
+        gpu_expert_set = set()
+        acc_expert_set = set()
+        fusion_acc_set = set()
+        expert_actual_tokens = {}
         gpu_total_time = 0.0
         acc_total_time = 0.0
 
-        # 获取硬件参数
-        gpu_flops = self.devices['GPU'].peak_flops  # FLOPS
-        acc_flops = self.devices['Acc'].peak_flops  # FLOPS
-        gpu_bw = self.devices['GPU'].peak_memory_bandwidth
-        acc_bw = self.devices['Acc'].peak_memory_bandwidth
-        acc_to_gpu_bw = self.devices['GPU'].max_interface_bandwidth
-        k = self.model.hdim
-        n = self.model.hdim * self.model.ff_scale
-        dtype_size = self.model.dtype
-        weight_size = k * n * 3 * dtype_size
-
-        # 记录每个专家实际处理的token数
-        expert_actual_tokens = {}
-
-        for expert_id, stat in fusion_stats.items():
-            loc = expert_locs.get(expert_id, None)
+        for key, stat in fusion_stats.items():
+            eid = int(key[7:])
             orig_token = stat.get('total_tokens', 0)
             fused_token = stat.get('tokens_after_merge', 0)
             use_fusion = fused_token > 0 and orig_token >= token_threshold
+            cache = expert_time_cache[eid]
 
-            # 判断专家是否在GPU上
-            if loc == 'GPU':
-                gpu_expert_ids.append(expert_id)
-                # GPU执行时间
-                flop = orig_token * 2 * k * n * 3
-                time = flop / gpu_flops + weight_size / gpu_bw
-                # 不需要搬运权重
-                gpu_total_time += time
-                expert_actual_tokens[expert_id] = orig_token
+            if eid in expert_locs_set:
+                gpu_expert_set.add(eid)
+                gpu_total_time += cache['gpu_time']
+                expert_actual_tokens[eid] = orig_token
+            elif (orig_token <= token_threshold) or (use_fusion and fused_token <= token_threshold):
+                acc_expert_set.add(eid)
+                acc_total_time += cache['acc_time']
+                if use_fusion:
+                    fusion_acc_set.add(eid)
+                expert_actual_tokens[eid] = fused_token if use_fusion else orig_token
             else:
-                # 判断是否在加速器上执行
-                if (orig_token <= token_threshold) or (use_fusion and fused_token <= token_threshold):
-                    acc_expert_ids.append(expert_id)
-                    # 加速器执行时间
-                    flop = (fused_token if use_fusion else orig_token) * 2 * k * n * 3
-                    time = flop / acc_flops + weight_size / acc_bw
-                    acc_total_time += time
-                    if use_fusion:
-                        fusion_acc_expert_ids.append(expert_id)
-                    expert_actual_tokens[expert_id] = fused_token if use_fusion else orig_token
-                else:
-                    gpu_expert_ids.append(expert_id)
-                    move_to_gpu_ids.append(expert_id)
-                    # GPU执行时间（需要搬运权重）
-                    flop = orig_token * 2 * k * n * 3
-                    time = flop / gpu_flops + weight_size / gpu_bw + weight_size / acc_to_gpu_bw
-                    gpu_total_time += time
-                    expert_actual_tokens[expert_id] = orig_token
-
-        # -------- 微调分配以最小化总延迟 --------
-        def calc_time(gpu_ids, acc_ids):
-            gpu_time = 0.0
-            acc_time = 0.0
-            for expert_id in gpu_ids:
-                stat = fusion_stats.get(expert_id, {})
-                orig_token = stat.get('total_tokens', 0)
-                flop = orig_token * 2 * k * n * 3
-                loc = expert_locs.get(expert_id, None)
-                move_weight = (loc != 'GPU')
-                t = flop / gpu_flops + weight_size / gpu_bw
-                if move_weight:
-                    t += weight_size / acc_to_gpu_bw
-                gpu_time += t
-            for expert_id in acc_ids:
-                stat = fusion_stats.get(expert_id, {})
-                orig_token = stat.get('total_tokens', 0)
-                fused_token = stat.get('tokens_after_merge', 0)
-                use_fusion = fused_token > 0 and fused_token != orig_token
-                flop = (fused_token if use_fusion else orig_token) * 2 * k * n * 3
-                t = flop / acc_flops + weight_size / acc_bw
-                acc_time += t
-            return gpu_time, acc_time
+                gpu_expert_set.add(eid)
+                gpu_total_time += cache['gpu_time']
+                expert_actual_tokens[eid] = orig_token
 
         # 记录初始分配
-        best_gpu_ids = gpu_expert_ids.copy()
-        best_acc_ids = acc_expert_ids.copy()
+        best_gpu_set = gpu_expert_set.copy()
+        best_acc_set = acc_expert_set.copy()
         best_total_latency = max(gpu_total_time, acc_total_time)
+
         improved = True
         while improved:
             improved = False
-            gpu_time, acc_time = calc_time(gpu_expert_ids, acc_expert_ids)
-            total_latency = max(gpu_time, acc_time)
+            total_latency = max(gpu_total_time, acc_total_time)
+
             # 尝试从GPU移动到加速器
-            if gpu_time > acc_time and len(gpu_expert_ids) > 0:
-                # 找到GPU端融合后token数最少的专家
+            if gpu_total_time > acc_total_time and gpu_expert_set:
+                # 找到GPU端融合后token数最少的专家（排除原本在GPU上的）
                 min_fusion_id = None
                 min_fusion_token = float('inf')
-                for eid in gpu_expert_ids:
-                    stat = fusion_stats.get(eid, {})
-                    fused_token = stat.get('tokens_after_merge', stat.get('total_tokens', 0))
-                    if fused_token < min_fusion_token:
-                        min_fusion_token = fused_token
-                        min_fusion_id = eid
-                if min_fusion_id is not None:
-                    # 尝试移动
-                    gpu_expert_ids.remove(min_fusion_id)
-                    acc_expert_ids.append(min_fusion_id)
-                    new_gpu_time, new_acc_time = calc_time(gpu_expert_ids, acc_expert_ids)
-                    new_total_latency = max(new_gpu_time, new_acc_time)
-                    if new_total_latency < total_latency:
-                        best_gpu_ids = gpu_expert_ids.copy()
-                        best_acc_ids = acc_expert_ids.copy()
-                        fusion_acc_expert_ids.append(min_fusion_id)
-                        expert_actual_tokens[min_fusion_id] = fusion_stats.get(min_fusion_id, {}).get('tokens_after_merge', expert_actual_tokens.get(min_fusion_id, 0))
-                        best_total_latency = new_total_latency
-                        improved = True
-                    else:
-                        # 回退
-                        acc_expert_ids.remove(min_fusion_id)
-                        gpu_expert_ids.append(min_fusion_id)
-            # 尝试从加速器移动到GPU
-            elif acc_time > gpu_time and len(acc_expert_ids) > 0:
-                max_fusion_id = None
-                max_fusion_token = -1
-                for eid in acc_expert_ids:
-                    stat = fusion_stats.get(eid, {})
-                    fused_token = stat.get('tokens_after_merge', stat.get('total_tokens', 0))
-                    if fused_token > max_fusion_token:
-                        max_fusion_token = fused_token
-                        max_fusion_id = eid
-                if max_fusion_id is not None:
-                    # 尝试移动
-                    acc_expert_ids.remove(max_fusion_id)
-                    gpu_expert_ids.append(max_fusion_id)
-                    new_gpu_time, new_acc_time = calc_time(gpu_expert_ids, acc_expert_ids)
-                    new_total_latency = max(new_gpu_time, new_acc_time)
-                    if new_total_latency < total_latency:
-                        best_gpu_ids = gpu_expert_ids.copy()
-                        best_acc_ids = acc_expert_ids.copy()
-                        if max_fusion_id in fusion_acc_expert_ids:
-                            fusion_acc_expert_ids.remove(max_fusion_id)
-                            expert_actual_tokens[max_fusion_id] = fusion_stats.get(max_fusion_id, {}).get('total_tokens', expert_actual_tokens.get(max_fusion_id, 0))   
-                        best_total_latency = new_total_latency
-                        improved = True
-                    else:
-                        # 回退
-                        gpu_expert_ids.remove(max_fusion_id)
-                        acc_expert_ids.append(max_fusion_id)
+                for eid in gpu_expert_set:
+                    if eid not in expert_locs_set:
+                        fused = expert_time_cache[eid]['fused']
+                        if fused < min_fusion_token:
+                            min_fusion_token = fused
+                            min_fusion_id = eid
 
-        # 重新统计最终分配下的专家id和时间
-        final_gpu_time, final_acc_time = calc_time(best_gpu_ids, best_acc_ids)
-        move_to_gpu_ids = [eid for eid in best_gpu_ids if expert_locs.get(eid, None) != 'GPU']
+                if min_fusion_id is not None:
+                    cache = expert_time_cache[min_fusion_id]
+                    new_gpu_time = gpu_total_time - cache['gpu_time']
+                    new_acc_time = acc_total_time + cache['acc_time']
+                    new_total_latency = max(new_gpu_time, new_acc_time)
+
+                    if new_total_latency < total_latency:
+                        gpu_expert_set.remove(min_fusion_id)
+                        acc_expert_set.add(min_fusion_id)
+                        gpu_total_time = new_gpu_time
+                        acc_total_time = new_acc_time
+                        best_gpu_set = gpu_expert_set.copy()
+                        best_acc_set = acc_expert_set.copy()
+                        fusion_acc_set.add(min_fusion_id)
+                        expert_actual_tokens[min_fusion_id] = min_fusion_token
+                        best_total_latency = new_total_latency
+                        improved = True
+
+            # 尝试从加速器移动到GPU
+            elif acc_total_time > gpu_total_time and acc_expert_set:
+                max_actual_id = None
+                max_actual_token = -1
+                for eid in acc_expert_set:
+                    actual = expert_actual_tokens[eid]
+                    if actual > max_actual_token:
+                        max_actual_token = actual
+                        max_actual_id = eid
+
+                if max_actual_id is not None:
+                    cache = expert_time_cache[max_actual_id]
+                    new_gpu_time = gpu_total_time + cache['gpu_time']
+                    new_acc_time = acc_total_time - cache['acc_time']
+                    new_total_latency = max(new_gpu_time, new_acc_time)
+
+                    if new_total_latency < total_latency:
+                        acc_expert_set.remove(max_actual_id)
+                        gpu_expert_set.add(max_actual_id)
+                        gpu_total_time = new_gpu_time
+                        acc_total_time = new_acc_time
+                        best_gpu_set = gpu_expert_set.copy()
+                        best_acc_set = acc_expert_set.copy()
+                        if max_actual_id in fusion_acc_set:
+                            fusion_acc_set.remove(max_actual_id)
+                            expert_actual_tokens[max_actual_id] = expert_time_cache[max_actual_id]['orig']
+                        best_total_latency = new_total_latency
+                        improved = True
+
+        # 统计最终分配下的延迟构成
+        gpu_latency_breakdown = {'compute': 0.0, 'mem': 0.0, 'load': 0.0, 'total': 0.0}
+        acc_latency_breakdown = {'compute': 0.0, 'mem': 0.0, 'load': 0.0, 'total': 0.0}
+        
+        for eid in best_gpu_set:
+            cache = expert_time_cache[eid]
+            gpu_latency_breakdown['compute'] += cache['gpu_compute']
+            gpu_latency_breakdown['mem'] += cache['gpu_mem']
+            gpu_latency_breakdown['load'] += cache['gpu_load']
+            gpu_latency_breakdown['total'] += cache['gpu_time']
+        
+        for eid in best_acc_set:
+            cache = expert_time_cache[eid]
+            acc_latency_breakdown['compute'] += cache['acc_compute']
+            acc_latency_breakdown['mem'] += cache['acc_mem']
+            acc_latency_breakdown['load'] += cache['acc_load']
+            acc_latency_breakdown['total'] += cache['acc_time']
+
+        # 构建返回结果
+        best_gpu_ids = sorted(best_gpu_set)
+        best_acc_ids = sorted(best_acc_set)
+        move_to_gpu_ids = [eid for eid in best_gpu_ids if eid not in expert_locs_set]
+        fusion_acc_expert_ids = sorted(fusion_acc_set & best_acc_set)
 
         return {
             'gpu_expert_ids': best_gpu_ids,
             'acc_expert_ids': best_acc_ids,
             'move_to_gpu_ids': move_to_gpu_ids,
             'fusion_acc_expert_ids': fusion_acc_expert_ids,
-            'gpu_total_time': final_gpu_time,
-            'acc_total_time': final_acc_time,
-            'total_latency': max(final_gpu_time, final_acc_time),
+            'gpu_total_time': gpu_total_time,
+            'acc_total_time': acc_total_time,
+            'total_latency': max(gpu_total_time, acc_total_time),
+            'expert_actual_tokens': expert_actual_tokens,
+            'gpu_latency_breakdown': gpu_latency_breakdown,
+            'acc_latency_breakdown': acc_latency_breakdown
+        }
+
+
+    def expert_schedule_simulation(self, layer_idx=0):
+        """
+        专家调度模拟（优化版）：
+        预计算每个专家在GPU/加速器上的执行时间，使用增量更新进行负载均衡优化。
+        返回：gpu_expert_ids, acc_expert_ids, move_to_gpu_ids, fusion_acc_expert_ids, gpu_total_time, acc_total_time
+        """
+        token_threshold = self.get_expert_token_threshold()
+        if token_threshold is None:
+            raise RuntimeError("无法获取专家load到GPU的token阈值")
+
+        # 获取配置数据
+        layer_key = f"model.layers.{layer_idx}.mlp"
+        fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
+        expert_locs = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+
+        # 预计算硬件参数
+        gpu = self.devices['GPU']
+        acc = self.devices['Acc']
+        gpu_flops = gpu.peak_flops * gpu.num_xpu
+        acc_flops = acc.peak_flops * acc.num_attacc
+        gpu_bw = gpu.peak_memory_bandwidth * gpu.num_xpu
+        acc_bw = acc.peak_memory_bandwidth * acc.num_attacc
+        acc_to_gpu_bw = gpu.max_interface_bandwidth
+
+        k, n = self.model.hdim, self.model.hdim * self.model.ff_scale
+        dtype_size = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8] else 1
+        weight_size = k * n * 3 * dtype_size
+        flop_factor = 2 * k * n * 3
+        input_size_factor = 2 * k
+
+        # 预计算常量时间项
+        weight_load_gpu = weight_size / gpu_bw
+        weight_load_acc = weight_size / acc_bw
+        weight_transfer = weight_size / acc_to_gpu_bw
+
+        # 预计算每个专家的时间信息
+        expert_info = {}  # {eid: {orig_tokens, fused_tokens, gpu_time, acc_time, on_gpu, use_fusion}}
+
+        for key, stat in fusion_stats.items():
+            eid = int(key[7:])  # 解析 "expert_X"
+            orig = stat.get('total_tokens', 0)
+            fused = stat.get('tokens_after_merge', 0)
+            on_gpu = eid in expert_locs
+            use_fusion = fused > 0 and orig >= token_threshold
+
+            # GPU执行时间（始终用原始token数）
+            gpu_time = (orig * flop_factor) / gpu_flops + weight_load_gpu + (orig * input_size_factor) / gpu_bw
+            if not on_gpu:
+                gpu_time += weight_transfer
+
+            # 加速器执行时间（可用融合token数）
+            acc_tokens = fused if use_fusion else orig
+            acc_time = (acc_tokens * flop_factor) / acc_flops + weight_load_acc + (
+                        acc_tokens * input_size_factor) / acc_to_gpu_bw
+
+            expert_info[eid] = {
+                'orig': orig, 'fused': fused, 'acc_tokens': acc_tokens,
+                'gpu_time': gpu_time, 'acc_time': acc_time,
+                'on_gpu': on_gpu, 'use_fusion': use_fusion
+            }
+
+        # 初始分配：根据阈值决定专家位置
+        gpu_set, acc_set = set(), set()
+        gpu_time_total, acc_time_total = 0.0, 0.0
+
+        for eid, info in expert_info.items():
+            if info['on_gpu']:
+                # 已在GPU上的专家保持在GPU
+                gpu_set.add(eid)
+                gpu_time_total += info['gpu_time']
+            elif info['orig'] <= token_threshold or (info['use_fusion'] and info['acc_tokens'] <= token_threshold):
+                # token少的专家放加速器
+                acc_set.add(eid)
+                acc_time_total += info['acc_time']
+            else:
+                # token多的专家搬到GPU
+                gpu_set.add(eid)
+                gpu_time_total += info['gpu_time']
+
+        # 贪心优化：通过移动专家平衡GPU和加速器负载
+        # 可移动的专家：不在GPU原始位置上的专家
+        movable = {eid for eid in expert_info if not expert_info[eid]['on_gpu']}
+
+        improved = True
+        while improved:
+            improved = False
+
+            if gpu_time_total > acc_time_total:
+                # GPU负载重，尝试将专家移到加速器
+                # 选择移动后收益最大的专家（GPU时间减少 - 加速器时间增加 最大）
+                best_eid, best_gain = None, -float('inf')
+                for eid in gpu_set & movable:
+                    info = expert_info[eid]
+                    gain = info['gpu_time'] - info['acc_time']
+                    if gain > best_gain:
+                        best_gain, best_eid = gain, eid
+
+                if best_eid is not None:
+                    new_gpu = gpu_time_total - expert_info[best_eid]['gpu_time']
+                    new_acc = acc_time_total + expert_info[best_eid]['acc_time']
+                    if max(new_gpu, new_acc) < max(gpu_time_total, acc_time_total):
+                        gpu_set.remove(best_eid)
+                        acc_set.add(best_eid)
+                        gpu_time_total, acc_time_total = new_gpu, new_acc
+                        improved = True
+
+            elif acc_time_total > gpu_time_total:
+                # 加速器负载重，尝试将专家移到GPU
+                best_eid, best_gain = None, -float('inf')
+                for eid in acc_set & movable:
+                    info = expert_info[eid]
+                    gain = info['acc_time'] - info['gpu_time']
+                    if gain > best_gain:
+                        best_gain, best_eid = gain, eid
+
+                if best_eid is not None:
+                    new_gpu = gpu_time_total + expert_info[best_eid]['gpu_time']
+                    new_acc = acc_time_total - expert_info[best_eid]['acc_time']
+                    if max(new_gpu, new_acc) < max(gpu_time_total, acc_time_total):
+                        acc_set.remove(best_eid)
+                        gpu_set.add(best_eid)
+                        gpu_time_total, acc_time_total = new_gpu, new_acc
+                        improved = True
+
+        # 构建返回结果
+        gpu_expert_ids = sorted(gpu_set)
+        acc_expert_ids = sorted(acc_set)
+        move_to_gpu_ids = [eid for eid in gpu_expert_ids if eid not in expert_locs]
+        fusion_acc_expert_ids = [eid for eid in acc_expert_ids if expert_info[eid]['use_fusion']]
+        expert_actual_tokens = {
+            eid: info['acc_tokens'] if eid in acc_set else info['orig']
+            for eid, info in expert_info.items()
+        }
+
+        return {
+            'gpu_expert_ids': gpu_expert_ids,
+            'acc_expert_ids': acc_expert_ids,
+            'move_to_gpu_ids': move_to_gpu_ids,
+            'fusion_acc_expert_ids': fusion_acc_expert_ids,
+            'gpu_total_time': gpu_time_total,
+            'acc_total_time': acc_time_total,
+            'total_latency': max(gpu_time_total, acc_time_total),
             'expert_actual_tokens': expert_actual_tokens
         }
 
