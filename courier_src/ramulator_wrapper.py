@@ -239,11 +239,11 @@ class Ramulator:
                                         layer.dbyte, yaml_file, file_name, batch_size)
 
             # # remove trace
-            # rm_yaml_cmd = f"rm {yaml_file}"
-            # try:
-            #     os.system(rm_yaml_cmd)
-            # except Exception as e:
-            #     print(f"Error: {e}")
+            rm_yaml_cmd = f"rm {yaml_file}"
+            try:
+                os.system(rm_yaml_cmd)
+            except Exception as e:
+                print(f"Error: {e}")
 
             # post processing
             # 32: read granularity
