@@ -304,9 +304,9 @@ class System:
                         # 分别计算GPU专家
                         for eid in gpu_expert_ids:
                             tokens = expert_actual_tokens.get(eid, 0)
-                            act_layer = copy.deepcopy(s_decoder[idx + 2])    # 激活函数层
                             if tokens > 0:
                                 expert_layer = copy.deepcopy(layer)
+                                act_layer = copy.deepcopy(s_decoder[idx + 2])  # 激活函数层
                                 expert_layer.m = tokens
                                 act_layer.m = tokens
                                 t, e = self.devices['GPU'].get_time_and_energy(expert_layer)

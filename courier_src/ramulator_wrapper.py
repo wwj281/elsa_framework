@@ -12,21 +12,27 @@ class Ramulator:
     def __init__(self,
                  modelinfos,
                  ramulator_dir,
+                 pim_type: PIMType,
                  mapping_strategy: MappingStrategyType = MappingStrategyType.NAIVE, 
                  output_log='',
                  fast_mode=False,
                  num_hbm=5):
         self.df = pd.DataFrame()
         self.ramulator_dir = ramulator_dir
+        self.pim_type = pim_type
         self.mapping_strategy = mapping_strategy
         self.output_log = output_log
         if os.path.exists(output_log):
             self.df = pd.read_csv(output_log)
-        self.tCK = 0.625  # ns
+        if self.pim_type == PIMType.DDR4:
+            self.tCK = 0.625  # ns
+        else:
+            self.tCK = 0.769
         self.num_hbm = num_hbm
         self.nhead = modelinfos['num_heads']
         self.dhead = modelinfos['dhead']
-        if modelinfos['moe']:
+        self.moe = modelinfos['moe']
+        if self.moe:
             self.num_experts = modelinfos['num_experts']
             self.token_experts = modelinfos['activated_experts']
             self.shared_experts = modelinfos['shared_experts']
@@ -81,11 +87,18 @@ class Ramulator:
             if os.path.exists(self.output_log):
                 df = pd.read_csv(self.output_log)
             else:
-                columns = [
-                    'L', 'nhead', 'dhead', 'dbyte', 'pim_type',
-                    'power_constraint', 'cycle', 'mac', 'softmax', 'mvgb',
-                    'mvsb', 'wrgb'
-                ]
+                if self.moe:
+                    columns = [
+                        't', 'h_size', 'i_size', 'dbyte', 'pim_type',
+                        'power_constraint', 'cycle', 'mac', 'mvgb', 'wrgb',
+                        'acc', 'af', 'ewmul'
+                    ]
+                else:
+                    columns = [
+                        'L', 'nhead', 'dhead', 'dbyte', 'pim_type',
+                        'power_constraint', 'cycle', 'mac', 'softmax', 'mvgb',
+                        'mvsb', 'wrgb'
+                    ]
                 df = pd.DataFrame(columns=columns)
         else:
             df = self.df
@@ -150,26 +163,50 @@ class Ramulator:
         #     print(f"Error: {e}")
 
         # parsing output
-        n_cmds = {"mac": 0, "sfm": 0, "mvgb": 0, "mvsb": 0, "wrgb": 0}
-        cycle = 0
-        for line in output_list:
-            if "mac" in line:
-                n_cmds["mac"] += int(line.split()[-1])
-            elif "softmax_requests" in line:
-                n_cmds["sfm"] += int(line.split()[-1])
-            elif "move_to_gemv_buffer" in line:
-                n_cmds["mvgb"] += int(line.split()[-1])
-            elif "move_to_softmax_buffer" in line:
-                n_cmds["mvsb"] += int(line.split()[-1])
-            elif "write_to_gemv_buffer" in line:
-                n_cmds["wrgb"] += int(line.split()[-1])
-            elif "memory_system_cycles" in line:
-                cycle += int(line.split()[-1])
+        if self.moe:
+            n_cmds = {"mac": 0, "mvgb": 0, "wrgb": 0, "acc": 0, "af": 0, "ewmul": 0}
+            cycle = 0
+            for line in output_list:
+                if "mac" in line:
+                    n_cmds["mac"] += int(line.split()[-1])
+                elif "move_to_gemv_buffer" in line:
+                    n_cmds["mvgb"] += int(line.split()[-1])
+                elif "write_to_gemv_buffer" in line:
+                    n_cmds["wrgb"] += int(line.split()[-1])
+                elif "accumulate" in line:
+                    n_cmds["acc"] += int(line.split()[-1])
+                elif "activate_function" in line:
+                    n_cmds["af"] += int(line.split()[-1])
+                elif "multiply_element_wise" in line:
+                    n_cmds["ewmul"] += int(line.split()[-1])
+                elif "memory_system_cycles" in line:
+                    cycle += int(line.split()[-1])
 
-        out = [
-            cycle, n_cmds["mac"], n_cmds["sfm"], n_cmds["mvgb"], n_cmds["mvsb"],
-            n_cmds["wrgb"]
-        ]
+            out = [
+                cycle, n_cmds["mac"], n_cmds["mvgb"], n_cmds["wrgb"], n_cmds["acc"],
+                n_cmds["af"], n_cmds["ewmul"]
+            ]
+        else:
+            n_cmds = {"mac": 0, "sfm": 0, "mvgb": 0, "mvsb": 0, "wrgb": 0}
+            cycle = 0
+            for line in output_list:
+                if "mac" in line:
+                    n_cmds["mac"] += int(line.split()[-1])
+                elif "softmax_requests" in line:
+                    n_cmds["sfm"] += int(line.split()[-1])
+                elif "move_to_gemv_buffer" in line:
+                    n_cmds["mvgb"] += int(line.split()[-1])
+                elif "move_to_softmax_buffer" in line:
+                    n_cmds["mvsb"] += int(line.split()[-1])
+                elif "write_to_gemv_buffer" in line:
+                    n_cmds["wrgb"] += int(line.split()[-1])
+                elif "memory_system_cycles" in line:
+                    cycle += int(line.split()[-1])
+
+            out = [
+                cycle, n_cmds["mac"], n_cmds["sfm"], n_cmds["mvgb"], n_cmds["mvsb"],
+                n_cmds["wrgb"]
+            ]
         return out
 
     def run(self, pim_type: PIMType, layer: Layer, power_constraint=True, batch_size=1):
@@ -187,9 +224,14 @@ class Ramulator:
                 minimum_heads = 64
                 num_ops_group = math.ceil(num_ops_per_hbm / minimum_heads)
                 num_ops_per_hbm = minimum_heads
-
-            file_name = "attacc_l{}_nattn{}_dhead{}_dbyte{}_pc{}".format(
-                l, num_ops_per_hbm, dhead, layer.dbyte, int(power_constraint))
+            h_size = self.hidden_size
+            i_size = self.moe_intermediate_size
+            if self.moe:
+                file_name = "courier_t{}_h{}_i{}_dbyte{}_pc{}".format(
+                    l, h_size, i_size, layer.dbyte, int(power_constraint))
+            else:
+                file_name = "attacc_l{}_nattn{}_dhead{}_dbyte{}_pc{}".format(
+                    l, num_ops_per_hbm, dhead, layer.dbyte, int(power_constraint))
             yaml_file = os.path.join(self.ramulator_dir, file_name + '.yaml')
             self.make_yaml_file(yaml_file, file_name, power_constraint)
 
@@ -205,27 +247,44 @@ class Ramulator:
 
             # post processing
             # 32: read granularity
-            cycle, mac, sfm, mvgb, mvsb, wrgb = result
-            si_io = wrgb * 32  # 256 bit
-            tsv_io = (wrgb + mvsb + mvgb) * 32
-            giomux_io = (wrgb + mvsb + mvgb) * 32
-            bgmux_io = (wrgb + mvsb + mvgb) * 32
-            mem_acc = mac * 32
+            if pim_type == PIMType.DDR4:
+                cycle, mac, mvgb, wrgb, acc, af, ewmul = result
+                si_io = wrgb * 128  # 256 bit
+                tsv_io = (wrgb + mvgb) * 128
+                giomux_io = (wrgb + mvgb) * 128
+                bgmux_io = (wrgb + mvgb) * 128
+                mem_acc = mac * 128
+            elif pim_type in [PIMType.BA, PIMType.BG, PIMType.BUFFER]:
+                cycle, mac, sfm, mvgb, mvsb, wrgb = result
+                si_io = wrgb * 32  # 256 bit
+                tsv_io = (wrgb + mvsb + mvgb) * 32
+                giomux_io = (wrgb + mvsb + mvgb) * 32
+                bgmux_io = (wrgb + mvsb + mvgb) * 32
+                mem_acc = mac * 32
+            else:
+                assert "Incorrect pim type!"
             if pim_type == PIMType.BA:
                 # pCH * Rank * bank group * bank
                 mem_acc *= 2 * 2 * 4 * 4
             elif pim_type == PIMType.BG:
                 # pCH * Rank * bank group
                 mem_acc *= 2 * 2 * 4
+            elif pim_type == PIMType.DDR4:
+                mem_acc *= 2 * 2 * 8 * 4
             else:
                 mem_acc *= 1
 
             ## update log file
-
-            log = [
-                      l, num_ops_per_hbm, dhead, dbyte, pim_type.name,
-                      power_constraint
-                  ] + result
+            if self.moe:
+                log = [
+                          l, h_size, i_size, dbyte, pim_type.name,
+                          power_constraint
+                      ] + result
+            else:
+                log = [
+                          l, num_ops_per_hbm, dhead, dbyte, pim_type.name,
+                          power_constraint
+                      ] + result
             self.update_log_file(log)
 
             ## si, tsv, giomux to bgmux, bgmux to column decoder, bank RD
@@ -252,13 +311,22 @@ class Ramulator:
             num_ops_group = math.ceil(num_ops_per_hbm / minimum_heads)
             num_ops_per_hbm = minimum_heads
 
-        l = layer.n
-        dhead = layer.k
         dbyte = layer.dbyte
-        row = self.df[(self.df['L'] == l) & (self.df['nhead'] == num_ops_per_hbm) & \
-                      (self.df['dbyte'] == dbyte) & (self.df['dhead'] == dhead) & \
-                      (self.df['power_constraint'] == power_constraint) & \
-                      (self.df['pim_type'] == pim_type.name)]
+        if self.moe:
+            l = layer.m
+            h_size = self.hidden_size
+            i_size = self.moe_intermediate_size
+            row = self.df[(self.df['t'] == l) & (self.df['h_size'] == h_size) & \
+                          (self.df['i_size'] == i_size) & (self.df['dbyte'] == dbyte) & \
+                          (self.df['power_constraint'] == power_constraint) & \
+                          (self.df['pim_type'] == pim_type.name)]
+        else:
+            l = layer.n
+            dhead = layer.k
+            row = self.df[(self.df['L'] == l) & (self.df['nhead'] == num_ops_per_hbm) & \
+                          (self.df['dbyte'] == dbyte) & (self.df['dhead'] == dhead) & \
+                          (self.df['power_constraint'] == power_constraint) & \
+                          (self.df['pim_type'] == pim_type.name)]
         if row.empty:
             print('self.run 2')
             return self.run(pim_type, layer, power_constraint, batch_size)
@@ -266,21 +334,31 @@ class Ramulator:
         else:
             cycle = int(row.iloc[0]['cycle'])
             mac = int(row.iloc[0]['mac'])
-            softmax = int(row.iloc[0]['softmax'])
             mvgb = int(row.iloc[0]['mvgb'])
-            mvsb = int(row.iloc[0]['mvsb'])
             wrgb = int(row.iloc[0]['wrgb'])
-            si_io = wrgb * 32  # 256 bit
-            tsv_io = (wrgb + mvsb + mvgb) * 32
-            giomux_io = (wrgb + mvsb + mvgb) * 32
-            bgmux_io = (wrgb + mvsb + mvgb) * 32
-            mem_acc = mac * 32
+            if pim_type == PIMType.DDR4:
+                softmax = 0
+                si_io = wrgb * 128  # 1024 bit
+                tsv_io = (wrgb + mvgb) * 128
+                giomux_io = (wrgb + mvgb) * 128
+                bgmux_io = (wrgb + mvgb) * 128
+                mem_acc = mac * 128
+            else:
+                softmax = int(row.iloc[0]['softmax'])
+                mvsb = int(row.iloc[0]['mvsb'])
+                si_io = wrgb * 32  # 256 bit
+                tsv_io = (wrgb + mvsb + mvgb) * 32
+                giomux_io = (wrgb + mvsb + mvgb) * 32
+                bgmux_io = (wrgb + mvsb + mvgb) * 32
+                mem_acc = mac * 32
             if pim_type == PIMType.BA:
                 # pCH * Rank * bank group * bank
                 mem_acc *= 2 * 2 * 4 * 4
             elif pim_type == PIMType.BG:
                 # pCH * Rank * bank group
                 mem_acc *= 2 * 2 * 4
+            elif pim_type == PIMType.DDR4:
+                mem_acc *= 2 * 2 * 8 * 4
             else:
                 mem_acc *= 2
 
