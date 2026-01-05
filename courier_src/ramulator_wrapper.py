@@ -156,11 +156,11 @@ class Ramulator:
             assert 0
 
         # # remove trace
-        # rm_trace_cmd = f"rm {trace_file}"
-        # try:
-        #     os.system(rm_trace_cmd)
-        # except Exception as e:
-        #     print(f"Error: {e}")
+        rm_trace_cmd = f"rm {trace_file}"
+        try:
+            os.system(rm_trace_cmd)
+        except Exception as e:
+            print(f"Error: {e}")
 
         # parsing output
         if self.moe:
