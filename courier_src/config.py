@@ -222,7 +222,7 @@ def make_pim_config(pim_type: PIMType,
         config["MEM_CAPACITY_PER_HBM"] = 128 * 1024 * 1024 * 1024
         config[
             "MEM_BW_PER_HBM"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
-        config["FLOPS_PER_HBM"] = 64 * 200 * 1000 * 1000 * 128  # 单Bank一次计算处理操作数 * 计算频率 * DDR4 NMP单Channel Bank数
+        config["FLOPS_PER_HBM"] = 64 * 2 * 200 * 1000 * 1000 * 128  # 单Bank一次计算处理操作数 * 计算频率 * DDR4 NMP单Channel Bank数
         config["SOFTMAX_MEM_BW"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
         config["SOFTMAX_FLOPS"] = 64 * 200 * 1000 * 1000 * 128
     else:

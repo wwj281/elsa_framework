@@ -14,7 +14,7 @@ shared_moe_intermediate_size = 1408
 batch_size = 1
 data_size = 2  # FP 16
 
-n_channel = 8
+n_channel = 4
 n_dimm = 2
 n_rank = 2
 n_bg = 8
@@ -242,11 +242,11 @@ def main():
     parser = argparse.ArgumentParser(description="Output path and operation infos",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("-ne", "--num_experts", type=int, default=64,
+    parser.add_argument("-ne", "--num_experts", type=int, default=60,
                         help="Number of routed experts, default = 64")
-    parser.add_argument("-te", "--token_experts", type=int, default=6,
+    parser.add_argument("-te", "--token_experts", type=int, default=4,
                         help="Number of activated experts per token, default = 6")
-    parser.add_argument("-se", "--shared_experts", type=int, default=2,
+    parser.add_argument("-se", "--shared_experts", type=int, default=1,
                         help="Number of shared experts per token, default = 2")
     parser.add_argument("-hs", "--hidden_size", type=int, default=2048,
                         help="Hidden size, default= 2048")
@@ -258,7 +258,7 @@ def main():
                         help="Batch size, default = 1")
     parser.add_argument("-db", "--dbyte", type=int, default=2,
                         help="data type (B), default = 2")
-    parser.add_argument("-tn", "--token_num", type=int, default=1,
+    parser.add_argument("-tn", "--token_num", type=int, default=333,
                         help="Number of token in a expert, default = 1")
     parser.add_argument("-o", "--output", type=str, default="courier_pim.trace",
                         help="output path")

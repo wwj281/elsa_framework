@@ -102,7 +102,7 @@ class Ramulator:
                 df = pd.DataFrame(columns=columns)
         else:
             df = self.df
-        if len(df.columns) > 12:
+        if len(df.columns) > 13:
             import pdb
             pdb.set_trace()
         new_df = pd.DataFrame(columns=df.columns)
