@@ -14,7 +14,7 @@ shared_moe_intermediate_size = 1408
 batch_size = 1
 data_size = 2  # FP 16
 
-n_channel = 8
+n_channel = 4
 n_dimm = 2
 n_rank = 2
 n_bg = 8
