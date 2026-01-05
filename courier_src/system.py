@@ -336,6 +336,11 @@ class System:
                         else:
                             layer.exec_time = gpu_total_time
                             layer.energy = gpu_total_energy
+                            print(f"actual layer exec_time {layer.exec_time:.6f}")
+                            print(f"actual GPU exec_time {gpu_total_time + x2g_time:.6f}")
+                            print(f"    computation time {gpu_total_time:.6f}")
+                            print(f"    load time {x2g_time:.6f}")
+                            print(f"actual Acc exec_time {acc_total_time:.6f}")
                 else:
                     # 其他层保持原逻辑
                     exec_time, energy = self.devices['GPU'].get_time_and_energy(layer)
