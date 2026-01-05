@@ -46,6 +46,7 @@ class System:
                 print(f"[System] Failed to load {expert_location_path}: {e}")
         scaling_factor = SCALING_FACTOR
         self.hetero_name = hetero_name
+        self.mapping_strategy = None
         self.GPU = xPU(DeviceType.GPU, gpu_config, scaling_factor)
         self.AttDevice = self.GPU
         if self.hetero_name == DeviceType.PIM:
@@ -71,6 +72,7 @@ class System:
     def set_accelerator(self, modelinfos, name: DeviceType, config):
         self.hetero_name = name
         if self.hetero_name == DeviceType.PIM:
+            self.mapping_strategy = config['MAPPING_STRATEGY']
             ramulator = Ramulator(modelinfos, ramulator_dir="ramulator2", pim_type=config["PIM_TYPE"], mapping_strategy=config['MAPPING_STRATEGY'], output_log="ramulator.out")
             self.devices['Acc'] = PIM(config,
                                       self.scaling_factor,
@@ -364,10 +366,12 @@ class System:
                                 exec_time, energy = self.devices[
                                     'Acc'].get_time_and_energy(layer, batch_size)
                             else:
-                                if layer.name == 'ff1' and ramulator_call_count == 0:
+                                if layer.name == 'ff1':
+                                    if self.mapping_strategy == MappingStrategyType.NAIVE and ramulator_call_count == 0:
+                                        ramulator_call_count += 1
+                                        continue
                                     exec_time, energy = self.devices[
-                                    'Acc'].get_time_and_energy(layer, batch_size)
-                                    ramulator_call_count += 1
+                                        'Acc'].get_time_and_energy(layer, batch_size)
                                 else:
                                     exec_time, energy = 0, [0, 0, 0, 0, 0, 0]
                     else:
