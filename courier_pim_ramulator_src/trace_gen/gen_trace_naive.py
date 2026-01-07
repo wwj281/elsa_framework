@@ -39,7 +39,7 @@ DIMM_GS['courier'] = n_channel * DIMM_GS['ch']
 ## To do!!! 一共512GB的内存空间，单根DIMM 32GB
 ## --------------------------------------  DIMM memory space -----------------------------------------##
 ## ------|  legacy CH  |  dimm  |  rank  |   BG   |  BA  |  row index  |  column index  |  access granularity  |------ ##
-## bits  |     3       |   1    |   1    |    3   |   2  |      14     |       8        |           7          |       ##
+## bits  |     2       |   2    |   1    |    3   |   2  |      14     |       8        |           7          |       ##
 
 ## ----------------------------  Commands -------------------------------##
 ## ACT: Activate all banks in parallel

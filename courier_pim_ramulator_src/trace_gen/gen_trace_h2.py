@@ -39,7 +39,7 @@ DIMM_GS['courier'] = n_channel * DIMM_GS['ch']
 ## To do!!! 一共512GB的内存空间，单根DIMM 32GB
 ## --------------------------------------  DIMM memory space -----------------------------------------##
 ## ------|  legacy CH  |  dimm  |  rank  |   BG   |  BA  |  row index  |  column index  |  access granularity  |------ ##
-## bits  |     3       |   1    |   1    |    3   |   2  |      14     |       8        |           7          |       ##
+## bits  |     2       |   2    |   1    |    3   |   2  |      14     |       8        |           7          |       ##
 
 ## ----------------------------  Commands -------------------------------##
 ## ACT: Activate all banks in parallel
@@ -135,7 +135,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_si
                         total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
         # gate mac计算完后，以DIMM为单位合并中间结果，然后计算激活函数
-        for n_idx in range(math.ceil(n_ch_gate_up / n_dimm / n_rank / n_bg / n_bank)):
+        for n_idx in range(math.ceil(n_ch_gate_up / n_chip / n_mac / 16)):  # 假设DIMM NMP的算力是Bank NMP的16倍
             for dimm_idx in range(math.ceil(valid_dimm)):
                 addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + n_idx * DIMM_GS['col']
                 hex_addr = hex(addr)[2:]
@@ -155,11 +155,18 @@ def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_si
                         total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
     def ewmul(addr_offset):
-        for k_idx in range(math.ceil(k_ch_gate_up / n_chip / n_mac)):
+        for k_idx in range(math.ceil(n_ch_gate_up / n_chip / n_mac / 16)):
             for dimm_idx in range(math.ceil(valid_dimm)):
                 addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + k_idx * DIMM_GS['col']
                 hex_addr = hex(addr)[2:]
                 total_cmd[itr].append("PIM_EWMUL 0x{0:0>8}".format(hex_addr))
+
+    def down_cpvec(addr_offset):
+        for col_idx in range(math.ceil(k_ch_down / n_chip / n_mac)):
+            for dimm_idx in range(math.ceil(valid_dimm)):
+                addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + col_idx * DIMM_GS['col']
+                hex_addr = hex(addr)[2:]
+                total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
 
     def down_mac(addr_offset):
         for n_idx in range(math.ceil(n_ch_down / n_dimm / n_rank / n_bg / n_bank)):
@@ -195,6 +202,8 @@ def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_si
 
     barrier()
 
+    down_cpvec(down_addr)
+
     down_mac(down_addr)
 
     barrier()
@@ -203,7 +212,7 @@ def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_si
 # 暂时假设以DIMM为单位分配专家，可能导致DIMM之间负载不均，某些DIMM可能处于闲置状态
 def run_attention(token_num, trace_file_name):
     # 暂时假设共享专家和普通专家的形状相同
-    weight_offset = math.ceil(hidden_size * moe_intermediate_size / (n_channel * n_dimm * n_rank * n_bg * n_bank * n_chip))
+    weight_offset = math.ceil(hidden_size * moe_intermediate_size / (n_channel * n_dimm * n_rank * n_bg * n_bank))
     t_k_gate_up = int(math.sqrt(n_channel * hidden_size / moe_intermediate_size))
     t_k_gate_up = 2 if t_k_gate_up == 1 else t_k_gate_up
     while n_channel % t_k_gate_up != 0:
