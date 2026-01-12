@@ -246,7 +246,7 @@ def run_attention(token_num, trace_file_name):
 
 
 def main():
-    global num_experts, token_experts, shared_experts, hidden_size, moe_intermediate_size, shared_moe_intermediate_size, batch_size
+    global num_experts, token_experts, shared_experts, hidden_size, moe_intermediate_size, shared_moe_intermediate_size, batch_size, n_channel
 
     parser = argparse.ArgumentParser(description="Output path and operation infos",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -271,6 +271,8 @@ def main():
                         help="Number of token in a expert, default = 1")
     parser.add_argument("-o", "--output", type=str, default="courier_pim.trace",
                         help="output path")
+    parser.add_argument("-ch", "--num_channels", type=int, default=4,
+                        help="Number of channels in NMP, default = 4")
 
     args = parser.parse_args()
 
@@ -283,6 +285,7 @@ def main():
     batch_size = args.batch_size
     token_num = args.token_num
     data_size = args.dbyte
+    n_channel = args.num_channels
 
     print("------   Make a trace of naive courier mapping  ------")
 

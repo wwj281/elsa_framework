@@ -125,14 +125,14 @@ class Ramulator:
         #     self.dhead, num_ops_per_hbm, l, dbyte, trace_file)
         if self.mapping_strategy == MappingStrategyType.NAIVE:
             trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_naive.py")
-            trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {}".format(
+            trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --num_channels {}".format(
                 self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
-                self.moe_intermediate_size, batch_size, dbyte, trace_file)
+                self.moe_intermediate_size, batch_size, dbyte, trace_file, self.num_hbm)
         else:
             trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_h2.py")
-            trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --token_num {}".format(
+            trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --token_num {} --num_channels {}".format(
                 self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
-                self.moe_intermediate_size, batch_size, dbyte, trace_file, l)
+                self.moe_intermediate_size, batch_size, dbyte, trace_file, l, self.num_hbm)
 
         gen_trace_cmd = f"python {trace_exc} {trace_args}"
 
