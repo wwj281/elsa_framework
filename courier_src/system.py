@@ -72,8 +72,9 @@ class System:
     def set_accelerator(self, modelinfos, name: DeviceType, config):
         self.hetero_name = name
         if self.hetero_name == DeviceType.PIM:
+            output_log = f"{config['PIM_TYPE']}_C{config['NUM_HBM']}_M{config['MAPPING_STRATEGY']}.log"
             self.mapping_strategy = config['MAPPING_STRATEGY']
-            ramulator = Ramulator(modelinfos, ramulator_dir="ramulator2", pim_type=config["PIM_TYPE"], mapping_strategy=config['MAPPING_STRATEGY'], output_log="ramulator.out")
+            ramulator = Ramulator(modelinfos, ramulator_dir='ramulator2', pim_type=config['PIM_TYPE'], mapping_strategy=config['MAPPING_STRATEGY'], output_log=output_log)
             self.devices['Acc'] = PIM(config,
                                       self.scaling_factor,
                                       ramulator)

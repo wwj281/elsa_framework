@@ -227,8 +227,8 @@ class Ramulator:
             h_size = self.hidden_size
             i_size = self.moe_intermediate_size
             if self.moe:
-                file_name = "courier_t{}_h{}_i{}_dbyte{}_pc{}".format(
-                    l, h_size, i_size, layer.dbyte, int(power_constraint))
+                file_name = "courier_t{}_h{}_i{}_dbyte{}_channel{}_pc{}".format(
+                    l, h_size, i_size, layer.dbyte, self.num_hbm, int(power_constraint))
             else:
                 file_name = "attacc_l{}_nattn{}_dhead{}_dbyte{}_pc{}".format(
                     l, num_ops_per_hbm, dhead, layer.dbyte, int(power_constraint))
