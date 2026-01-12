@@ -138,7 +138,7 @@ def main():
         "--mapping_strategy",
         type=str,
         default='H2',
-        help="Mapping strategy type (NAIVE, H2)")
+        help="Mapping strategy type (NAIVE, H2, WEIGHT)")
     parser.add_argument("--num_acc",
                         type=int,
                         default=1,
@@ -229,7 +229,9 @@ def main():
             pim_type = PIMType.BA
         if args.mapping_strategy == 'NAIVE':
             mapping_strategy = MappingStrategyType.NAIVE
-        elif args.mapping_strategy == 'H2':
+        elif args.mapping_strategy == 'WEIGHT':
+            mapping_strategy = MappingStrategyType.WEIGHT
+        else:
             mapping_strategy = MappingStrategyType.H2
         pim_config = make_pim_config(pim_type,  
                                      mapping_strategy,

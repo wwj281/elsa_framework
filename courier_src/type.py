@@ -44,6 +44,8 @@ class GPUType(Enum):
     H100 = 1
     RTX4090 = 2
 
+
 class MappingStrategyType(Enum):
     NAIVE = 0
     H2 = 1
+    WEIGHT = 2

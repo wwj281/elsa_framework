@@ -229,7 +229,7 @@ def run_attention(n_expert_per_channel, trace_file_name):
 
 
 def main():
-    global num_experts, token_experts, shared_experts, hidden_size, moe_intermediate_size, shared_moe_intermediate_size, n_expert_per_channel, batch_size
+    global num_experts, token_experts, shared_experts, hidden_size, moe_intermediate_size, shared_moe_intermediate_size, n_expert_per_channel, batch_size, n_channel
 
     parser = argparse.ArgumentParser(description="Output path and operation infos",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -252,6 +252,8 @@ def main():
                         help="data type (B), default = 2")
     parser.add_argument("-o", "--output", type=str, default="courier_pim.trace",
                         help="output path")
+    parser.add_argument("-ch", "--num_channels", type=int, default=4,
+                        help="Number of channels in NMP, default = 4")
 
     args = parser.parse_args()
 
@@ -262,6 +264,7 @@ def main():
     moe_intermediate_size = args.moe_intermediate_size
     shared_moe_intermediate_size = args.shared_moe_intermediate_size
     batch_size = args.batch_size
+    n_channel = args.num_channels
     # 注意这里是激活的专家加上共享专家
     n_expert_per_channel = math.ceil((token_experts + shared_experts) * batch_size / n_channel)
 
