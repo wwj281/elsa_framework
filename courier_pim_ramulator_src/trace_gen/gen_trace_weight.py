@@ -22,12 +22,12 @@ n_bank = 4
 n_row = pow(2, 16)
 n_col = pow(2, 6)
 n_chip = 8
-prefetch_size = 8 
+prefetch_size = 8
 n_mac = 8  # mac的数量就是一个物理bank一次能处理的操作数数量，在16bit DQ下，也等于BL
 
 # Granularity size
 DIMM_GS = {}
-DIMM_GS['col'] = n_chip * data_size * prefetch_size 
+DIMM_GS['col'] = n_chip * data_size * prefetch_size
 DIMM_GS['row'] = n_col * DIMM_GS['col']
 DIMM_GS['ba'] = n_row * DIMM_GS['row']  # 这里的bank是指逻辑bank，即多个chip中相同idx的所有bank
 DIMM_GS['bg'] = n_bank * DIMM_GS['ba']
@@ -90,7 +90,7 @@ def cmd_list_reset():
     valid_dimms = []
 
 
-def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_size_down, valid_dimm=n_dimm):
+def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_size_down, valid_dimm=n_dimm, token_num=1):
     total_cmd.append([])
     k_ch_gate_up = tiling_size_gate_up['k_ch_gate_up']
     n_ch_gate_up = tiling_size_gate_up['n_ch_gate_up']
@@ -116,70 +116,74 @@ def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_si
     # 但是当前映射模式下，各DIMM处理的专家数可能不同，因此只需要向被激活的DIMM发送指令，下面的代码可能需要修改
     def gate_cpvec(addr_offset):
         for col_idx in range(math.ceil(k_ch_gate_up / n_chip / n_mac)):
-            for dimm_idx in range(math.ceil(valid_dimm)):
-                addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + col_idx * DIMM_GS['col']
-                hex_addr = hex(addr)[2:]
-                total_cmd[itr].append("PIM_WR_GB 0x{0:0>8}".format(hex_addr))
+            for _ in range(token_num):
+                for dimm_idx in range(math.ceil(valid_dimm)):
+                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + col_idx * DIMM_GS['col']
+                    hex_addr = hex(addr)[2:]
+                    total_cmd[itr].append("PIM_WR_GB 0x{0:0>8}".format(hex_addr))
 
     def gate_mac(addr_offset):
         for n_idx in range(math.ceil(n_ch_gate_up / n_dimm / n_rank / n_bg / n_bank)):
             for k_idx in range(math.ceil(k_ch_gate_up / n_chip / n_mac)):
                 idx = k_idx + n_idx * math.ceil(k_ch_gate_up / n_chip / n_mac)
-
-                for dimm_idx in range(math.ceil(valid_dimm)):
-                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
-                    hex_addr = hex(addr)[2:]
-                    total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
-                    if k_idx == (math.ceil(k_ch_gate_up / n_chip / n_mac) - 1):
-                        total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
-                        total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
+                for _ in range(token_num):
+                    for dimm_idx in range(math.ceil(valid_dimm)):
+                        addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
+                        hex_addr = hex(addr)[2:]
+                        total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
+                        if k_idx == (math.ceil(k_ch_gate_up / n_chip / n_mac) - 1):
+                            total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
+                            total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
         # gate mac计算完后，以DIMM为单位合并中间结果，然后计算激活函数
         for n_idx in range(math.ceil(n_ch_gate_up / n_chip / n_mac / 16)):  # 假设DIMM NMP的算力是Bank NMP的16倍
-            for dimm_idx in range(math.ceil(valid_dimm)):
-                addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + n_idx * DIMM_GS['col']
-                hex_addr = hex(addr)[2:]
-                total_cmd[itr].append("PIM_AF 0x{0:0>8}".format(hex_addr))
+            for _ in range(token_num):
+                for dimm_idx in range(math.ceil(valid_dimm)):
+                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + n_idx * DIMM_GS['col']
+                    hex_addr = hex(addr)[2:]
+                    total_cmd[itr].append("PIM_AF 0x{0:0>8}".format(hex_addr))
 
     def up_mac(addr_offset):
         for n_idx in range(math.ceil(n_ch_gate_up / n_dimm / n_rank / n_bg / n_bank)):
             for k_idx in range(math.ceil(k_ch_gate_up / n_chip / n_mac)):
                 idx = k_idx + n_idx * math.ceil(k_ch_gate_up / n_chip / n_mac)
-
-                for dimm_idx in range(math.ceil(valid_dimm)):
-                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
-                    hex_addr = hex(addr)[2:]
-                    total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
-                    if k_idx == (math.ceil(k_ch_gate_up / n_chip / n_mac) - 1):
-                        total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
-                        total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
+                for _ in range(token_num):
+                    for dimm_idx in range(math.ceil(valid_dimm)):
+                        addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
+                        hex_addr = hex(addr)[2:]
+                        total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
+                        if k_idx == (math.ceil(k_ch_gate_up / n_chip / n_mac) - 1):
+                            total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
+                            total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
     def ewmul(addr_offset):
         for k_idx in range(math.ceil(n_ch_gate_up / n_chip / n_mac / 16)):
-            for dimm_idx in range(math.ceil(valid_dimm)):
-                addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + k_idx * DIMM_GS['col']
-                hex_addr = hex(addr)[2:]
-                total_cmd[itr].append("PIM_EWMUL 0x{0:0>8}".format(hex_addr))
+            for _ in range(token_num):
+                for dimm_idx in range(math.ceil(valid_dimm)):
+                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + k_idx * DIMM_GS['col']
+                    hex_addr = hex(addr)[2:]
+                    total_cmd[itr].append("PIM_EWMUL 0x{0:0>8}".format(hex_addr))
 
     def down_cpvec(addr_offset):
         for col_idx in range(math.ceil(k_ch_down / n_chip / n_mac)):
-            for dimm_idx in range(math.ceil(valid_dimm)):
-                addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + col_idx * DIMM_GS['col']
-                hex_addr = hex(addr)[2:]
-                total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
+            for _ in range(token_num):
+                for dimm_idx in range(math.ceil(valid_dimm)):
+                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + col_idx * DIMM_GS['col']
+                    hex_addr = hex(addr)[2:]
+                    total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
 
     def down_mac(addr_offset):
         for n_idx in range(math.ceil(n_ch_down / n_dimm / n_rank / n_bg / n_bank)):
             for k_idx in range(math.ceil(k_ch_down / n_chip / n_mac)):
                 idx = k_idx + n_idx * math.ceil(k_ch_down / n_chip / n_mac)
-
-                for dimm_idx in range(math.ceil(valid_dimm)):
-                    addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
-                    hex_addr = hex(addr)[2:]
-                    total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
-                    if k_idx == (math.ceil(k_ch_down / n_chip / n_mac) - 1):
-                        total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
-                        total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
+                for _ in range(token_num):
+                    for dimm_idx in range(math.ceil(valid_dimm)):
+                        addr = addr_offset + dimm_idx * DIMM_GS['dimm'] + idx * DIMM_GS['col']
+                        hex_addr = hex(addr)[2:]
+                        total_cmd[itr].append("PIM_MAC_AB 0x{0:0>8}".format(hex_addr))
+                        if k_idx == (math.ceil(k_ch_down / n_chip / n_mac) - 1):
+                            total_cmd[itr].append("PIM_MV_GB 0x{0:0>8}".format(hex_addr))
+                            total_cmd[itr].append("PIM_ACC 0x{0:0>8}".format(hex_addr))
 
     def barrier():
         for dimm_idx in range(n_dimm):
@@ -230,12 +234,12 @@ def run_attention(token_num, trace_file_name):
     ##-- Generate Commands --##
     # num_itr = math.ceil(n_expert_per_channel / (n_dimm))
     # 这里以处理专家数最多的DIMM作为衡量延迟的标准
-    num_itr = token_num
+    num_itr = 1
     gate_addr = 0
     up_addr = gate_addr + weight_offset
     down_addr = gate_addr + weight_offset * 2
     for itr in range(num_itr):
-        Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_size_down)
+        Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_size_down, token_num=token_num)
 
     trace_file = open(trace_file_name, 'w')
     for itr in range(num_itr):

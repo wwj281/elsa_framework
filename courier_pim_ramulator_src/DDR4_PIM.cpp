@@ -15,7 +15,7 @@ class DDR4PIM : public IDRAM, public Implementation {
       // We refer to JEDEC Standard (JESD238A).
       //   name          density  DQ  Ch Dimm Ra Bg  Ba   Ro     Co
       {"DDR4_256Gb_x16", {256<<10,  16, {1, 1, 2, 8, 4, 1<<14, 1<<11}}},
-      {"DDR4_512Gb_x16", {512<<10,  16, {1, 2, 2, 8, 4, 1<<14, 1<<11}}},
+      {"DDR4_512Gb_x16", {512<<10,  16, {1, 2, 2, 8, 4, 1<<16, 1<<9}}},
     };
 
     inline static const std::map<std::string, std::vector<int>> timing_presets = {
