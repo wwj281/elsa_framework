@@ -145,7 +145,7 @@ def main():
                         help="number of accelerator in DGX system. default=1")
     parser.add_argument("--num_channel",
                         type=int,
-                        default=4,
+                        default=2,
                         help="number of channel in accelerator. default=4")
 
     ## set model and service environment
