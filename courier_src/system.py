@@ -270,7 +270,7 @@ class System:
         print(f"     m_time: {expert_schedule['acc_latency_breakdown']['mem']:6f} s")
         print(f"     l_time: {expert_schedule['acc_latency_breakdown']['load']:6f} s")
         print(f"total_latency: {expert_schedule['total_latency']:.6f} s")
-        a = 1 / 0
+
 
         for itr, bs in enumerate(target_bs):
             time = 0
