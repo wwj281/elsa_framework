@@ -340,7 +340,7 @@ class System:
                                 break
                         # 汇总延迟
                         if acc_total_time > gpu_total_time + x2g_time:
-                            layer.exec_time = acc_total_time
+                            layer.exec_time = acc_total_time - x2g_time
                             layer.energy = acc_total_energy
                         else:
                             layer.exec_time = gpu_total_time
