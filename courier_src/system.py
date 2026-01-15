@@ -903,7 +903,8 @@ class System:
             gpu_latency_breakdown['load'] += cache['gpu_load']
             gpu_latency_breakdown['total'] += cache['gpu_time']
 
-        for eid in acc_expert_set:
+        max_ch = max(channel_latencies, key=channel_latencies.get)
+        for eid in channel_experts[max_ch]:
             cache = expert_time_cache[eid]
             acc_latency_breakdown['compute'] += cache['acc_compute']
             acc_latency_breakdown['mem'] += cache['acc_mem']
