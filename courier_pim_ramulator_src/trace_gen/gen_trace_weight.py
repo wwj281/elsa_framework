@@ -217,12 +217,12 @@ def Attention(gate_addr, up_addr, down_addr, itr, tiling_size_gate_up, tiling_si
 def run_attention(token_num, trace_file_name):
     # 暂时假设共享专家和普通专家的形状相同
     weight_offset = math.ceil(hidden_size * moe_intermediate_size / (n_channel * n_dimm * n_rank * n_bg * n_bank))
-    t_k_gate_up = int(math.sqrt(n_channel * hidden_size / moe_intermediate_size))
+    t_k_gate_up = max(int(math.sqrt(n_channel * hidden_size / moe_intermediate_size)), 1)
     t_k_gate_up = 2 if t_k_gate_up == 1 else t_k_gate_up
     while n_channel % t_k_gate_up != 0:
         t_k_gate_up -= 1
     t_n_gate_up = n_channel / t_k_gate_up
-    t_k_down = int(math.sqrt(n_channel * moe_intermediate_size / hidden_size))
+    t_k_down = max(int(math.sqrt(n_channel * moe_intermediate_size / hidden_size)), 1)
     t_k_down = 2 if t_k_down == 1 else t_k_down
     while n_channel % t_k_down != 0:
         t_k_down -= 1
