@@ -214,12 +214,12 @@ def run_attention(token_num, trace_file_name):
     # 暂时假设共享专家和普通专家的形状相同
     weight_offset = math.ceil(hidden_size * moe_intermediate_size / (n_channel * n_dimm * n_rank * n_bg * n_bank))
     t_k_gate_up = max(int(math.sqrt(n_channel * hidden_size / moe_intermediate_size)), 1)
-    t_k_gate_up = 2 if t_k_gate_up == 1 and n_channel > 2 else t_k_gate_up
+    t_k_gate_up = 2 if t_k_gate_up == 1 and moe_intermediate_size < hidden_size else t_k_gate_up
     while n_channel % t_k_gate_up != 0:
         t_k_gate_up -= 1
     t_n_gate_up = n_channel / t_k_gate_up
     t_k_down = max(int(math.sqrt(n_channel * moe_intermediate_size / hidden_size)), 1)
-    t_k_down = 2 if t_k_down == 1 and n_channel > 2 else t_k_down
+    t_k_down = 2 if t_k_down == 1 and hidden_size < moe_intermediate_size else t_k_down
     while n_channel % t_k_down != 0:
         t_k_down -= 1
     t_n_down = n_channel / t_k_down
@@ -251,15 +251,15 @@ def main():
     parser = argparse.ArgumentParser(description="Output path and operation infos",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("-ne", "--num_experts", type=int, default=60,
+    parser.add_argument("-ne", "--num_experts", type=int, default=8,
                         help="Number of routed experts, default = 64")
-    parser.add_argument("-te", "--token_experts", type=int, default=4,
+    parser.add_argument("-te", "--token_experts", type=int, default=2,
                         help="Number of activated experts per token, default = 6")
-    parser.add_argument("-se", "--shared_experts", type=int, default=1,
+    parser.add_argument("-se", "--shared_experts", type=int, default=0,
                         help="Number of shared experts per token, default = 2")
-    parser.add_argument("-hs", "--hidden_size", type=int, default=2048,
+    parser.add_argument("-hs", "--hidden_size", type=int, default=4096,
                         help="Hidden size, default= 2048")
-    parser.add_argument("-mis", "--moe_intermediate_size", type=int, default=1408,
+    parser.add_argument("-mis", "--moe_intermediate_size", type=int, default=14336,
                         help="Moe layer intermediate size, default = 1408")
     parser.add_argument("-smis", "--shared_moe_intermediate_size", type=int, default=1408,
                         help="Shared moe layer intermediate size, default = 1408")
@@ -267,11 +267,11 @@ def main():
                         help="Batch size, default = 1")
     parser.add_argument("-db", "--dbyte", type=int, default=2,
                         help="data type (B), default = 2")
-    parser.add_argument("-tn", "--token_num", type=int, default=333,
+    parser.add_argument("-tn", "--token_num", type=int, default=1,
                         help="Number of token in a expert, default = 1")
     parser.add_argument("-o", "--output", type=str, default="courier_pim.trace",
                         help="output path")
-    parser.add_argument("-ch", "--num_channels", type=int, default=4,
+    parser.add_argument("-ch", "--num_channels", type=int, default=2,
                         help="Number of channels in NMP, default = 4")
 
     args = parser.parse_args()

@@ -106,17 +106,17 @@ def main():
     parser.add_argument(
         "--tfs_file",
         type=str,
-        default="per_layer_expert_stats_0.05.json",
+        default="mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json",
         help="expert-token-fusion-stats file name")
     parser.add_argument(
         "--gss_file",
         type=str,
-        default="expert_gate_sum_threshold_0.05.json",
+        default="mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json",
         help="expert0-gate-sum-stats file name")
     parser.add_argument(
         "--elp_file",
         type=str,
-        default="expert_location_path.json",
+        default="mixtral_8x7b/expert_location_path.json ",
         help="expert-location-path file name")
 
 
@@ -152,7 +152,7 @@ def main():
     parser.add_argument(
         "--model",
         type=str,
-        default='Qwen-2.7B',
+        default='Mixtral-8x7B',
         help="model list: GPT-175B, LLAMA-65B, MT-530B, OPT-66B, DeepSeek-16B, Qwen-2.7B, Mixtral-8x7B")
     parser.add_argument("--word",
                         type=int,
