@@ -48,6 +48,7 @@ def run(system: System,
         pipe=0,
         parallel=False,
         output_file=None,
+        schedule_strategy=ScheduleStrategyType.FUSION,
         attn_on_hetero=False,
         act_on_hetero=False,
         moe_on_hetero=True):
@@ -62,6 +63,7 @@ def run(system: System,
                     pipe=pipe,
                     parallel_ff=parallel,
                     power_constraint=power_constraint,
+                    schedule_strategy=schedule_strategy,
                     attn_on_hetero=attn_on_hetero,
                     act_on_hetero=act_on_hetero,
                     moe_on_hetero=moe_on_hetero)
@@ -106,17 +108,17 @@ def main():
     parser.add_argument(
         "--tfs_file",
         type=str,
-        default="mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json",
+        default="input1024_batch16/mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json",
         help="expert-token-fusion-stats file name")
     parser.add_argument(
         "--gss_file",
         type=str,
-        default="mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json",
+        default="input1024_batch16/mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json",
         help="expert0-gate-sum-stats file name")
     parser.add_argument(
         "--elp_file",
         type=str,
-        default="mixtral_8x7b/expert_location_path.json ",
+        default="input1024_batch16/mixtral_8x7b/expert_location_path.json",
         help="expert-location-path file name")
 
 
@@ -135,9 +137,14 @@ def main():
                         action='store_true',
                         help="apply pipeline optimization ")
     parser.add_argument(
+        "--schedule_strategy",
+        type=str,
+        default='FUSION',
+        help="Schedule strategy type (FUSION, NOFUSION, PIMOE, FIDDLER)")
+    parser.add_argument(
         "--mapping_strategy",
         type=str,
-        default='H2',
+        default='WEIGHT',
         help="Mapping strategy type (NAIVE, H2, WEIGHT)")
     parser.add_argument("--num_acc",
                         type=int,
@@ -207,7 +214,7 @@ def main():
 
     # set system
     dtype = DataType.W16A16 if args.word == 2 else DataType.W8A8
-    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B'] else False
+    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B', 'Qwen-3-30B'] else False
     modelinfos = make_model_config(args.model, dtype, moe=moe)
     xpu_config = make_xpu_config(gpu_device, num_gpu=num_gpu, mem_cap=gmem_cap)
     expert_token_fusion_stats_path = os.path.join("gate_weight_data", args.tfs_file)
@@ -246,6 +253,16 @@ def main():
         system.set_xpu(xpu_config['GPU'])
         system.set_accelerator(modelinfos, DeviceType.CPU, xpu_config['CPU'])
 
+
+    if args.schedule_strategy == 'NOFUSION':  
+        schedule_strategy = ScheduleStrategyType.NOFUSION
+    elif args.schedule_strategy == 'PIMOE':
+        schedule_strategy = ScheduleStrategyType.PIMOE
+    elif args.schedule_strategy == 'FIDDLER':
+        schedule_strategy = ScheduleStrategyType.FIDDLER
+    else:
+        schedule_strategy = ScheduleStrategyType.FUSION
+
     run(system,
         args.batch,
         args.lin,
@@ -254,6 +271,7 @@ def main():
         parallel=args.ffopt,
         output_file=output_path,
         power_constraint=args.powerlimit,
+        schedule_strategy=schedule_strategy,
         attn_on_hetero=args.act_on_hetero,
         act_on_hetero=args.act_on_hetero,
         moe_on_hetero=args.system not in ['dgx'])

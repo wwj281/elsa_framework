@@ -1,0 +1,2114 @@
+{
+  "model.layers.0.mlp": {
+    "expert_0": {
+      "total_tokens": 3673,
+      "high_weight_tokens": 1676,
+      "low_weight_tokens": 1997,
+      "merge_groups": 16,
+      "tokens_after_merge": 1692,
+      "computation_saved_ratio": 0.5393411380343044
+    },
+    "expert_1": {
+      "total_tokens": 5421,
+      "high_weight_tokens": 4355,
+      "low_weight_tokens": 1066,
+      "merge_groups": 16,
+      "tokens_after_merge": 4371,
+      "computation_saved_ratio": 0.19369120088544545
+    },
+    "expert_2": {
+      "total_tokens": 3351,
+      "high_weight_tokens": 2387,
+      "low_weight_tokens": 964,
+      "merge_groups": 16,
+      "tokens_after_merge": 2403,
+      "computation_saved_ratio": 0.2829006266786034
+    },
+    "expert_3": {
+      "total_tokens": 3229,
+      "high_weight_tokens": 2269,
+      "low_weight_tokens": 960,
+      "merge_groups": 16,
+      "tokens_after_merge": 2285,
+      "computation_saved_ratio": 0.29235057293279654
+    },
+    "expert_4": {
+      "total_tokens": 6107,
+      "high_weight_tokens": 2003,
+      "low_weight_tokens": 4104,
+      "merge_groups": 16,
+      "tokens_after_merge": 2019,
+      "computation_saved_ratio": 0.669395775339774
+    },
+    "expert_5": {
+      "total_tokens": 3895,
+      "high_weight_tokens": 1052,
+      "low_weight_tokens": 2843,
+      "merge_groups": 16,
+      "tokens_after_merge": 1068,
+      "computation_saved_ratio": 0.7258023106546855
+    },
+    "expert_6": {
+      "total_tokens": 3179,
+      "high_weight_tokens": 1504,
+      "low_weight_tokens": 1675,
+      "merge_groups": 16,
+      "tokens_after_merge": 1520,
+      "computation_saved_ratio": 0.5218622208241586
+    },
+    "expert_7": {
+      "total_tokens": 3945,
+      "high_weight_tokens": 1386,
+      "low_weight_tokens": 2559,
+      "merge_groups": 16,
+      "tokens_after_merge": 1402,
+      "computation_saved_ratio": 0.6446134347275032
+    }
+  },
+  "model.layers.1.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3403,
+      "high_weight_tokens": 1822,
+      "low_weight_tokens": 1581,
+      "merge_groups": 16,
+      "tokens_after_merge": 1838,
+      "computation_saved_ratio": 0.45988833382309724
+    },
+    "expert_1": {
+      "total_tokens": 3801,
+      "high_weight_tokens": 2154,
+      "low_weight_tokens": 1647,
+      "merge_groups": 16,
+      "tokens_after_merge": 2170,
+      "computation_saved_ratio": 0.429097605893186
+    },
+    "expert_2": {
+      "total_tokens": 3589,
+      "high_weight_tokens": 2000,
+      "low_weight_tokens": 1589,
+      "merge_groups": 16,
+      "tokens_after_merge": 2016,
+      "computation_saved_ratio": 0.43828364446921153
+    },
+    "expert_3": {
+      "total_tokens": 2824,
+      "high_weight_tokens": 356,
+      "low_weight_tokens": 2468,
+      "merge_groups": 16,
+      "tokens_after_merge": 372,
+      "computation_saved_ratio": 0.868271954674221
+    },
+    "expert_4": {
+      "total_tokens": 6033,
+      "high_weight_tokens": 2090,
+      "low_weight_tokens": 3943,
+      "merge_groups": 16,
+      "tokens_after_merge": 2106,
+      "computation_saved_ratio": 0.6509199403281949
+    },
+    "expert_5": {
+      "total_tokens": 6057,
+      "high_weight_tokens": 4575,
+      "low_weight_tokens": 1482,
+      "merge_groups": 16,
+      "tokens_after_merge": 4591,
+      "computation_saved_ratio": 0.2420340102360905
+    },
+    "expert_6": {
+      "total_tokens": 3363,
+      "high_weight_tokens": 1990,
+      "low_weight_tokens": 1373,
+      "merge_groups": 16,
+      "tokens_after_merge": 2006,
+      "computation_saved_ratio": 0.4035087719298246
+    },
+    "expert_7": {
+      "total_tokens": 3730,
+      "high_weight_tokens": 1767,
+      "low_weight_tokens": 1963,
+      "merge_groups": 16,
+      "tokens_after_merge": 1783,
+      "computation_saved_ratio": 0.5219839142091153
+    }
+  },
+  "model.layers.2.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5599,
+      "high_weight_tokens": 2658,
+      "low_weight_tokens": 2941,
+      "merge_groups": 16,
+      "tokens_after_merge": 2674,
+      "computation_saved_ratio": 0.5224147169137345
+    },
+    "expert_1": {
+      "total_tokens": 3220,
+      "high_weight_tokens": 1620,
+      "low_weight_tokens": 1600,
+      "merge_groups": 16,
+      "tokens_after_merge": 1636,
+      "computation_saved_ratio": 0.49192546583850927
+    },
+    "expert_2": {
+      "total_tokens": 3835,
+      "high_weight_tokens": 1770,
+      "low_weight_tokens": 2065,
+      "merge_groups": 16,
+      "tokens_after_merge": 1786,
+      "computation_saved_ratio": 0.5342894393741852
+    },
+    "expert_3": {
+      "total_tokens": 3968,
+      "high_weight_tokens": 1877,
+      "low_weight_tokens": 2091,
+      "merge_groups": 16,
+      "tokens_after_merge": 1893,
+      "computation_saved_ratio": 0.5229334677419355
+    },
+    "expert_4": {
+      "total_tokens": 3635,
+      "high_weight_tokens": 1803,
+      "low_weight_tokens": 1832,
+      "merge_groups": 16,
+      "tokens_after_merge": 1819,
+      "computation_saved_ratio": 0.49958734525447046
+    },
+    "expert_5": {
+      "total_tokens": 5342,
+      "high_weight_tokens": 3184,
+      "low_weight_tokens": 2158,
+      "merge_groups": 16,
+      "tokens_after_merge": 3200,
+      "computation_saved_ratio": 0.4009734181954324
+    },
+    "expert_6": {
+      "total_tokens": 3498,
+      "high_weight_tokens": 2244,
+      "low_weight_tokens": 1254,
+      "merge_groups": 16,
+      "tokens_after_merge": 2260,
+      "computation_saved_ratio": 0.35391652372784443
+    },
+    "expert_7": {
+      "total_tokens": 3703,
+      "high_weight_tokens": 1842,
+      "low_weight_tokens": 1861,
+      "merge_groups": 16,
+      "tokens_after_merge": 1858,
+      "computation_saved_ratio": 0.49824466648663246
+    }
+  },
+  "model.layers.3.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4588,
+      "high_weight_tokens": 2180,
+      "low_weight_tokens": 2408,
+      "merge_groups": 16,
+      "tokens_after_merge": 2196,
+      "computation_saved_ratio": 0.5213600697471665
+    },
+    "expert_1": {
+      "total_tokens": 3770,
+      "high_weight_tokens": 1848,
+      "low_weight_tokens": 1922,
+      "merge_groups": 16,
+      "tokens_after_merge": 1864,
+      "computation_saved_ratio": 0.5055702917771883
+    },
+    "expert_2": {
+      "total_tokens": 3754,
+      "high_weight_tokens": 2049,
+      "low_weight_tokens": 1705,
+      "merge_groups": 16,
+      "tokens_after_merge": 2065,
+      "computation_saved_ratio": 0.4499200852424081
+    },
+    "expert_3": {
+      "total_tokens": 4081,
+      "high_weight_tokens": 2474,
+      "low_weight_tokens": 1607,
+      "merge_groups": 16,
+      "tokens_after_merge": 2490,
+      "computation_saved_ratio": 0.38985542759127667
+    },
+    "expert_4": {
+      "total_tokens": 3253,
+      "high_weight_tokens": 1746,
+      "low_weight_tokens": 1507,
+      "merge_groups": 16,
+      "tokens_after_merge": 1762,
+      "computation_saved_ratio": 0.45834614202274826
+    },
+    "expert_5": {
+      "total_tokens": 3749,
+      "high_weight_tokens": 1591,
+      "low_weight_tokens": 2158,
+      "merge_groups": 16,
+      "tokens_after_merge": 1607,
+      "computation_saved_ratio": 0.5713523606295012
+    },
+    "expert_6": {
+      "total_tokens": 5147,
+      "high_weight_tokens": 2967,
+      "low_weight_tokens": 2180,
+      "merge_groups": 16,
+      "tokens_after_merge": 2983,
+      "computation_saved_ratio": 0.42043909073246555
+    },
+    "expert_7": {
+      "total_tokens": 4458,
+      "high_weight_tokens": 2498,
+      "low_weight_tokens": 1960,
+      "merge_groups": 16,
+      "tokens_after_merge": 2514,
+      "computation_saved_ratio": 0.4360699865410498
+    }
+  },
+  "model.layers.4.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3656,
+      "high_weight_tokens": 1978,
+      "low_weight_tokens": 1678,
+      "merge_groups": 16,
+      "tokens_after_merge": 1994,
+      "computation_saved_ratio": 0.45459518599562365
+    },
+    "expert_1": {
+      "total_tokens": 5493,
+      "high_weight_tokens": 3868,
+      "low_weight_tokens": 1625,
+      "merge_groups": 16,
+      "tokens_after_merge": 3884,
+      "computation_saved_ratio": 0.2929182596031312
+    },
+    "expert_2": {
+      "total_tokens": 3667,
+      "high_weight_tokens": 1627,
+      "low_weight_tokens": 2040,
+      "merge_groups": 16,
+      "tokens_after_merge": 1643,
+      "computation_saved_ratio": 0.551949822743387
+    },
+    "expert_3": {
+      "total_tokens": 5299,
+      "high_weight_tokens": 2167,
+      "low_weight_tokens": 3132,
+      "merge_groups": 16,
+      "tokens_after_merge": 2183,
+      "computation_saved_ratio": 0.5880354783921495
+    },
+    "expert_4": {
+      "total_tokens": 3354,
+      "high_weight_tokens": 1716,
+      "low_weight_tokens": 1638,
+      "merge_groups": 16,
+      "tokens_after_merge": 1732,
+      "computation_saved_ratio": 0.4836016696481813
+    },
+    "expert_5": {
+      "total_tokens": 3822,
+      "high_weight_tokens": 2020,
+      "low_weight_tokens": 1802,
+      "merge_groups": 16,
+      "tokens_after_merge": 2036,
+      "computation_saved_ratio": 0.467294610151753
+    },
+    "expert_6": {
+      "total_tokens": 3710,
+      "high_weight_tokens": 1881,
+      "low_weight_tokens": 1829,
+      "merge_groups": 16,
+      "tokens_after_merge": 1897,
+      "computation_saved_ratio": 0.48867924528301887
+    },
+    "expert_7": {
+      "total_tokens": 3799,
+      "high_weight_tokens": 1822,
+      "low_weight_tokens": 1977,
+      "merge_groups": 16,
+      "tokens_after_merge": 1838,
+      "computation_saved_ratio": 0.5161884706501711
+    }
+  },
+  "model.layers.5.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3169,
+      "high_weight_tokens": 1681,
+      "low_weight_tokens": 1488,
+      "merge_groups": 16,
+      "tokens_after_merge": 1697,
+      "computation_saved_ratio": 0.46449984222152096
+    },
+    "expert_1": {
+      "total_tokens": 3342,
+      "high_weight_tokens": 1782,
+      "low_weight_tokens": 1560,
+      "merge_groups": 16,
+      "tokens_after_merge": 1798,
+      "computation_saved_ratio": 0.461998803111909
+    },
+    "expert_2": {
+      "total_tokens": 5973,
+      "high_weight_tokens": 2796,
+      "low_weight_tokens": 3177,
+      "merge_groups": 16,
+      "tokens_after_merge": 2812,
+      "computation_saved_ratio": 0.529214799933032
+    },
+    "expert_3": {
+      "total_tokens": 4089,
+      "high_weight_tokens": 2221,
+      "low_weight_tokens": 1868,
+      "merge_groups": 16,
+      "tokens_after_merge": 2237,
+      "computation_saved_ratio": 0.4529224749327464
+    },
+    "expert_4": {
+      "total_tokens": 3349,
+      "high_weight_tokens": 1679,
+      "low_weight_tokens": 1670,
+      "merge_groups": 16,
+      "tokens_after_merge": 1695,
+      "computation_saved_ratio": 0.4938787697820245
+    },
+    "expert_5": {
+      "total_tokens": 3539,
+      "high_weight_tokens": 1815,
+      "low_weight_tokens": 1724,
+      "merge_groups": 16,
+      "tokens_after_merge": 1831,
+      "computation_saved_ratio": 0.4826222096637468
+    },
+    "expert_6": {
+      "total_tokens": 3492,
+      "high_weight_tokens": 1854,
+      "low_weight_tokens": 1638,
+      "merge_groups": 16,
+      "tokens_after_merge": 1870,
+      "computation_saved_ratio": 0.46449026345933564
+    },
+    "expert_7": {
+      "total_tokens": 5847,
+      "high_weight_tokens": 3311,
+      "low_weight_tokens": 2536,
+      "merge_groups": 16,
+      "tokens_after_merge": 3327,
+      "computation_saved_ratio": 0.43099025141098
+    }
+  },
+  "model.layers.6.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3829,
+      "high_weight_tokens": 1932,
+      "low_weight_tokens": 1897,
+      "merge_groups": 16,
+      "tokens_after_merge": 1948,
+      "computation_saved_ratio": 0.49125097936798123
+    },
+    "expert_1": {
+      "total_tokens": 5528,
+      "high_weight_tokens": 3111,
+      "low_weight_tokens": 2417,
+      "merge_groups": 16,
+      "tokens_after_merge": 3127,
+      "computation_saved_ratio": 0.43433429811866864
+    },
+    "expert_2": {
+      "total_tokens": 5032,
+      "high_weight_tokens": 2696,
+      "low_weight_tokens": 2336,
+      "merge_groups": 16,
+      "tokens_after_merge": 2712,
+      "computation_saved_ratio": 0.4610492845786963
+    },
+    "expert_3": {
+      "total_tokens": 3713,
+      "high_weight_tokens": 1807,
+      "low_weight_tokens": 1906,
+      "merge_groups": 16,
+      "tokens_after_merge": 1823,
+      "computation_saved_ratio": 0.5090223538917318
+    },
+    "expert_4": {
+      "total_tokens": 4108,
+      "high_weight_tokens": 2108,
+      "low_weight_tokens": 2000,
+      "merge_groups": 16,
+      "tokens_after_merge": 2124,
+      "computation_saved_ratio": 0.48296007789678674
+    },
+    "expert_5": {
+      "total_tokens": 3119,
+      "high_weight_tokens": 1764,
+      "low_weight_tokens": 1355,
+      "merge_groups": 16,
+      "tokens_after_merge": 1780,
+      "computation_saved_ratio": 0.42930426418723955
+    },
+    "expert_6": {
+      "total_tokens": 3212,
+      "high_weight_tokens": 1694,
+      "low_weight_tokens": 1518,
+      "merge_groups": 16,
+      "tokens_after_merge": 1710,
+      "computation_saved_ratio": 0.4676214196762142
+    },
+    "expert_7": {
+      "total_tokens": 4259,
+      "high_weight_tokens": 2157,
+      "low_weight_tokens": 2102,
+      "merge_groups": 16,
+      "tokens_after_merge": 2173,
+      "computation_saved_ratio": 0.48978633482038036
+    }
+  },
+  "model.layers.7.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3581,
+      "high_weight_tokens": 1822,
+      "low_weight_tokens": 1759,
+      "merge_groups": 16,
+      "tokens_after_merge": 1838,
+      "computation_saved_ratio": 0.48673554872940517
+    },
+    "expert_1": {
+      "total_tokens": 3611,
+      "high_weight_tokens": 2078,
+      "low_weight_tokens": 1533,
+      "merge_groups": 16,
+      "tokens_after_merge": 2094,
+      "computation_saved_ratio": 0.42010523400720023
+    },
+    "expert_2": {
+      "total_tokens": 3840,
+      "high_weight_tokens": 1809,
+      "low_weight_tokens": 2031,
+      "merge_groups": 16,
+      "tokens_after_merge": 1825,
+      "computation_saved_ratio": 0.5247395833333333
+    },
+    "expert_3": {
+      "total_tokens": 3754,
+      "high_weight_tokens": 1874,
+      "low_weight_tokens": 1880,
+      "merge_groups": 16,
+      "tokens_after_merge": 1890,
+      "computation_saved_ratio": 0.49653702717101755
+    },
+    "expert_4": {
+      "total_tokens": 4979,
+      "high_weight_tokens": 2494,
+      "low_weight_tokens": 2485,
+      "merge_groups": 16,
+      "tokens_after_merge": 2510,
+      "computation_saved_ratio": 0.4958827073709581
+    },
+    "expert_5": {
+      "total_tokens": 4865,
+      "high_weight_tokens": 2592,
+      "low_weight_tokens": 2273,
+      "merge_groups": 16,
+      "tokens_after_merge": 2608,
+      "computation_saved_ratio": 0.4639260020554985
+    },
+    "expert_6": {
+      "total_tokens": 3663,
+      "high_weight_tokens": 2195,
+      "low_weight_tokens": 1468,
+      "merge_groups": 16,
+      "tokens_after_merge": 2211,
+      "computation_saved_ratio": 0.39639639639639634
+    },
+    "expert_7": {
+      "total_tokens": 4507,
+      "high_weight_tokens": 2369,
+      "low_weight_tokens": 2138,
+      "merge_groups": 16,
+      "tokens_after_merge": 2385,
+      "computation_saved_ratio": 0.4708231639671622
+    }
+  },
+  "model.layers.8.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 2742,
+      "high_weight_tokens": 1135,
+      "low_weight_tokens": 1607,
+      "merge_groups": 16,
+      "tokens_after_merge": 1151,
+      "computation_saved_ratio": 0.5802334062727936
+    },
+    "expert_1": {
+      "total_tokens": 4741,
+      "high_weight_tokens": 2571,
+      "low_weight_tokens": 2170,
+      "merge_groups": 16,
+      "tokens_after_merge": 2587,
+      "computation_saved_ratio": 0.4543345285804683
+    },
+    "expert_2": {
+      "total_tokens": 3745,
+      "high_weight_tokens": 1957,
+      "low_weight_tokens": 1788,
+      "merge_groups": 16,
+      "tokens_after_merge": 1973,
+      "computation_saved_ratio": 0.4731642189586115
+    },
+    "expert_3": {
+      "total_tokens": 5380,
+      "high_weight_tokens": 2818,
+      "low_weight_tokens": 2562,
+      "merge_groups": 16,
+      "tokens_after_merge": 2834,
+      "computation_saved_ratio": 0.4732342007434944
+    },
+    "expert_4": {
+      "total_tokens": 3751,
+      "high_weight_tokens": 1854,
+      "low_weight_tokens": 1897,
+      "merge_groups": 16,
+      "tokens_after_merge": 1870,
+      "computation_saved_ratio": 0.501466275659824
+    },
+    "expert_5": {
+      "total_tokens": 3701,
+      "high_weight_tokens": 2154,
+      "low_weight_tokens": 1547,
+      "merge_groups": 16,
+      "tokens_after_merge": 2170,
+      "computation_saved_ratio": 0.41367198054579846
+    },
+    "expert_6": {
+      "total_tokens": 3983,
+      "high_weight_tokens": 2155,
+      "low_weight_tokens": 1828,
+      "merge_groups": 16,
+      "tokens_after_merge": 2171,
+      "computation_saved_ratio": 0.4549334672357519
+    },
+    "expert_7": {
+      "total_tokens": 4757,
+      "high_weight_tokens": 2543,
+      "low_weight_tokens": 2214,
+      "merge_groups": 16,
+      "tokens_after_merge": 2559,
+      "computation_saved_ratio": 0.462055917595123
+    }
+  },
+  "model.layers.9.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4195,
+      "high_weight_tokens": 2521,
+      "low_weight_tokens": 1674,
+      "merge_groups": 16,
+      "tokens_after_merge": 2537,
+      "computation_saved_ratio": 0.3952324195470799
+    },
+    "expert_1": {
+      "total_tokens": 3849,
+      "high_weight_tokens": 2088,
+      "low_weight_tokens": 1761,
+      "merge_groups": 16,
+      "tokens_after_merge": 2104,
+      "computation_saved_ratio": 0.4533645102624059
+    },
+    "expert_2": {
+      "total_tokens": 5343,
+      "high_weight_tokens": 2844,
+      "low_weight_tokens": 2499,
+      "merge_groups": 16,
+      "tokens_after_merge": 2860,
+      "computation_saved_ratio": 0.46472019464720193
+    },
+    "expert_3": {
+      "total_tokens": 3731,
+      "high_weight_tokens": 1831,
+      "low_weight_tokens": 1900,
+      "merge_groups": 16,
+      "tokens_after_merge": 1847,
+      "computation_saved_ratio": 0.5049584561779683
+    },
+    "expert_4": {
+      "total_tokens": 2739,
+      "high_weight_tokens": 1238,
+      "low_weight_tokens": 1501,
+      "merge_groups": 16,
+      "tokens_after_merge": 1254,
+      "computation_saved_ratio": 0.5421686746987953
+    },
+    "expert_5": {
+      "total_tokens": 4485,
+      "high_weight_tokens": 1726,
+      "low_weight_tokens": 2759,
+      "merge_groups": 16,
+      "tokens_after_merge": 1742,
+      "computation_saved_ratio": 0.6115942028985507
+    },
+    "expert_6": {
+      "total_tokens": 3219,
+      "high_weight_tokens": 1860,
+      "low_weight_tokens": 1359,
+      "merge_groups": 16,
+      "tokens_after_merge": 1876,
+      "computation_saved_ratio": 0.4172103137620379
+    },
+    "expert_7": {
+      "total_tokens": 5239,
+      "high_weight_tokens": 3040,
+      "low_weight_tokens": 2199,
+      "merge_groups": 16,
+      "tokens_after_merge": 3056,
+      "computation_saved_ratio": 0.41668257301011646
+    }
+  },
+  "model.layers.10.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4832,
+      "high_weight_tokens": 3569,
+      "low_weight_tokens": 1263,
+      "merge_groups": 16,
+      "tokens_after_merge": 3585,
+      "computation_saved_ratio": 0.2580711920529801
+    },
+    "expert_1": {
+      "total_tokens": 3111,
+      "high_weight_tokens": 1643,
+      "low_weight_tokens": 1468,
+      "merge_groups": 16,
+      "tokens_after_merge": 1659,
+      "computation_saved_ratio": 0.4667309546769528
+    },
+    "expert_2": {
+      "total_tokens": 5470,
+      "high_weight_tokens": 2759,
+      "low_weight_tokens": 2711,
+      "merge_groups": 16,
+      "tokens_after_merge": 2775,
+      "computation_saved_ratio": 0.49268738574040216
+    },
+    "expert_3": {
+      "total_tokens": 3608,
+      "high_weight_tokens": 1962,
+      "low_weight_tokens": 1646,
+      "merge_groups": 16,
+      "tokens_after_merge": 1978,
+      "computation_saved_ratio": 0.4517738359201774
+    },
+    "expert_4": {
+      "total_tokens": 3852,
+      "high_weight_tokens": 2130,
+      "low_weight_tokens": 1722,
+      "merge_groups": 16,
+      "tokens_after_merge": 2146,
+      "computation_saved_ratio": 0.4428868120456906
+    },
+    "expert_5": {
+      "total_tokens": 4097,
+      "high_weight_tokens": 2032,
+      "low_weight_tokens": 2065,
+      "merge_groups": 16,
+      "tokens_after_merge": 2048,
+      "computation_saved_ratio": 0.5001220405174518
+    },
+    "expert_6": {
+      "total_tokens": 4256,
+      "high_weight_tokens": 1944,
+      "low_weight_tokens": 2312,
+      "merge_groups": 16,
+      "tokens_after_merge": 1960,
+      "computation_saved_ratio": 0.5394736842105263
+    },
+    "expert_7": {
+      "total_tokens": 3574,
+      "high_weight_tokens": 1151,
+      "low_weight_tokens": 2423,
+      "merge_groups": 16,
+      "tokens_after_merge": 1167,
+      "computation_saved_ratio": 0.6734750979294908
+    }
+  },
+  "model.layers.11.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 6309,
+      "high_weight_tokens": 3875,
+      "low_weight_tokens": 2434,
+      "merge_groups": 16,
+      "tokens_after_merge": 3891,
+      "computation_saved_ratio": 0.3832620066571565
+    },
+    "expert_1": {
+      "total_tokens": 3995,
+      "high_weight_tokens": 2146,
+      "low_weight_tokens": 1849,
+      "merge_groups": 16,
+      "tokens_after_merge": 2162,
+      "computation_saved_ratio": 0.45882352941176474
+    },
+    "expert_2": {
+      "total_tokens": 4066,
+      "high_weight_tokens": 1907,
+      "low_weight_tokens": 2159,
+      "merge_groups": 16,
+      "tokens_after_merge": 1923,
+      "computation_saved_ratio": 0.5270536153467782
+    },
+    "expert_3": {
+      "total_tokens": 1680,
+      "high_weight_tokens": 318,
+      "low_weight_tokens": 1362,
+      "merge_groups": 16,
+      "tokens_after_merge": 334,
+      "computation_saved_ratio": 0.8011904761904762
+    },
+    "expert_4": {
+      "total_tokens": 3800,
+      "high_weight_tokens": 2147,
+      "low_weight_tokens": 1653,
+      "merge_groups": 16,
+      "tokens_after_merge": 2163,
+      "computation_saved_ratio": 0.4307894736842105
+    },
+    "expert_5": {
+      "total_tokens": 3832,
+      "high_weight_tokens": 2362,
+      "low_weight_tokens": 1470,
+      "merge_groups": 16,
+      "tokens_after_merge": 2378,
+      "computation_saved_ratio": 0.37943632567849683
+    },
+    "expert_6": {
+      "total_tokens": 4848,
+      "high_weight_tokens": 2526,
+      "low_weight_tokens": 2322,
+      "merge_groups": 16,
+      "tokens_after_merge": 2542,
+      "computation_saved_ratio": 0.4756600660066007
+    },
+    "expert_7": {
+      "total_tokens": 4270,
+      "high_weight_tokens": 1649,
+      "low_weight_tokens": 2621,
+      "merge_groups": 16,
+      "tokens_after_merge": 1665,
+      "computation_saved_ratio": 0.6100702576112412
+    }
+  },
+  "model.layers.12.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3510,
+      "high_weight_tokens": 2039,
+      "low_weight_tokens": 1471,
+      "merge_groups": 16,
+      "tokens_after_merge": 2055,
+      "computation_saved_ratio": 0.4145299145299145
+    },
+    "expert_1": {
+      "total_tokens": 5580,
+      "high_weight_tokens": 3036,
+      "low_weight_tokens": 2544,
+      "merge_groups": 16,
+      "tokens_after_merge": 3052,
+      "computation_saved_ratio": 0.4530465949820789
+    },
+    "expert_2": {
+      "total_tokens": 3932,
+      "high_weight_tokens": 1864,
+      "low_weight_tokens": 2068,
+      "merge_groups": 16,
+      "tokens_after_merge": 1880,
+      "computation_saved_ratio": 0.5218718209562563
+    },
+    "expert_3": {
+      "total_tokens": 5020,
+      "high_weight_tokens": 3081,
+      "low_weight_tokens": 1939,
+      "merge_groups": 16,
+      "tokens_after_merge": 3097,
+      "computation_saved_ratio": 0.3830677290836654
+    },
+    "expert_4": {
+      "total_tokens": 3437,
+      "high_weight_tokens": 1937,
+      "low_weight_tokens": 1500,
+      "merge_groups": 16,
+      "tokens_after_merge": 1953,
+      "computation_saved_ratio": 0.4317718940936863
+    },
+    "expert_5": {
+      "total_tokens": 5444,
+      "high_weight_tokens": 1956,
+      "low_weight_tokens": 3488,
+      "merge_groups": 16,
+      "tokens_after_merge": 1972,
+      "computation_saved_ratio": 0.6377663482733285
+    },
+    "expert_6": {
+      "total_tokens": 3942,
+      "high_weight_tokens": 2592,
+      "low_weight_tokens": 1350,
+      "merge_groups": 16,
+      "tokens_after_merge": 2608,
+      "computation_saved_ratio": 0.3384069000507357
+    },
+    "expert_7": {
+      "total_tokens": 1935,
+      "high_weight_tokens": 621,
+      "low_weight_tokens": 1314,
+      "merge_groups": 16,
+      "tokens_after_merge": 637,
+      "computation_saved_ratio": 0.6708010335917313
+    }
+  },
+  "model.layers.13.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3613,
+      "high_weight_tokens": 1869,
+      "low_weight_tokens": 1744,
+      "merge_groups": 16,
+      "tokens_after_merge": 1885,
+      "computation_saved_ratio": 0.4782729034043731
+    },
+    "expert_1": {
+      "total_tokens": 4976,
+      "high_weight_tokens": 2656,
+      "low_weight_tokens": 2320,
+      "merge_groups": 16,
+      "tokens_after_merge": 2672,
+      "computation_saved_ratio": 0.46302250803858525
+    },
+    "expert_2": {
+      "total_tokens": 5039,
+      "high_weight_tokens": 2851,
+      "low_weight_tokens": 2188,
+      "merge_groups": 16,
+      "tokens_after_merge": 2867,
+      "computation_saved_ratio": 0.43103790434610045
+    },
+    "expert_3": {
+      "total_tokens": 4814,
+      "high_weight_tokens": 2513,
+      "low_weight_tokens": 2301,
+      "merge_groups": 16,
+      "tokens_after_merge": 2529,
+      "computation_saved_ratio": 0.47465724968840883
+    },
+    "expert_4": {
+      "total_tokens": 3388,
+      "high_weight_tokens": 1607,
+      "low_weight_tokens": 1781,
+      "merge_groups": 16,
+      "tokens_after_merge": 1623,
+      "computation_saved_ratio": 0.5209563164108619
+    },
+    "expert_5": {
+      "total_tokens": 4215,
+      "high_weight_tokens": 2334,
+      "low_weight_tokens": 1881,
+      "merge_groups": 16,
+      "tokens_after_merge": 2350,
+      "computation_saved_ratio": 0.4424673784104389
+    },
+    "expert_6": {
+      "total_tokens": 3473,
+      "high_weight_tokens": 1836,
+      "low_weight_tokens": 1637,
+      "merge_groups": 16,
+      "tokens_after_merge": 1852,
+      "computation_saved_ratio": 0.46674344946731927
+    },
+    "expert_7": {
+      "total_tokens": 3282,
+      "high_weight_tokens": 1611,
+      "low_weight_tokens": 1671,
+      "merge_groups": 16,
+      "tokens_after_merge": 1627,
+      "computation_saved_ratio": 0.5042656916514321
+    }
+  },
+  "model.layers.14.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5310,
+      "high_weight_tokens": 2274,
+      "low_weight_tokens": 3036,
+      "merge_groups": 16,
+      "tokens_after_merge": 2290,
+      "computation_saved_ratio": 0.5687382297551788
+    },
+    "expert_1": {
+      "total_tokens": 3793,
+      "high_weight_tokens": 1985,
+      "low_weight_tokens": 1808,
+      "merge_groups": 16,
+      "tokens_after_merge": 2001,
+      "computation_saved_ratio": 0.47244924861587134
+    },
+    "expert_2": {
+      "total_tokens": 5070,
+      "high_weight_tokens": 2950,
+      "low_weight_tokens": 2120,
+      "merge_groups": 16,
+      "tokens_after_merge": 2966,
+      "computation_saved_ratio": 0.4149901380670612
+    },
+    "expert_3": {
+      "total_tokens": 3661,
+      "high_weight_tokens": 2395,
+      "low_weight_tokens": 1266,
+      "merge_groups": 16,
+      "tokens_after_merge": 2411,
+      "computation_saved_ratio": 0.3414367659109533
+    },
+    "expert_4": {
+      "total_tokens": 3798,
+      "high_weight_tokens": 1503,
+      "low_weight_tokens": 2295,
+      "merge_groups": 16,
+      "tokens_after_merge": 1519,
+      "computation_saved_ratio": 0.6000526592943655
+    },
+    "expert_5": {
+      "total_tokens": 3161,
+      "high_weight_tokens": 1389,
+      "low_weight_tokens": 1772,
+      "merge_groups": 16,
+      "tokens_after_merge": 1405,
+      "computation_saved_ratio": 0.5555204049351471
+    },
+    "expert_6": {
+      "total_tokens": 3770,
+      "high_weight_tokens": 2064,
+      "low_weight_tokens": 1706,
+      "merge_groups": 16,
+      "tokens_after_merge": 2080,
+      "computation_saved_ratio": 0.4482758620689655
+    },
+    "expert_7": {
+      "total_tokens": 4237,
+      "high_weight_tokens": 2411,
+      "low_weight_tokens": 1826,
+      "merge_groups": 16,
+      "tokens_after_merge": 2427,
+      "computation_saved_ratio": 0.42718904885532216
+    }
+  },
+  "model.layers.15.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5195,
+      "high_weight_tokens": 2260,
+      "low_weight_tokens": 2935,
+      "merge_groups": 16,
+      "tokens_after_merge": 2276,
+      "computation_saved_ratio": 0.5618864292589028
+    },
+    "expert_1": {
+      "total_tokens": 3905,
+      "high_weight_tokens": 1794,
+      "low_weight_tokens": 2111,
+      "merge_groups": 16,
+      "tokens_after_merge": 1810,
+      "computation_saved_ratio": 0.5364916773367477
+    },
+    "expert_2": {
+      "total_tokens": 4375,
+      "high_weight_tokens": 2297,
+      "low_weight_tokens": 2078,
+      "merge_groups": 16,
+      "tokens_after_merge": 2313,
+      "computation_saved_ratio": 0.4713142857142857
+    },
+    "expert_3": {
+      "total_tokens": 4400,
+      "high_weight_tokens": 2863,
+      "low_weight_tokens": 1537,
+      "merge_groups": 16,
+      "tokens_after_merge": 2879,
+      "computation_saved_ratio": 0.3456818181818182
+    },
+    "expert_4": {
+      "total_tokens": 4114,
+      "high_weight_tokens": 2037,
+      "low_weight_tokens": 2077,
+      "merge_groups": 16,
+      "tokens_after_merge": 2053,
+      "computation_saved_ratio": 0.5009722897423432
+    },
+    "expert_5": {
+      "total_tokens": 3271,
+      "high_weight_tokens": 1439,
+      "low_weight_tokens": 1832,
+      "merge_groups": 16,
+      "tokens_after_merge": 1455,
+      "computation_saved_ratio": 0.5551819015591561
+    },
+    "expert_6": {
+      "total_tokens": 3881,
+      "high_weight_tokens": 2088,
+      "low_weight_tokens": 1793,
+      "merge_groups": 16,
+      "tokens_after_merge": 2104,
+      "computation_saved_ratio": 0.45787168255604227
+    },
+    "expert_7": {
+      "total_tokens": 3659,
+      "high_weight_tokens": 2205,
+      "low_weight_tokens": 1454,
+      "merge_groups": 16,
+      "tokens_after_merge": 2221,
+      "computation_saved_ratio": 0.39300355288330147
+    }
+  },
+  "model.layers.16.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3455,
+      "high_weight_tokens": 1942,
+      "low_weight_tokens": 1513,
+      "merge_groups": 16,
+      "tokens_after_merge": 1958,
+      "computation_saved_ratio": 0.43328509406657023
+    },
+    "expert_1": {
+      "total_tokens": 3543,
+      "high_weight_tokens": 1878,
+      "low_weight_tokens": 1665,
+      "merge_groups": 16,
+      "tokens_after_merge": 1894,
+      "computation_saved_ratio": 0.46542478125882025
+    },
+    "expert_2": {
+      "total_tokens": 5600,
+      "high_weight_tokens": 3367,
+      "low_weight_tokens": 2233,
+      "merge_groups": 16,
+      "tokens_after_merge": 3383,
+      "computation_saved_ratio": 0.39589285714285716
+    },
+    "expert_3": {
+      "total_tokens": 5049,
+      "high_weight_tokens": 2869,
+      "low_weight_tokens": 2180,
+      "merge_groups": 16,
+      "tokens_after_merge": 2885,
+      "computation_saved_ratio": 0.4285997227173698
+    },
+    "expert_4": {
+      "total_tokens": 4070,
+      "high_weight_tokens": 1740,
+      "low_weight_tokens": 2330,
+      "merge_groups": 16,
+      "tokens_after_merge": 1756,
+      "computation_saved_ratio": 0.5685503685503686
+    },
+    "expert_5": {
+      "total_tokens": 3401,
+      "high_weight_tokens": 2280,
+      "low_weight_tokens": 1121,
+      "merge_groups": 16,
+      "tokens_after_merge": 2296,
+      "computation_saved_ratio": 0.32490443987062634
+    },
+    "expert_6": {
+      "total_tokens": 4043,
+      "high_weight_tokens": 1520,
+      "low_weight_tokens": 2523,
+      "merge_groups": 16,
+      "tokens_after_merge": 1536,
+      "computation_saved_ratio": 0.6200840959683404
+    },
+    "expert_7": {
+      "total_tokens": 3639,
+      "high_weight_tokens": 1374,
+      "low_weight_tokens": 2265,
+      "merge_groups": 16,
+      "tokens_after_merge": 1390,
+      "computation_saved_ratio": 0.6180269304754054
+    }
+  },
+  "model.layers.17.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4138,
+      "high_weight_tokens": 2754,
+      "low_weight_tokens": 1384,
+      "merge_groups": 16,
+      "tokens_after_merge": 2770,
+      "computation_saved_ratio": 0.33059449009183184
+    },
+    "expert_1": {
+      "total_tokens": 5260,
+      "high_weight_tokens": 2306,
+      "low_weight_tokens": 2954,
+      "merge_groups": 16,
+      "tokens_after_merge": 2322,
+      "computation_saved_ratio": 0.5585551330798479
+    },
+    "expert_2": {
+      "total_tokens": 4835,
+      "high_weight_tokens": 1926,
+      "low_weight_tokens": 2909,
+      "merge_groups": 16,
+      "tokens_after_merge": 1942,
+      "computation_saved_ratio": 0.5983453981385729
+    },
+    "expert_3": {
+      "total_tokens": 3984,
+      "high_weight_tokens": 2071,
+      "low_weight_tokens": 1913,
+      "merge_groups": 16,
+      "tokens_after_merge": 2087,
+      "computation_saved_ratio": 0.4761546184738956
+    },
+    "expert_4": {
+      "total_tokens": 3334,
+      "high_weight_tokens": 2181,
+      "low_weight_tokens": 1153,
+      "merge_groups": 16,
+      "tokens_after_merge": 2197,
+      "computation_saved_ratio": 0.3410317936412718
+    },
+    "expert_5": {
+      "total_tokens": 3579,
+      "high_weight_tokens": 1885,
+      "low_weight_tokens": 1694,
+      "merge_groups": 16,
+      "tokens_after_merge": 1901,
+      "computation_saved_ratio": 0.4688460463816708
+    },
+    "expert_6": {
+      "total_tokens": 3284,
+      "high_weight_tokens": 1535,
+      "low_weight_tokens": 1749,
+      "merge_groups": 16,
+      "tokens_after_merge": 1551,
+      "computation_saved_ratio": 0.5277101096224117
+    },
+    "expert_7": {
+      "total_tokens": 4386,
+      "high_weight_tokens": 2474,
+      "low_weight_tokens": 1912,
+      "merge_groups": 16,
+      "tokens_after_merge": 2490,
+      "computation_saved_ratio": 0.43228454172366626
+    }
+  },
+  "model.layers.18.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3488,
+      "high_weight_tokens": 1738,
+      "low_weight_tokens": 1750,
+      "merge_groups": 16,
+      "tokens_after_merge": 1754,
+      "computation_saved_ratio": 0.49713302752293576
+    },
+    "expert_1": {
+      "total_tokens": 3638,
+      "high_weight_tokens": 1657,
+      "low_weight_tokens": 1981,
+      "merge_groups": 16,
+      "tokens_after_merge": 1673,
+      "computation_saved_ratio": 0.540131940626718
+    },
+    "expert_2": {
+      "total_tokens": 3554,
+      "high_weight_tokens": 2309,
+      "low_weight_tokens": 1245,
+      "merge_groups": 16,
+      "tokens_after_merge": 2325,
+      "computation_saved_ratio": 0.3458075407990996
+    },
+    "expert_3": {
+      "total_tokens": 3416,
+      "high_weight_tokens": 1768,
+      "low_weight_tokens": 1648,
+      "merge_groups": 16,
+      "tokens_after_merge": 1784,
+      "computation_saved_ratio": 0.477751756440281
+    },
+    "expert_4": {
+      "total_tokens": 3526,
+      "high_weight_tokens": 1370,
+      "low_weight_tokens": 2156,
+      "merge_groups": 16,
+      "tokens_after_merge": 1386,
+      "computation_saved_ratio": 0.6069200226885989
+    },
+    "expert_5": {
+      "total_tokens": 4180,
+      "high_weight_tokens": 2196,
+      "low_weight_tokens": 1984,
+      "merge_groups": 16,
+      "tokens_after_merge": 2212,
+      "computation_saved_ratio": 0.4708133971291866
+    },
+    "expert_6": {
+      "total_tokens": 5051,
+      "high_weight_tokens": 1872,
+      "low_weight_tokens": 3179,
+      "merge_groups": 16,
+      "tokens_after_merge": 1888,
+      "computation_saved_ratio": 0.6262126311621461
+    },
+    "expert_7": {
+      "total_tokens": 5947,
+      "high_weight_tokens": 3992,
+      "low_weight_tokens": 1955,
+      "merge_groups": 16,
+      "tokens_after_merge": 4008,
+      "computation_saved_ratio": 0.32604674625861774
+    }
+  },
+  "model.layers.19.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4074,
+      "high_weight_tokens": 1631,
+      "low_weight_tokens": 2443,
+      "merge_groups": 16,
+      "tokens_after_merge": 1647,
+      "computation_saved_ratio": 0.5957290132547864
+    },
+    "expert_1": {
+      "total_tokens": 5322,
+      "high_weight_tokens": 2848,
+      "low_weight_tokens": 2474,
+      "merge_groups": 16,
+      "tokens_after_merge": 2864,
+      "computation_saved_ratio": 0.46185644494550926
+    },
+    "expert_2": {
+      "total_tokens": 3459,
+      "high_weight_tokens": 1629,
+      "low_weight_tokens": 1830,
+      "merge_groups": 16,
+      "tokens_after_merge": 1645,
+      "computation_saved_ratio": 0.5244290257299797
+    },
+    "expert_3": {
+      "total_tokens": 5410,
+      "high_weight_tokens": 3052,
+      "low_weight_tokens": 2358,
+      "merge_groups": 16,
+      "tokens_after_merge": 3068,
+      "computation_saved_ratio": 0.43290203327171906
+    },
+    "expert_4": {
+      "total_tokens": 3632,
+      "high_weight_tokens": 2098,
+      "low_weight_tokens": 1534,
+      "merge_groups": 16,
+      "tokens_after_merge": 2114,
+      "computation_saved_ratio": 0.4179515418502202
+    },
+    "expert_5": {
+      "total_tokens": 3428,
+      "high_weight_tokens": 1823,
+      "low_weight_tokens": 1605,
+      "merge_groups": 16,
+      "tokens_after_merge": 1839,
+      "computation_saved_ratio": 0.4635355892648775
+    },
+    "expert_6": {
+      "total_tokens": 4160,
+      "high_weight_tokens": 1844,
+      "low_weight_tokens": 2316,
+      "merge_groups": 16,
+      "tokens_after_merge": 1860,
+      "computation_saved_ratio": 0.5528846153846154
+    },
+    "expert_7": {
+      "total_tokens": 3315,
+      "high_weight_tokens": 1940,
+      "low_weight_tokens": 1375,
+      "merge_groups": 16,
+      "tokens_after_merge": 1956,
+      "computation_saved_ratio": 0.4099547511312217
+    }
+  },
+  "model.layers.20.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3616,
+      "high_weight_tokens": 1938,
+      "low_weight_tokens": 1678,
+      "merge_groups": 16,
+      "tokens_after_merge": 1954,
+      "computation_saved_ratio": 0.45962389380530977
+    },
+    "expert_1": {
+      "total_tokens": 3632,
+      "high_weight_tokens": 1786,
+      "low_weight_tokens": 1846,
+      "merge_groups": 16,
+      "tokens_after_merge": 1802,
+      "computation_saved_ratio": 0.5038546255506609
+    },
+    "expert_2": {
+      "total_tokens": 5726,
+      "high_weight_tokens": 3282,
+      "low_weight_tokens": 2444,
+      "merge_groups": 16,
+      "tokens_after_merge": 3298,
+      "computation_saved_ratio": 0.42403073698917215
+    },
+    "expert_3": {
+      "total_tokens": 3530,
+      "high_weight_tokens": 1585,
+      "low_weight_tokens": 1945,
+      "merge_groups": 16,
+      "tokens_after_merge": 1601,
+      "computation_saved_ratio": 0.5464589235127479
+    },
+    "expert_4": {
+      "total_tokens": 3318,
+      "high_weight_tokens": 1668,
+      "low_weight_tokens": 1650,
+      "merge_groups": 16,
+      "tokens_after_merge": 1684,
+      "computation_saved_ratio": 0.4924653405666064
+    },
+    "expert_5": {
+      "total_tokens": 3838,
+      "high_weight_tokens": 2209,
+      "low_weight_tokens": 1629,
+      "merge_groups": 16,
+      "tokens_after_merge": 2225,
+      "computation_saved_ratio": 0.4202709744658676
+    },
+    "expert_6": {
+      "total_tokens": 5742,
+      "high_weight_tokens": 2678,
+      "low_weight_tokens": 3064,
+      "merge_groups": 16,
+      "tokens_after_merge": 2694,
+      "computation_saved_ratio": 0.5308254963427377
+    },
+    "expert_7": {
+      "total_tokens": 3398,
+      "high_weight_tokens": 1808,
+      "low_weight_tokens": 1590,
+      "merge_groups": 16,
+      "tokens_after_merge": 1824,
+      "computation_saved_ratio": 0.46321365509123014
+    }
+  },
+  "model.layers.21.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3649,
+      "high_weight_tokens": 1788,
+      "low_weight_tokens": 1861,
+      "merge_groups": 16,
+      "tokens_after_merge": 1804,
+      "computation_saved_ratio": 0.5056179775280899
+    },
+    "expert_1": {
+      "total_tokens": 3099,
+      "high_weight_tokens": 1614,
+      "low_weight_tokens": 1485,
+      "merge_groups": 16,
+      "tokens_after_merge": 1630,
+      "computation_saved_ratio": 0.47402387867053886
+    },
+    "expert_2": {
+      "total_tokens": 3708,
+      "high_weight_tokens": 1587,
+      "low_weight_tokens": 2121,
+      "merge_groups": 16,
+      "tokens_after_merge": 1603,
+      "computation_saved_ratio": 0.5676914778856527
+    },
+    "expert_3": {
+      "total_tokens": 3426,
+      "high_weight_tokens": 1801,
+      "low_weight_tokens": 1625,
+      "merge_groups": 16,
+      "tokens_after_merge": 1817,
+      "computation_saved_ratio": 0.4696438995913602
+    },
+    "expert_4": {
+      "total_tokens": 4161,
+      "high_weight_tokens": 2085,
+      "low_weight_tokens": 2076,
+      "merge_groups": 16,
+      "tokens_after_merge": 2101,
+      "computation_saved_ratio": 0.4950732996875751
+    },
+    "expert_5": {
+      "total_tokens": 5870,
+      "high_weight_tokens": 3485,
+      "low_weight_tokens": 2385,
+      "merge_groups": 16,
+      "tokens_after_merge": 3501,
+      "computation_saved_ratio": 0.4035775127768313
+    },
+    "expert_6": {
+      "total_tokens": 3592,
+      "high_weight_tokens": 1895,
+      "low_weight_tokens": 1697,
+      "merge_groups": 16,
+      "tokens_after_merge": 1911,
+      "computation_saved_ratio": 0.4679844097995546
+    },
+    "expert_7": {
+      "total_tokens": 5295,
+      "high_weight_tokens": 2646,
+      "low_weight_tokens": 2649,
+      "merge_groups": 16,
+      "tokens_after_merge": 2662,
+      "computation_saved_ratio": 0.49726156751652506
+    }
+  },
+  "model.layers.22.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3490,
+      "high_weight_tokens": 1588,
+      "low_weight_tokens": 1902,
+      "merge_groups": 16,
+      "tokens_after_merge": 1604,
+      "computation_saved_ratio": 0.5404011461318052
+    },
+    "expert_1": {
+      "total_tokens": 4236,
+      "high_weight_tokens": 2134,
+      "low_weight_tokens": 2102,
+      "merge_groups": 16,
+      "tokens_after_merge": 2150,
+      "computation_saved_ratio": 0.4924457034938622
+    },
+    "expert_2": {
+      "total_tokens": 3829,
+      "high_weight_tokens": 1720,
+      "low_weight_tokens": 2109,
+      "merge_groups": 16,
+      "tokens_after_merge": 1736,
+      "computation_saved_ratio": 0.546617915904936
+    },
+    "expert_3": {
+      "total_tokens": 3191,
+      "high_weight_tokens": 1399,
+      "low_weight_tokens": 1792,
+      "merge_groups": 16,
+      "tokens_after_merge": 1415,
+      "computation_saved_ratio": 0.5565653400188029
+    },
+    "expert_4": {
+      "total_tokens": 4694,
+      "high_weight_tokens": 2471,
+      "low_weight_tokens": 2223,
+      "merge_groups": 16,
+      "tokens_after_merge": 2487,
+      "computation_saved_ratio": 0.47017469109501486
+    },
+    "expert_5": {
+      "total_tokens": 3301,
+      "high_weight_tokens": 1792,
+      "low_weight_tokens": 1509,
+      "merge_groups": 16,
+      "tokens_after_merge": 1808,
+      "computation_saved_ratio": 0.45228718570130266
+    },
+    "expert_6": {
+      "total_tokens": 4320,
+      "high_weight_tokens": 2788,
+      "low_weight_tokens": 1532,
+      "merge_groups": 16,
+      "tokens_after_merge": 2804,
+      "computation_saved_ratio": 0.350925925925926
+    },
+    "expert_7": {
+      "total_tokens": 5739,
+      "high_weight_tokens": 3107,
+      "low_weight_tokens": 2632,
+      "merge_groups": 16,
+      "tokens_after_merge": 3123,
+      "computation_saved_ratio": 0.45582854155776265
+    }
+  },
+  "model.layers.23.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3775,
+      "high_weight_tokens": 2037,
+      "low_weight_tokens": 1738,
+      "merge_groups": 16,
+      "tokens_after_merge": 2053,
+      "computation_saved_ratio": 0.45615894039735094
+    },
+    "expert_1": {
+      "total_tokens": 4369,
+      "high_weight_tokens": 2018,
+      "low_weight_tokens": 2351,
+      "merge_groups": 16,
+      "tokens_after_merge": 2034,
+      "computation_saved_ratio": 0.5344472419317922
+    },
+    "expert_2": {
+      "total_tokens": 4047,
+      "high_weight_tokens": 2071,
+      "low_weight_tokens": 1976,
+      "merge_groups": 16,
+      "tokens_after_merge": 2087,
+      "computation_saved_ratio": 0.4843093649617001
+    },
+    "expert_3": {
+      "total_tokens": 3721,
+      "high_weight_tokens": 2153,
+      "low_weight_tokens": 1568,
+      "merge_groups": 16,
+      "tokens_after_merge": 2169,
+      "computation_saved_ratio": 0.417092179521634
+    },
+    "expert_4": {
+      "total_tokens": 3363,
+      "high_weight_tokens": 1560,
+      "low_weight_tokens": 1803,
+      "merge_groups": 16,
+      "tokens_after_merge": 1576,
+      "computation_saved_ratio": 0.5313707998810586
+    },
+    "expert_5": {
+      "total_tokens": 4842,
+      "high_weight_tokens": 2279,
+      "low_weight_tokens": 2563,
+      "merge_groups": 16,
+      "tokens_after_merge": 2295,
+      "computation_saved_ratio": 0.5260223048327137
+    },
+    "expert_6": {
+      "total_tokens": 3688,
+      "high_weight_tokens": 2306,
+      "low_weight_tokens": 1382,
+      "merge_groups": 16,
+      "tokens_after_merge": 2322,
+      "computation_saved_ratio": 0.37039045553145333
+    },
+    "expert_7": {
+      "total_tokens": 4995,
+      "high_weight_tokens": 2666,
+      "low_weight_tokens": 2329,
+      "merge_groups": 16,
+      "tokens_after_merge": 2682,
+      "computation_saved_ratio": 0.4630630630630631
+    }
+  },
+  "model.layers.24.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4114,
+      "high_weight_tokens": 1962,
+      "low_weight_tokens": 2152,
+      "merge_groups": 16,
+      "tokens_after_merge": 1978,
+      "computation_saved_ratio": 0.5192027224112785
+    },
+    "expert_1": {
+      "total_tokens": 5223,
+      "high_weight_tokens": 3072,
+      "low_weight_tokens": 2151,
+      "merge_groups": 16,
+      "tokens_after_merge": 3088,
+      "computation_saved_ratio": 0.4087689067585679
+    },
+    "expert_2": {
+      "total_tokens": 4111,
+      "high_weight_tokens": 1932,
+      "low_weight_tokens": 2179,
+      "merge_groups": 16,
+      "tokens_after_merge": 1948,
+      "computation_saved_ratio": 0.5261493553879835
+    },
+    "expert_3": {
+      "total_tokens": 5092,
+      "high_weight_tokens": 2628,
+      "low_weight_tokens": 2464,
+      "merge_groups": 16,
+      "tokens_after_merge": 2644,
+      "computation_saved_ratio": 0.48075412411626084
+    },
+    "expert_4": {
+      "total_tokens": 3594,
+      "high_weight_tokens": 2159,
+      "low_weight_tokens": 1435,
+      "merge_groups": 16,
+      "tokens_after_merge": 2175,
+      "computation_saved_ratio": 0.39482470784641066
+    },
+    "expert_5": {
+      "total_tokens": 3755,
+      "high_weight_tokens": 2166,
+      "low_weight_tokens": 1589,
+      "merge_groups": 16,
+      "tokens_after_merge": 2182,
+      "computation_saved_ratio": 0.4189081225033289
+    },
+    "expert_6": {
+      "total_tokens": 3577,
+      "high_weight_tokens": 1509,
+      "low_weight_tokens": 2068,
+      "merge_groups": 16,
+      "tokens_after_merge": 1525,
+      "computation_saved_ratio": 0.5736650824713447
+    },
+    "expert_7": {
+      "total_tokens": 3334,
+      "high_weight_tokens": 1561,
+      "low_weight_tokens": 1773,
+      "merge_groups": 16,
+      "tokens_after_merge": 1577,
+      "computation_saved_ratio": 0.526994601079784
+    }
+  },
+  "model.layers.25.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5880,
+      "high_weight_tokens": 4273,
+      "low_weight_tokens": 1607,
+      "merge_groups": 16,
+      "tokens_after_merge": 4289,
+      "computation_saved_ratio": 0.270578231292517
+    },
+    "expert_1": {
+      "total_tokens": 3510,
+      "high_weight_tokens": 1972,
+      "low_weight_tokens": 1538,
+      "merge_groups": 16,
+      "tokens_after_merge": 1988,
+      "computation_saved_ratio": 0.4336182336182336
+    },
+    "expert_2": {
+      "total_tokens": 4941,
+      "high_weight_tokens": 2213,
+      "low_weight_tokens": 2728,
+      "merge_groups": 16,
+      "tokens_after_merge": 2229,
+      "computation_saved_ratio": 0.548876745598057
+    },
+    "expert_3": {
+      "total_tokens": 3277,
+      "high_weight_tokens": 1558,
+      "low_weight_tokens": 1719,
+      "merge_groups": 16,
+      "tokens_after_merge": 1574,
+      "computation_saved_ratio": 0.5196826365578273
+    },
+    "expert_4": {
+      "total_tokens": 3682,
+      "high_weight_tokens": 2317,
+      "low_weight_tokens": 1365,
+      "merge_groups": 16,
+      "tokens_after_merge": 2333,
+      "computation_saved_ratio": 0.366376969038566
+    },
+    "expert_5": {
+      "total_tokens": 3292,
+      "high_weight_tokens": 1291,
+      "low_weight_tokens": 2001,
+      "merge_groups": 16,
+      "tokens_after_merge": 1307,
+      "computation_saved_ratio": 0.6029769137302552
+    },
+    "expert_6": {
+      "total_tokens": 4261,
+      "high_weight_tokens": 1724,
+      "low_weight_tokens": 2537,
+      "merge_groups": 16,
+      "tokens_after_merge": 1740,
+      "computation_saved_ratio": 0.5916451537197841
+    },
+    "expert_7": {
+      "total_tokens": 3957,
+      "high_weight_tokens": 1503,
+      "low_weight_tokens": 2454,
+      "merge_groups": 16,
+      "tokens_after_merge": 1519,
+      "computation_saved_ratio": 0.6161233257518322
+    }
+  },
+  "model.layers.26.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5558,
+      "high_weight_tokens": 3442,
+      "low_weight_tokens": 2116,
+      "merge_groups": 16,
+      "tokens_after_merge": 3458,
+      "computation_saved_ratio": 0.37783375314861456
+    },
+    "expert_1": {
+      "total_tokens": 3793,
+      "high_weight_tokens": 2610,
+      "low_weight_tokens": 1183,
+      "merge_groups": 16,
+      "tokens_after_merge": 2626,
+      "computation_saved_ratio": 0.30767202741892963
+    },
+    "expert_2": {
+      "total_tokens": 4438,
+      "high_weight_tokens": 1947,
+      "low_weight_tokens": 2491,
+      "merge_groups": 16,
+      "tokens_after_merge": 1963,
+      "computation_saved_ratio": 0.5576836412798558
+    },
+    "expert_3": {
+      "total_tokens": 3716,
+      "high_weight_tokens": 2046,
+      "low_weight_tokens": 1670,
+      "merge_groups": 16,
+      "tokens_after_merge": 2062,
+      "computation_saved_ratio": 0.4451022604951561
+    },
+    "expert_4": {
+      "total_tokens": 4123,
+      "high_weight_tokens": 2384,
+      "low_weight_tokens": 1739,
+      "merge_groups": 16,
+      "tokens_after_merge": 2400,
+      "computation_saved_ratio": 0.4178995876788746
+    },
+    "expert_5": {
+      "total_tokens": 3524,
+      "high_weight_tokens": 1691,
+      "low_weight_tokens": 1833,
+      "merge_groups": 16,
+      "tokens_after_merge": 1707,
+      "computation_saved_ratio": 0.5156072644721907
+    },
+    "expert_6": {
+      "total_tokens": 3851,
+      "high_weight_tokens": 1016,
+      "low_weight_tokens": 2835,
+      "merge_groups": 16,
+      "tokens_after_merge": 1032,
+      "computation_saved_ratio": 0.7320176577512334
+    },
+    "expert_7": {
+      "total_tokens": 3797,
+      "high_weight_tokens": 1714,
+      "low_weight_tokens": 2083,
+      "merge_groups": 16,
+      "tokens_after_merge": 1730,
+      "computation_saved_ratio": 0.5443771398472479
+    }
+  },
+  "model.layers.27.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4120,
+      "high_weight_tokens": 2292,
+      "low_weight_tokens": 1828,
+      "merge_groups": 16,
+      "tokens_after_merge": 2308,
+      "computation_saved_ratio": 0.4398058252427185
+    },
+    "expert_1": {
+      "total_tokens": 5087,
+      "high_weight_tokens": 2586,
+      "low_weight_tokens": 2501,
+      "merge_groups": 16,
+      "tokens_after_merge": 2602,
+      "computation_saved_ratio": 0.48850009828975816
+    },
+    "expert_2": {
+      "total_tokens": 3726,
+      "high_weight_tokens": 2503,
+      "low_weight_tokens": 1223,
+      "merge_groups": 16,
+      "tokens_after_merge": 2519,
+      "computation_saved_ratio": 0.3239398819108964
+    },
+    "expert_3": {
+      "total_tokens": 3424,
+      "high_weight_tokens": 1317,
+      "low_weight_tokens": 2107,
+      "merge_groups": 16,
+      "tokens_after_merge": 1333,
+      "computation_saved_ratio": 0.6106892523364487
+    },
+    "expert_4": {
+      "total_tokens": 5191,
+      "high_weight_tokens": 3014,
+      "low_weight_tokens": 2177,
+      "merge_groups": 16,
+      "tokens_after_merge": 3030,
+      "computation_saved_ratio": 0.41629743787324214
+    },
+    "expert_5": {
+      "total_tokens": 3796,
+      "high_weight_tokens": 1859,
+      "low_weight_tokens": 1937,
+      "merge_groups": 16,
+      "tokens_after_merge": 1875,
+      "computation_saved_ratio": 0.506059009483667
+    },
+    "expert_6": {
+      "total_tokens": 4381,
+      "high_weight_tokens": 1663,
+      "low_weight_tokens": 2718,
+      "merge_groups": 16,
+      "tokens_after_merge": 1679,
+      "computation_saved_ratio": 0.61675416571559
+    },
+    "expert_7": {
+      "total_tokens": 3075,
+      "high_weight_tokens": 1679,
+      "low_weight_tokens": 1396,
+      "merge_groups": 16,
+      "tokens_after_merge": 1695,
+      "computation_saved_ratio": 0.448780487804878
+    }
+  },
+  "model.layers.28.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3330,
+      "high_weight_tokens": 1045,
+      "low_weight_tokens": 2285,
+      "merge_groups": 16,
+      "tokens_after_merge": 1061,
+      "computation_saved_ratio": 0.6813813813813814
+    },
+    "expert_1": {
+      "total_tokens": 4424,
+      "high_weight_tokens": 2760,
+      "low_weight_tokens": 1664,
+      "merge_groups": 16,
+      "tokens_after_merge": 2776,
+      "computation_saved_ratio": 0.3725135623869801
+    },
+    "expert_2": {
+      "total_tokens": 3990,
+      "high_weight_tokens": 1776,
+      "low_weight_tokens": 2214,
+      "merge_groups": 16,
+      "tokens_after_merge": 1792,
+      "computation_saved_ratio": 0.5508771929824561
+    },
+    "expert_3": {
+      "total_tokens": 3402,
+      "high_weight_tokens": 2064,
+      "low_weight_tokens": 1338,
+      "merge_groups": 16,
+      "tokens_after_merge": 2080,
+      "computation_saved_ratio": 0.38859494415049967
+    },
+    "expert_4": {
+      "total_tokens": 3640,
+      "high_weight_tokens": 2795,
+      "low_weight_tokens": 845,
+      "merge_groups": 16,
+      "tokens_after_merge": 2811,
+      "computation_saved_ratio": 0.22774725274725272
+    },
+    "expert_5": {
+      "total_tokens": 4934,
+      "high_weight_tokens": 2242,
+      "low_weight_tokens": 2692,
+      "merge_groups": 16,
+      "tokens_after_merge": 2258,
+      "computation_saved_ratio": 0.542359140656668
+    },
+    "expert_6": {
+      "total_tokens": 4122,
+      "high_weight_tokens": 1538,
+      "low_weight_tokens": 2584,
+      "merge_groups": 16,
+      "tokens_after_merge": 1554,
+      "computation_saved_ratio": 0.6229985443959243
+    },
+    "expert_7": {
+      "total_tokens": 4958,
+      "high_weight_tokens": 2750,
+      "low_weight_tokens": 2208,
+      "merge_groups": 16,
+      "tokens_after_merge": 2766,
+      "computation_saved_ratio": 0.4421137555465914
+    }
+  },
+  "model.layers.29.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3420,
+      "high_weight_tokens": 1747,
+      "low_weight_tokens": 1673,
+      "merge_groups": 16,
+      "tokens_after_merge": 1763,
+      "computation_saved_ratio": 0.4845029239766082
+    },
+    "expert_1": {
+      "total_tokens": 5380,
+      "high_weight_tokens": 2175,
+      "low_weight_tokens": 3205,
+      "merge_groups": 16,
+      "tokens_after_merge": 2191,
+      "computation_saved_ratio": 0.5927509293680298
+    },
+    "expert_2": {
+      "total_tokens": 3905,
+      "high_weight_tokens": 2061,
+      "low_weight_tokens": 1844,
+      "merge_groups": 16,
+      "tokens_after_merge": 2077,
+      "computation_saved_ratio": 0.4681177976952625
+    },
+    "expert_3": {
+      "total_tokens": 2966,
+      "high_weight_tokens": 957,
+      "low_weight_tokens": 2009,
+      "merge_groups": 16,
+      "tokens_after_merge": 973,
+      "computation_saved_ratio": 0.671948752528658
+    },
+    "expert_4": {
+      "total_tokens": 3705,
+      "high_weight_tokens": 1946,
+      "low_weight_tokens": 1759,
+      "merge_groups": 16,
+      "tokens_after_merge": 1962,
+      "computation_saved_ratio": 0.47044534412955463
+    },
+    "expert_5": {
+      "total_tokens": 3600,
+      "high_weight_tokens": 1985,
+      "low_weight_tokens": 1615,
+      "merge_groups": 16,
+      "tokens_after_merge": 2001,
+      "computation_saved_ratio": 0.4441666666666667
+    },
+    "expert_6": {
+      "total_tokens": 6244,
+      "high_weight_tokens": 4365,
+      "low_weight_tokens": 1879,
+      "merge_groups": 16,
+      "tokens_after_merge": 4381,
+      "computation_saved_ratio": 0.2983664317745035
+    },
+    "expert_7": {
+      "total_tokens": 3580,
+      "high_weight_tokens": 1564,
+      "low_weight_tokens": 2016,
+      "merge_groups": 16,
+      "tokens_after_merge": 1580,
+      "computation_saved_ratio": 0.558659217877095
+    }
+  },
+  "model.layers.30.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3522,
+      "high_weight_tokens": 2011,
+      "low_weight_tokens": 1511,
+      "merge_groups": 16,
+      "tokens_after_merge": 2027,
+      "computation_saved_ratio": 0.42447473026689386
+    },
+    "expert_1": {
+      "total_tokens": 4028,
+      "high_weight_tokens": 3082,
+      "low_weight_tokens": 946,
+      "merge_groups": 16,
+      "tokens_after_merge": 3098,
+      "computation_saved_ratio": 0.23088381330685204
+    },
+    "expert_2": {
+      "total_tokens": 3645,
+      "high_weight_tokens": 1169,
+      "low_weight_tokens": 2476,
+      "merge_groups": 16,
+      "tokens_after_merge": 1185,
+      "computation_saved_ratio": 0.6748971193415638
+    },
+    "expert_3": {
+      "total_tokens": 5055,
+      "high_weight_tokens": 1255,
+      "low_weight_tokens": 3800,
+      "merge_groups": 16,
+      "tokens_after_merge": 1271,
+      "computation_saved_ratio": 0.7485657764589515
+    },
+    "expert_4": {
+      "total_tokens": 3208,
+      "high_weight_tokens": 380,
+      "low_weight_tokens": 2828,
+      "merge_groups": 16,
+      "tokens_after_merge": 396,
+      "computation_saved_ratio": 0.8765586034912718
+    },
+    "expert_5": {
+      "total_tokens": 4990,
+      "high_weight_tokens": 3960,
+      "low_weight_tokens": 1030,
+      "merge_groups": 16,
+      "tokens_after_merge": 3976,
+      "computation_saved_ratio": 0.20320641282565133
+    },
+    "expert_6": {
+      "total_tokens": 3877,
+      "high_weight_tokens": 2993,
+      "low_weight_tokens": 884,
+      "merge_groups": 16,
+      "tokens_after_merge": 3009,
+      "computation_saved_ratio": 0.2238844467371679
+    },
+    "expert_7": {
+      "total_tokens": 4475,
+      "high_weight_tokens": 1775,
+      "low_weight_tokens": 2700,
+      "merge_groups": 16,
+      "tokens_after_merge": 1791,
+      "computation_saved_ratio": 0.5997765363128491
+    }
+  },
+  "model.layers.31.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3831,
+      "high_weight_tokens": 2796,
+      "low_weight_tokens": 1035,
+      "merge_groups": 16,
+      "tokens_after_merge": 2812,
+      "computation_saved_ratio": 0.2659879926912033
+    },
+    "expert_1": {
+      "total_tokens": 3407,
+      "high_weight_tokens": 2656,
+      "low_weight_tokens": 751,
+      "merge_groups": 16,
+      "tokens_after_merge": 2672,
+      "computation_saved_ratio": 0.21573231582036978
+    },
+    "expert_2": {
+      "total_tokens": 5696,
+      "high_weight_tokens": 4850,
+      "low_weight_tokens": 846,
+      "merge_groups": 16,
+      "tokens_after_merge": 4866,
+      "computation_saved_ratio": 0.1457162921348315
+    },
+    "expert_3": {
+      "total_tokens": 4382,
+      "high_weight_tokens": 1865,
+      "low_weight_tokens": 2517,
+      "merge_groups": 16,
+      "tokens_after_merge": 1881,
+      "computation_saved_ratio": 0.57074395253309
+    },
+    "expert_4": {
+      "total_tokens": 4426,
+      "high_weight_tokens": 1024,
+      "low_weight_tokens": 3402,
+      "merge_groups": 16,
+      "tokens_after_merge": 1040,
+      "computation_saved_ratio": 0.7650248531405333
+    },
+    "expert_5": {
+      "total_tokens": 2600,
+      "high_weight_tokens": 523,
+      "low_weight_tokens": 2077,
+      "merge_groups": 16,
+      "tokens_after_merge": 539,
+      "computation_saved_ratio": 0.7926923076923077
+    },
+    "expert_6": {
+      "total_tokens": 4566,
+      "high_weight_tokens": 2530,
+      "low_weight_tokens": 2036,
+      "merge_groups": 16,
+      "tokens_after_merge": 2546,
+      "computation_saved_ratio": 0.44240035041611914
+    },
+    "expert_7": {
+      "total_tokens": 3892,
+      "high_weight_tokens": 436,
+      "low_weight_tokens": 3456,
+      "merge_groups": 16,
+      "tokens_after_merge": 452,
+      "computation_saved_ratio": 0.8838643371017472
+    }
+  }
+}

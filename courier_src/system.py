@@ -105,6 +105,7 @@ class System:
                  attn_on_hetero=False,
                  act_on_hetero=False,
                  moe_on_hetero=True,
+                 schedule_strategy=ScheduleStrategyType.FUSION,
                  token_fusion_expert_ratio=None):
 
         def add_infos(name, infos, time, energy, bound):
@@ -253,14 +254,20 @@ class System:
         perf_all = []
         energy_all = []
         ramulator_call_count = 0
+        print(f"Schedule strategy: {schedule_strategy}")
         start_time = sys_time.perf_counter()
-        # expert_schedule = self.expert_schedule_simulation_fused_token()
-        expert_schedule = self.expert_schedule_simulation_pimoe()
-        # expert_schedule = self.expert_schedule_simulation()
+        if schedule_strategy == ScheduleStrategyType.NOFUSION:
+            expert_schedule = self.expert_schedule_simulation_no_fusion()
+        elif schedule_strategy == ScheduleStrategyType.PIMOE:
+            expert_schedule = self.expert_schedule_simulation_pimoe()
+        elif schedule_strategy == ScheduleStrategyType.FIDDLER:
+            expert_schedule = self.expert_schedule_simulation_fiddler()
+        else:
+            expert_schedule = self.expert_schedule_simulation_fused_token()
         end_time = sys_time.perf_counter()
         print(f"Expert schedule simulation time: {end_time - start_time:.6f} s")
-        print(f"gpu_expert_ids: {expert_schedule['gpu_expert_ids']}")
-        print(f"acc_expert_ids: {expert_schedule['acc_expert_ids']}")
+        print(f"gpu_expert_ids ({len(expert_schedule['gpu_expert_ids'])}): {expert_schedule['gpu_expert_ids']}")
+        print(f"acc_expert_ids ({len(expert_schedule['acc_expert_ids'])}): {expert_schedule['acc_expert_ids']}")
         print(f"gpu_total_time: {expert_schedule['gpu_total_time']:.6f} s")
         print(f"     c_time: {expert_schedule['gpu_latency_breakdown']['compute']:.6f} s")
         print(f"     m_time: {expert_schedule['gpu_latency_breakdown']['mem']:.6f} s")
@@ -965,6 +972,7 @@ class System:
 
         # 预计算每个专家的时间信息（仅基于original token）
         expert_time_cache = {}
+        print('++++++++++++  ',len(fusion_stats.items()))
         for key, stat in fusion_stats.items():
             eid = int(key[7:])
             orig = stat.get('total_tokens', 0)

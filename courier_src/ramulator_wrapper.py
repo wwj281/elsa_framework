@@ -137,8 +137,7 @@ class Ramulator:
             trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_h2.py")
             trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --token_num {} --num_channels {}".format(
                 self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
-                self.moe_intermediate_size, batch_size, dbyte, trace_file, l, self.num_hbm)
-
+                self.moe_intermediate_size, batch_size, dbyte, trace_file, 1, self.num_hbm)
         gen_trace_cmd = f"python {trace_exc} {trace_args}"
 
         # generate trace
@@ -171,21 +170,22 @@ class Ramulator:
         if self.moe:
             n_cmds = {"mac": 0, "mvgb": 0, "wrgb": 0, "acc": 0, "af": 0, "ewmul": 0}
             cycle = 0
+            scale_ratio = 1 if self.mapping_strategy == MappingStrategyType.WEIGHT else l
             for line in output_list:
                 if "mac" in line:
-                    n_cmds["mac"] += int(line.split()[-1])
+                    n_cmds["mac"] += int(line.split()[-1]) * scale_ratio
                 elif "move_to_gemv_buffer" in line:
-                    n_cmds["mvgb"] += int(line.split()[-1])
+                    n_cmds["mvgb"] += int(line.split()[-1]) * scale_ratio
                 elif "write_to_gemv_buffer" in line:
-                    n_cmds["wrgb"] += int(line.split()[-1])
+                    n_cmds["wrgb"] += int(line.split()[-1]) * scale_ratio
                 elif "accumulate" in line:
-                    n_cmds["acc"] += int(line.split()[-1])
+                    n_cmds["acc"] += int(line.split()[-1]) * scale_ratio
                 elif "activate_function" in line:
-                    n_cmds["af"] += int(line.split()[-1])
+                    n_cmds["af"] += int(line.split()[-1]) * scale_ratio
                 elif "multiply_element_wise" in line:
-                    n_cmds["ewmul"] += int(line.split()[-1])
+                    n_cmds["ewmul"] += int(line.split()[-1]) * scale_ratio
                 elif "memory_system_cycles" in line:
-                    cycle += int(line.split()[-1])
+                    cycle += int(line.split()[-1]) * scale_ratio
 
             out = [
                 cycle, n_cmds["mac"], n_cmds["mvgb"], n_cmds["wrgb"], n_cmds["acc"],

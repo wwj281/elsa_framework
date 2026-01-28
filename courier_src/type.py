@@ -49,3 +49,10 @@ class MappingStrategyType(Enum):
     NAIVE = 0
     H2 = 1
     WEIGHT = 2
+
+class ScheduleStrategyType(Enum):
+    FUSION = 0
+    NOFUSION = 1
+    PIMOE = 2
+    FIDDLER = 3
+    
