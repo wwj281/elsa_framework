@@ -336,6 +336,7 @@ class System:
                             if tokens > 0:
                                 expert_layer = copy.deepcopy(layer)
                                 expert_layer.m = tokens
+                                print(f'Expert {eid} acc tokens: {tokens}')
                                 t, e = self.devices['Acc'].get_time_and_energy(expert_layer, batch_size)
                                 acc_total_time += t
                                 acc_total_energy = [a + b for a, b in zip(acc_total_energy, e)]
@@ -1194,12 +1195,12 @@ class System:
         expert_actual_tokens = {}
         gpu_total_time = 0.0
         acc_total_time = 0.0
-
+        print('token_threshold=', token_threshold)
         for key, stat in fusion_stats.items():
             eid = int(key[7:])
             orig_token = stat.get('total_tokens', 0)
             fused_token = stat.get('tokens_after_merge', 0)
-            use_fusion = fused_token > 0 and orig_token >= token_threshold
+            use_fusion = fused_token > 0 and fused != orig
             cache = expert_time_cache[eid]
 
             if eid in expert_locs_set:

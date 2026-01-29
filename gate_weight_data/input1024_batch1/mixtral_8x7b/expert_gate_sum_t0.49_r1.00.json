@@ -1,0 +1,1346 @@
+{
+  "model.layers.0.mlp": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 63.0836181640625,
+      "num_tokens": 136
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 100.46630859375,
+      "num_tokens": 287
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 103.388916015625,
+      "num_tokens": 240
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 124.3260498046875,
+      "num_tokens": 241
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 147.8099365234375,
+      "num_tokens": 317
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 150.9127197265625,
+      "num_tokens": 247
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 166.30682373046875,
+      "num_tokens": 288
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 168.71139526367188,
+      "num_tokens": 294
+    }
+  ],
+  "model.layers.1.block_sparse_moe": [
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 49.917137145996094,
+      "num_tokens": 185
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 73.50115966796875,
+      "num_tokens": 174
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 120.64077758789062,
+      "num_tokens": 239
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 131.26702880859375,
+      "num_tokens": 266
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 135.34231567382812,
+      "num_tokens": 280
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 135.9391632080078,
+      "num_tokens": 260
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 188.77828979492188,
+      "num_tokens": 346
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 189.60751342773438,
+      "num_tokens": 300
+    }
+  ],
+  "model.layers.2.block_sparse_moe": [
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 84.71237182617188,
+      "num_tokens": 196
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 102.63786315917969,
+      "num_tokens": 254
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 103.7012939453125,
+      "num_tokens": 218
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 116.73497772216797,
+      "num_tokens": 238
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 127.12416076660156,
+      "num_tokens": 239
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 141.17974853515625,
+      "num_tokens": 287
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 145.98123168945312,
+      "num_tokens": 323
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 202.92532348632812,
+      "num_tokens": 295
+    }
+  ],
+  "model.layers.3.block_sparse_moe": [
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 67.62367248535156,
+      "num_tokens": 144
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 90.99668884277344,
+      "num_tokens": 198
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 111.11022186279297,
+      "num_tokens": 258
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 131.16552734375,
+      "num_tokens": 314
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 133.83404541015625,
+      "num_tokens": 226
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 137.77496337890625,
+      "num_tokens": 257
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 174.6346435546875,
+      "num_tokens": 322
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 177.85821533203125,
+      "num_tokens": 331
+    }
+  ],
+  "model.layers.4.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 67.10150146484375,
+      "num_tokens": 148
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 110.99798583984375,
+      "num_tokens": 225
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 126.3919677734375,
+      "num_tokens": 258
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 130.76898193359375,
+      "num_tokens": 297
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 130.99612426757812,
+      "num_tokens": 263
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 139.28271484375,
+      "num_tokens": 247
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 141.9571533203125,
+      "num_tokens": 273
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 177.5042724609375,
+      "num_tokens": 339
+    }
+  ],
+  "model.layers.5.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 84.09431457519531,
+      "num_tokens": 187
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 106.59991455078125,
+      "num_tokens": 220
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 107.68475341796875,
+      "num_tokens": 244
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 127.0201416015625,
+      "num_tokens": 234
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 130.03829956054688,
+      "num_tokens": 258
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 130.15469360351562,
+      "num_tokens": 253
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 168.92794799804688,
+      "num_tokens": 307
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 170.47271728515625,
+      "num_tokens": 347
+    }
+  ],
+  "model.layers.6.block_sparse_moe": [
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 45.94244384765625,
+      "num_tokens": 100
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 78.82527160644531,
+      "num_tokens": 185
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 113.09237670898438,
+      "num_tokens": 217
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 115.30413818359375,
+      "num_tokens": 237
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 140.7034912109375,
+      "num_tokens": 322
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 172.51605224609375,
+      "num_tokens": 318
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 178.34912109375,
+      "num_tokens": 380
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 180.26174926757812,
+      "num_tokens": 291
+    }
+  ],
+  "model.layers.7.block_sparse_moe": [
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 39.7889404296875,
+      "num_tokens": 87
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 80.7623291015625,
+      "num_tokens": 187
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 119.82357788085938,
+      "num_tokens": 232
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 121.72528076171875,
+      "num_tokens": 230
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 148.941162109375,
+      "num_tokens": 305
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 158.55758666992188,
+      "num_tokens": 315
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 165.38665771484375,
+      "num_tokens": 335
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 190.01068115234375,
+      "num_tokens": 359
+    }
+  ],
+  "model.layers.8.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 21.70989990234375,
+      "num_tokens": 68
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 34.006591796875,
+      "num_tokens": 104
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 51.22039794921875,
+      "num_tokens": 143
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 145.13888549804688,
+      "num_tokens": 280
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 172.81838989257812,
+      "num_tokens": 352
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 174.5550994873047,
+      "num_tokens": 359
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 205.80966186523438,
+      "num_tokens": 363
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 219.7403106689453,
+      "num_tokens": 381
+    }
+  ],
+  "model.layers.9.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 47.73858642578125,
+      "num_tokens": 120
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 73.30770874023438,
+      "num_tokens": 166
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 74.1895751953125,
+      "num_tokens": 161
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 105.40835571289062,
+      "num_tokens": 255
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 116.20123291015625,
+      "num_tokens": 219
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 162.2315673828125,
+      "num_tokens": 310
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 192.8219451904297,
+      "num_tokens": 435
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 253.0987548828125,
+      "num_tokens": 384
+    }
+  ],
+  "model.layers.10.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 59.04486083984375,
+      "num_tokens": 158
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 61.5615234375,
+      "num_tokens": 138
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 126.20452880859375,
+      "num_tokens": 244
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 135.54937744140625,
+      "num_tokens": 317
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 144.1322021484375,
+      "num_tokens": 319
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 153.08544921875,
+      "num_tokens": 325
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 160.8253173828125,
+      "num_tokens": 280
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 184.588623046875,
+      "num_tokens": 269
+    }
+  ],
+  "model.layers.11.block_sparse_moe": [
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 11.63507080078125,
+      "num_tokens": 50
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 81.00054931640625,
+      "num_tokens": 200
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 117.54486083984375,
+      "num_tokens": 297
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 119.90625,
+      "num_tokens": 252
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 168.59881591796875,
+      "num_tokens": 322
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 171.47872924804688,
+      "num_tokens": 301
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 176.8125,
+      "num_tokens": 320
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 178.01657104492188,
+      "num_tokens": 308
+    }
+  ],
+  "model.layers.12.block_sparse_moe": [
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 41.38458251953125,
+      "num_tokens": 125
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 60.017333984375,
+      "num_tokens": 148
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 64.066650390625,
+      "num_tokens": 128
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 64.25628662109375,
+      "num_tokens": 158
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 97.257080078125,
+      "num_tokens": 238
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 226.45855712890625,
+      "num_tokens": 417
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 228.20266723632812,
+      "num_tokens": 339
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 243.35693359375,
+      "num_tokens": 497
+    }
+  ],
+  "model.layers.13.block_sparse_moe": [
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 44.81365966796875,
+      "num_tokens": 117
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 92.0670166015625,
+      "num_tokens": 226
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 106.7373046875,
+      "num_tokens": 237
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 111.6636962890625,
+      "num_tokens": 216
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 127.02621459960938,
+      "num_tokens": 237
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 134.3985595703125,
+      "num_tokens": 295
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 197.69354248046875,
+      "num_tokens": 370
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 210.60516357421875,
+      "num_tokens": 352
+    }
+  ],
+  "model.layers.14.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 77.9683837890625,
+      "num_tokens": 150
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 105.09283447265625,
+      "num_tokens": 254
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 112.65692138671875,
+      "num_tokens": 262
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 132.54937744140625,
+      "num_tokens": 246
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 132.89984130859375,
+      "num_tokens": 248
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 151.428955078125,
+      "num_tokens": 268
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 153.64474487304688,
+      "num_tokens": 276
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 158.74920654296875,
+      "num_tokens": 346
+    }
+  ],
+  "model.layers.15.block_sparse_moe": [
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 68.26458740234375,
+      "num_tokens": 158
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 74.6187744140625,
+      "num_tokens": 177
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 99.44287109375,
+      "num_tokens": 197
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 126.24102783203125,
+      "num_tokens": 260
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 148.3170166015625,
+      "num_tokens": 279
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 159.33871459960938,
+      "num_tokens": 282
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 161.34854125976562,
+      "num_tokens": 351
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 187.41339111328125,
+      "num_tokens": 346
+    }
+  ],
+  "model.layers.16.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 49.52642822265625,
+      "num_tokens": 114
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 70.8497314453125,
+      "num_tokens": 121
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 77.5631103515625,
+      "num_tokens": 175
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 105.9976806640625,
+      "num_tokens": 245
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 114.01666259765625,
+      "num_tokens": 256
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 158.61849975585938,
+      "num_tokens": 250
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 211.15191650390625,
+      "num_tokens": 397
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 237.2655029296875,
+      "num_tokens": 492
+    }
+  ],
+  "model.layers.17.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 84.7169189453125,
+      "num_tokens": 182
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 108.37509155273438,
+      "num_tokens": 240
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 108.958251953125,
+      "num_tokens": 243
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 123.718017578125,
+      "num_tokens": 205
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 129.3387451171875,
+      "num_tokens": 263
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 129.4375,
+      "num_tokens": 292
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 161.19329833984375,
+      "num_tokens": 250
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 179.25042724609375,
+      "num_tokens": 375
+    }
+  ],
+  "model.layers.18.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 76.38693237304688,
+      "num_tokens": 178
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 92.22467041015625,
+      "num_tokens": 212
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 97.489013671875,
+      "num_tokens": 193
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 122.8057861328125,
+      "num_tokens": 261
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 140.0035400390625,
+      "num_tokens": 253
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 155.97698974609375,
+      "num_tokens": 286
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 165.15252685546875,
+      "num_tokens": 360
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 174.9521484375,
+      "num_tokens": 307
+    }
+  ],
+  "model.layers.19.block_sparse_moe": [
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 83.4156265258789,
+      "num_tokens": 188
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 89.7791748046875,
+      "num_tokens": 236
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 114.45916748046875,
+      "num_tokens": 247
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 118.62728881835938,
+      "num_tokens": 240
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 131.6211700439453,
+      "num_tokens": 262
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 134.42071533203125,
+      "num_tokens": 253
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 162.20220947265625,
+      "num_tokens": 290
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 190.46990966796875,
+      "num_tokens": 334
+    }
+  ],
+  "model.layers.20.block_sparse_moe": [
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 29.92755126953125,
+      "num_tokens": 73
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 90.17886352539062,
+      "num_tokens": 207
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 120.42678833007812,
+      "num_tokens": 263
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 125.60675048828125,
+      "num_tokens": 275
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 136.34500122070312,
+      "num_tokens": 271
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 151.50013732910156,
+      "num_tokens": 288
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 162.56329345703125,
+      "num_tokens": 299
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 208.440673828125,
+      "num_tokens": 374
+    }
+  ],
+  "model.layers.21.block_sparse_moe": [
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 69.09649658203125,
+      "num_tokens": 152
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 78.23262023925781,
+      "num_tokens": 167
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 107.31658935546875,
+      "num_tokens": 207
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 109.412109375,
+      "num_tokens": 230
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 125.29977416992188,
+      "num_tokens": 257
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 129.96966552734375,
+      "num_tokens": 243
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 182.9320068359375,
+      "num_tokens": 403
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 222.72882080078125,
+      "num_tokens": 391
+    }
+  ],
+  "model.layers.22.block_sparse_moe": [
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 45.92445373535156,
+      "num_tokens": 120
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 54.86747741699219,
+      "num_tokens": 125
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 69.93989562988281,
+      "num_tokens": 174
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 99.58865356445312,
+      "num_tokens": 228
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 144.85272216796875,
+      "num_tokens": 323
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 199.09140014648438,
+      "num_tokens": 332
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 199.09483337402344,
+      "num_tokens": 327
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 211.636962890625,
+      "num_tokens": 421
+    }
+  ],
+  "model.layers.23.block_sparse_moe": [
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 60.34715270996094,
+      "num_tokens": 158
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 86.37508392333984,
+      "num_tokens": 192
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 122.039306640625,
+      "num_tokens": 280
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 132.88824462890625,
+      "num_tokens": 302
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 136.36227416992188,
+      "num_tokens": 249
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 152.0269317626953,
+      "num_tokens": 288
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 161.4762725830078,
+      "num_tokens": 309
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 173.47727966308594,
+      "num_tokens": 272
+    }
+  ],
+  "model.layers.24.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 48.134124755859375,
+      "num_tokens": 117
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 74.96646118164062,
+      "num_tokens": 145
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 97.35772705078125,
+      "num_tokens": 225
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 143.937255859375,
+      "num_tokens": 297
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 145.8405303955078,
+      "num_tokens": 280
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 161.25271606445312,
+      "num_tokens": 332
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 165.58367919921875,
+      "num_tokens": 339
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 187.91893005371094,
+      "num_tokens": 315
+    }
+  ],
+  "model.layers.25.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 74.54933166503906,
+      "num_tokens": 165
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 81.04727172851562,
+      "num_tokens": 169
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 89.98213195800781,
+      "num_tokens": 210
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 101.83815002441406,
+      "num_tokens": 287
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 120.84883117675781,
+      "num_tokens": 241
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 128.2563018798828,
+      "num_tokens": 271
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 197.60916137695312,
+      "num_tokens": 298
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 230.8685302734375,
+      "num_tokens": 409
+    }
+  ],
+  "model.layers.26.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 53.8472900390625,
+      "num_tokens": 199
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 101.74552917480469,
+      "num_tokens": 212
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 105.71294403076172,
+      "num_tokens": 272
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 117.20513153076172,
+      "num_tokens": 272
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 129.48931884765625,
+      "num_tokens": 266
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 130.29486083984375,
+      "num_tokens": 243
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 188.90750122070312,
+      "num_tokens": 295
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 197.7930908203125,
+      "num_tokens": 291
+    }
+  ],
+  "model.layers.27.block_sparse_moe": [
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 76.26512145996094,
+      "num_tokens": 210
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 87.20382690429688,
+      "num_tokens": 168
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 107.22654724121094,
+      "num_tokens": 258
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 127.04673767089844,
+      "num_tokens": 262
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 127.31143188476562,
+      "num_tokens": 250
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 132.75210571289062,
+      "num_tokens": 326
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 168.32058715820312,
+      "num_tokens": 270
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 198.86595153808594,
+      "num_tokens": 306
+    }
+  ],
+  "model.layers.28.block_sparse_moe": [
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 84.55755615234375,
+      "num_tokens": 157
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 88.8438720703125,
+      "num_tokens": 234
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 89.19908142089844,
+      "num_tokens": 227
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 123.63250732421875,
+      "num_tokens": 221
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 137.42001342773438,
+      "num_tokens": 301
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 147.29322814941406,
+      "num_tokens": 370
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 171.21047973632812,
+      "num_tokens": 263
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 182.82626342773438,
+      "num_tokens": 277
+    }
+  ],
+  "model.layers.29.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 70.163818359375,
+      "num_tokens": 194
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 101.2630615234375,
+      "num_tokens": 187
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 111.94110107421875,
+      "num_tokens": 220
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 127.24365234375,
+      "num_tokens": 252
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 129.26458740234375,
+      "num_tokens": 269
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 133.362060546875,
+      "num_tokens": 248
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 171.44195556640625,
+      "num_tokens": 315
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 180.31814575195312,
+      "num_tokens": 365
+    }
+  ],
+  "model.layers.30.block_sparse_moe": [
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 41.428192138671875,
+      "num_tokens": 186
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 68.78512573242188,
+      "num_tokens": 257
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 94.32316589355469,
+      "num_tokens": 291
+    },
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 111.67462158203125,
+      "num_tokens": 269
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 133.3043212890625,
+      "num_tokens": 212
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 167.3330535888672,
+      "num_tokens": 269
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 193.58047485351562,
+      "num_tokens": 260
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 214.56884765625,
+      "num_tokens": 306
+    }
+  ],
+  "model.layers.31.block_sparse_moe": [
+    {
+      "expert_id": 7,
+      "gate_weight_sum": 31.86620330810547,
+      "num_tokens": 202
+    },
+    {
+      "expert_id": 5,
+      "gate_weight_sum": 67.3087158203125,
+      "num_tokens": 267
+    },
+    {
+      "expert_id": 3,
+      "gate_weight_sum": 81.71725463867188,
+      "num_tokens": 233
+    },
+    {
+      "expert_id": 4,
+      "gate_weight_sum": 123.83612060546875,
+      "num_tokens": 265
+    },
+    {
+      "expert_id": 0,
+      "gate_weight_sum": 137.9127197265625,
+      "num_tokens": 271
+    },
+    {
+      "expert_id": 6,
+      "gate_weight_sum": 140.55929565429688,
+      "num_tokens": 217
+    },
+    {
+      "expert_id": 2,
+      "gate_weight_sum": 206.866455078125,
+      "num_tokens": 285
+    },
+    {
+      "expert_id": 1,
+      "gate_weight_sum": 234.93939208984375,
+      "num_tokens": 310
+    }
+  ]
+}
