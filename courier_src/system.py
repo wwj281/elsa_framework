@@ -262,6 +262,8 @@ class System:
             expert_schedule = self.expert_schedule_simulation_pimoe()
         elif schedule_strategy == ScheduleStrategyType.FIDDLER:
             expert_schedule = self.expert_schedule_simulation_fiddler()
+        elif schedule_strategy == ScheduleStrategyType.KLOTSKI:
+            expert_schedule = self.expert_schedule_simulation_klotski()
         else:
             expert_schedule = self.expert_schedule_simulation_fused_token()
         end_time = sys_time.perf_counter()
@@ -284,7 +286,7 @@ class System:
             wrt_io_busy = 0
             s_decoder = self.model.sum_decoder
             g_decoder = self.model.gen_decoder
-
+            per_expert_load_time = 0
             ## Summarization stage
             for idx, layer in enumerate(s_decoder):
                 # 动态调度X2G和ff层
@@ -300,6 +302,7 @@ class System:
                         exec_time, energy = self.devices['GPU'].get_time_and_energy(new_layer)
                         exec_time += max(wrt_io_busy - time, 0)
                         wrt_io_busy = time + exec_time
+                        per_expert_load_time = exec_time / move_expert_num
                         layer.exec_time = exec_time
                         layer.energy = energy
                     else:
@@ -313,13 +316,16 @@ class System:
                         gpu_expert_ids = expert_schedule.get('gpu_expert_ids', [])
                         acc_expert_ids = expert_schedule.get('acc_expert_ids', [])
                         expert_actual_tokens = expert_schedule.get('expert_actual_tokens', {})
+                        gpu_local_expert_num = len(gpu_expert_ids) - len(expert_schedule.get('move_to_gpu_ids', []))
                         gpu_total_time = 0.0
                         acc_total_time = 0.0
+                        actual_compute_time = 0.0
                         gpu_total_energy = [0, 0, 0, 0, 0, 0]
                         acc_total_energy = [0, 0, 0, 0, 0, 0]
                         # 分别计算GPU专家
-                        for eid in gpu_expert_ids:
+                        for index, eid in enumerate(gpu_expert_ids):
                             tokens = expert_actual_tokens.get(eid, 0)
+                            print('index:', index,'GPU Expert', eid, 'tokens:', tokens)
                             if tokens > 0:
                                 expert_layer = copy.deepcopy(layer)
                                 act_layer = copy.deepcopy(s_decoder[idx + 2])  # 激活函数层
@@ -328,8 +334,16 @@ class System:
                                 t, e = self.devices['GPU'].get_time_and_energy(expert_layer)
                                 act_t, act_e = self.devices['GPU'].get_time_and_energy(act_layer)
                                 e = [e[i] * 3 + act_e[i] for i in range(len(e))]
-                                gpu_total_time += t * 3 + act_t  # ff1, ff2, ff3
+                                if schedule_strategy == ScheduleStrategyType.KLOTSKI and index >= gpu_local_expert_num:
+                                    print("    Klotski gpu_total_time:", gpu_total_time, 'per_expert_load_time:', per_expert_load_time, 'computation:', t * 3 + act_t)
+                                    print("    Load per expert time:", per_expert_load_time * (index - gpu_local_expert_num + 1))
+                                    # gpu_total_time += max(t * 3 + act_t, per_expert_load_time)                                      
+                                    gpu_total_time = max(gpu_total_time, per_expert_load_time * (index - gpu_local_expert_num + 1)) + t * 3 + act_t
+                                else:
+                                    gpu_total_time += t * 3 + act_t  # ff1, ff2, ff3
+                                actual_compute_time += t * 3 + act_t
                                 gpu_total_energy = [a + b for a, b in zip(gpu_total_energy, e)]
+                                print('gpu_total_time:', t * 3 + act_t)
                         # 分别计算加速器专家
                         for eid in acc_expert_ids:
                             tokens = expert_actual_tokens.get(eid, 0)
@@ -351,10 +365,14 @@ class System:
                             layer.exec_time = acc_total_time - x2g_time
                             layer.energy = acc_total_energy
                         else:
-                            layer.exec_time = gpu_total_time
+                            if schedule_strategy == ScheduleStrategyType.KLOTSKI:
+                                layer.exec_time = gpu_total_time - x2g_time
+                            else:
+                                layer.exec_time = gpu_total_time
                             layer.energy = gpu_total_energy
                         print(f"actual layer exec_time {layer.exec_time:.6f}")
                         print(f"actual GPU exec_time {gpu_total_time + x2g_time:.6f}")
+                        print(f"    real computation time {actual_compute_time:.6f}")
                         print(f"    computation time {gpu_total_time:.6f}")
                         print(f"    load time {x2g_time:.6f}")
                         print(f"actual Acc exec_time {acc_total_time:.6f}")
@@ -937,6 +955,117 @@ class System:
             'acc_latency_breakdown': acc_latency_breakdown,
             'channel_latencies': channel_latencies  # 额外返回各channel延迟
         }
+    
+    def expert_schedule_simulation_klotski(self, layer_idx=0):
+        """
+        专家调度模拟（仅基于original token）：
+        1. 获取token阈值，遍历第layer_idx层所有专家，所有专家在GPU上计算。
+        2. 根据分配结果模拟GPU的执行时间。
+        3. 不进行进一步负载均衡调整。
+        返回：
+            gpu_expert_ids, acc_expert_ids, move_to_gpu_ids, gpu_total_time, acc_total_time
+            以及延迟构成：gpu_latency_breakdown, acc_latency_breakdown
+        """
+
+        layer_key = f"model.layers.{layer_idx}.mlp"
+        fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
+        expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+
+        # 预计算硬件常量
+        gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
+        gpu_bw = self.devices['GPU'].peak_memory_bandwidth * self.devices['GPU'].num_xpu
+        acc_to_gpu_bw = self.devices['GPU'].max_interface_bandwidth / 2
+        k, n = self.model.hdim, self.model.hdim * self.model.ff_scale
+        dtype_size = 2 if self.model.dtype in [DataType.W16A16, DataType.W16A8] else 1
+        weight_size = k * n * 3 * dtype_size
+        flop_factor = 2 * k * n * 3
+        input_size_factor = dtype_size * k
+
+        weight_load_gpu = weight_size / gpu_bw
+        weight_transfer = weight_size / acc_to_gpu_bw
+
+        # 预计算每个专家的时间信息（仅基于original token）
+        expert_time_cache = {}
+        for key, stat in fusion_stats.items():
+            eid = int(key[7:])
+            orig = stat.get('total_tokens', 0)
+            on_gpu = eid in expert_locs_set
+
+            # GPU时间分解
+            gpu_compute = (orig * flop_factor) / gpu_flops
+            gpu_mem = weight_load_gpu + (orig * input_size_factor) / gpu_bw
+            gpu_load = weight_transfer if not on_gpu else 0  # 从加速器加载权重
+            gpu_time = gpu_compute + gpu_mem + gpu_load
+
+            # 加速器时间分解（使用original token）
+            acc_compute = 0
+            acc_mem = 0
+            acc_load = 0 
+            acc_time = acc_compute + acc_mem + acc_load
+
+            expert_time_cache[eid] = {
+                'gpu_time': gpu_time, 'acc_time': acc_time,
+                'gpu_compute': gpu_compute, 'gpu_mem': gpu_mem, 'gpu_load': gpu_load,
+                'acc_compute': acc_compute, 'acc_mem': acc_mem, 'acc_load': acc_load,
+                'orig': orig, 'on_gpu': on_gpu
+            }
+
+        # 初始分配（使用set加速，仅基于original token）
+        gpu_expert_set = set()
+        acc_expert_set = set()
+        expert_actual_tokens = {}
+        gpu_total_time = 0.0
+        acc_total_time = 0.0
+
+        for key, stat in fusion_stats.items():
+            eid = int(key[7:])
+            orig_token = stat.get('total_tokens', 0)
+            cache = expert_time_cache[eid]
+            gpu_expert_set.add(eid)
+            gpu_total_time += cache['gpu_time']
+            expert_actual_tokens[eid] = orig_token
+
+        # 统计延迟构成（初始分配后直接返回，不再进行负载均衡优化）
+        gpu_latency_breakdown = {'compute': 0.0, 'mem': 0.0, 'load': 0.0, 'total': 0.0}
+        acc_latency_breakdown = {'compute': 0.0, 'mem': 0.0, 'load': 0.0, 'total': 0.0}
+
+        for eid in gpu_expert_set:
+            cache = expert_time_cache[eid]
+            gpu_latency_breakdown['compute'] += cache['gpu_compute']
+            gpu_latency_breakdown['mem'] += cache['gpu_mem']
+            gpu_latency_breakdown['load'] += cache['gpu_load']
+            gpu_latency_breakdown['total'] += cache['gpu_time']
+
+        for eid in acc_expert_set:
+            cache = expert_time_cache[eid]
+            acc_latency_breakdown['compute'] += cache['acc_compute']
+            acc_latency_breakdown['mem'] += cache['acc_mem']
+            acc_latency_breakdown['load'] += cache['acc_load']
+            acc_latency_breakdown['total'] += cache['acc_time']
+
+        # 构建返回结果
+        gpu_expert_ids = sorted(
+            gpu_expert_set,
+            key=lambda eid: (
+                0 if eid in expert_locs_set else 1,   # 已在 GPU 的排最前
+                -expert_actual_tokens.get(eid, 0)     # token 数从大到小
+            )
+        )
+        acc_expert_ids = sorted(acc_expert_set)
+        move_to_gpu_ids = [eid for eid in gpu_expert_ids if eid not in expert_locs_set]
+
+        return {
+            'gpu_expert_ids': gpu_expert_ids,
+            'acc_expert_ids': acc_expert_ids,
+            'move_to_gpu_ids': move_to_gpu_ids,
+            'fusion_acc_expert_ids': set(),
+            'gpu_total_time': gpu_total_time,
+            'acc_total_time': acc_total_time,
+            'total_latency': max(gpu_total_time, acc_total_time),
+            'expert_actual_tokens': expert_actual_tokens,
+            'gpu_latency_breakdown': gpu_latency_breakdown,
+            'acc_latency_breakdown': acc_latency_breakdown
+        }
 
     def expert_schedule_simulation_no_fusion(self, layer_idx=0):
         """
@@ -1195,7 +1324,7 @@ class System:
         expert_actual_tokens = {}
         gpu_total_time = 0.0
         acc_total_time = 0.0
-        print('token_threshold=', token_threshold)
+        print('token_threshold:', token_threshold)
         for key, stat in fusion_stats.items():
             eid = int(key[7:])
             orig_token = stat.get('total_tokens', 0)

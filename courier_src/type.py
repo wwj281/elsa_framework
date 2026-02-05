@@ -55,4 +55,5 @@ class ScheduleStrategyType(Enum):
     NOFUSION = 1
     PIMOE = 2
     FIDDLER = 3
+    KLOTSKI = 4
     

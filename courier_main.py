@@ -260,6 +260,8 @@ def main():
         schedule_strategy = ScheduleStrategyType.PIMOE
     elif args.schedule_strategy == 'FIDDLER':
         schedule_strategy = ScheduleStrategyType.FIDDLER
+    elif args.schedule_strategy == 'KLOTSKI':
+        schedule_strategy = ScheduleStrategyType.KLOTSKI
     else:
         schedule_strategy = ScheduleStrategyType.FUSION
 

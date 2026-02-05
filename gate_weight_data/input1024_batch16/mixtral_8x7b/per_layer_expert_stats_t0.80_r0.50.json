@@ -1,0 +1,2114 @@
+{
+  "model.layers.0.mlp": {
+    "expert_0": {
+      "total_tokens": 3673,
+      "high_weight_tokens": 490,
+      "low_weight_tokens": 3183,
+      "merge_groups": 16,
+      "tokens_after_merge": 506,
+      "computation_saved_ratio": 0.8622379526272801
+    },
+    "expert_1": {
+      "total_tokens": 5421,
+      "high_weight_tokens": 5421,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5421,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3351,
+      "high_weight_tokens": 3351,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3351,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3229,
+      "high_weight_tokens": 3229,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3229,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 6107,
+      "high_weight_tokens": 6107,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6107,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3895,
+      "high_weight_tokens": 325,
+      "low_weight_tokens": 3570,
+      "merge_groups": 16,
+      "tokens_after_merge": 341,
+      "computation_saved_ratio": 0.9124518613607189
+    },
+    "expert_6": {
+      "total_tokens": 3179,
+      "high_weight_tokens": 484,
+      "low_weight_tokens": 2695,
+      "merge_groups": 16,
+      "tokens_after_merge": 500,
+      "computation_saved_ratio": 0.8427178357974205
+    },
+    "expert_7": {
+      "total_tokens": 3945,
+      "high_weight_tokens": 651,
+      "low_weight_tokens": 3294,
+      "merge_groups": 16,
+      "tokens_after_merge": 667,
+      "computation_saved_ratio": 0.8309252217997465
+    }
+  },
+  "model.layers.1.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3667,
+      "high_weight_tokens": 557,
+      "low_weight_tokens": 3110,
+      "merge_groups": 16,
+      "tokens_after_merge": 573,
+      "computation_saved_ratio": 0.8437414780474503
+    },
+    "expert_1": {
+      "total_tokens": 3557,
+      "high_weight_tokens": 3557,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3557,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3869,
+      "high_weight_tokens": 3869,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3869,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 2904,
+      "high_weight_tokens": 22,
+      "low_weight_tokens": 2882,
+      "merge_groups": 16,
+      "tokens_after_merge": 38,
+      "computation_saved_ratio": 0.9869146005509641
+    },
+    "expert_4": {
+      "total_tokens": 5498,
+      "high_weight_tokens": 5498,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5498,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 6205,
+      "high_weight_tokens": 6205,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6205,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3428,
+      "high_weight_tokens": 488,
+      "low_weight_tokens": 2940,
+      "merge_groups": 16,
+      "tokens_after_merge": 504,
+      "computation_saved_ratio": 0.852975495915986
+    },
+    "expert_7": {
+      "total_tokens": 3672,
+      "high_weight_tokens": 450,
+      "low_weight_tokens": 3222,
+      "merge_groups": 16,
+      "tokens_after_merge": 466,
+      "computation_saved_ratio": 0.8730936819172113
+    }
+  },
+  "model.layers.2.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 6235,
+      "high_weight_tokens": 6235,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6235,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3164,
+      "high_weight_tokens": 305,
+      "low_weight_tokens": 2859,
+      "merge_groups": 16,
+      "tokens_after_merge": 321,
+      "computation_saved_ratio": 0.8985461441213654
+    },
+    "expert_2": {
+      "total_tokens": 3754,
+      "high_weight_tokens": 336,
+      "low_weight_tokens": 3418,
+      "merge_groups": 16,
+      "tokens_after_merge": 352,
+      "computation_saved_ratio": 0.9062333510921683
+    },
+    "expert_3": {
+      "total_tokens": 4502,
+      "high_weight_tokens": 4502,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4502,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3767,
+      "high_weight_tokens": 476,
+      "low_weight_tokens": 3291,
+      "merge_groups": 16,
+      "tokens_after_merge": 492,
+      "computation_saved_ratio": 0.8693920891956464
+    },
+    "expert_5": {
+      "total_tokens": 4493,
+      "high_weight_tokens": 4493,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4493,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3576,
+      "high_weight_tokens": 3576,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3576,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3309,
+      "high_weight_tokens": 218,
+      "low_weight_tokens": 3091,
+      "merge_groups": 16,
+      "tokens_after_merge": 234,
+      "computation_saved_ratio": 0.9292837715321849
+    }
+  },
+  "model.layers.3.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4344,
+      "high_weight_tokens": 4344,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4344,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3556,
+      "high_weight_tokens": 270,
+      "low_weight_tokens": 3286,
+      "merge_groups": 16,
+      "tokens_after_merge": 286,
+      "computation_saved_ratio": 0.9195725534308211
+    },
+    "expert_2": {
+      "total_tokens": 4008,
+      "high_weight_tokens": 4008,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4008,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3794,
+      "high_weight_tokens": 229,
+      "low_weight_tokens": 3565,
+      "merge_groups": 16,
+      "tokens_after_merge": 245,
+      "computation_saved_ratio": 0.9354243542435424
+    },
+    "expert_4": {
+      "total_tokens": 3374,
+      "high_weight_tokens": 317,
+      "low_weight_tokens": 3057,
+      "merge_groups": 16,
+      "tokens_after_merge": 333,
+      "computation_saved_ratio": 0.9013040901007706
+    },
+    "expert_5": {
+      "total_tokens": 4021,
+      "high_weight_tokens": 237,
+      "low_weight_tokens": 3784,
+      "merge_groups": 16,
+      "tokens_after_merge": 253,
+      "computation_saved_ratio": 0.9370803282765481
+    },
+    "expert_6": {
+      "total_tokens": 4535,
+      "high_weight_tokens": 4535,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4535,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 5168,
+      "high_weight_tokens": 5168,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5168,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.4.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3270,
+      "high_weight_tokens": 364,
+      "low_weight_tokens": 2906,
+      "merge_groups": 16,
+      "tokens_after_merge": 380,
+      "computation_saved_ratio": 0.8837920489296636
+    },
+    "expert_1": {
+      "total_tokens": 5654,
+      "high_weight_tokens": 5654,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5654,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3754,
+      "high_weight_tokens": 201,
+      "low_weight_tokens": 3553,
+      "merge_groups": 16,
+      "tokens_after_merge": 217,
+      "computation_saved_ratio": 0.9421949920085242
+    },
+    "expert_3": {
+      "total_tokens": 4844,
+      "high_weight_tokens": 4844,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4844,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3209,
+      "high_weight_tokens": 233,
+      "low_weight_tokens": 2976,
+      "merge_groups": 16,
+      "tokens_after_merge": 249,
+      "computation_saved_ratio": 0.9224057338734808
+    },
+    "expert_5": {
+      "total_tokens": 4577,
+      "high_weight_tokens": 4577,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4577,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3707,
+      "high_weight_tokens": 252,
+      "low_weight_tokens": 3455,
+      "merge_groups": 16,
+      "tokens_after_merge": 268,
+      "computation_saved_ratio": 0.9277043431346101
+    },
+    "expert_7": {
+      "total_tokens": 3785,
+      "high_weight_tokens": 3785,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3785,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.5.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3173,
+      "high_weight_tokens": 257,
+      "low_weight_tokens": 2916,
+      "merge_groups": 16,
+      "tokens_after_merge": 273,
+      "computation_saved_ratio": 0.9139615505830444
+    },
+    "expert_1": {
+      "total_tokens": 3278,
+      "high_weight_tokens": 126,
+      "low_weight_tokens": 3152,
+      "merge_groups": 16,
+      "tokens_after_merge": 142,
+      "computation_saved_ratio": 0.9566809029896278
+    },
+    "expert_2": {
+      "total_tokens": 5765,
+      "high_weight_tokens": 5765,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5765,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3983,
+      "high_weight_tokens": 3983,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3983,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3277,
+      "high_weight_tokens": 184,
+      "low_weight_tokens": 3093,
+      "merge_groups": 16,
+      "tokens_after_merge": 200,
+      "computation_saved_ratio": 0.9389685688129387
+    },
+    "expert_5": {
+      "total_tokens": 3537,
+      "high_weight_tokens": 3537,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3537,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3403,
+      "high_weight_tokens": 237,
+      "low_weight_tokens": 3166,
+      "merge_groups": 16,
+      "tokens_after_merge": 253,
+      "computation_saved_ratio": 0.9256538348516016
+    },
+    "expert_7": {
+      "total_tokens": 6384,
+      "high_weight_tokens": 6384,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6384,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.6.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3275,
+      "high_weight_tokens": 123,
+      "low_weight_tokens": 3152,
+      "merge_groups": 16,
+      "tokens_after_merge": 139,
+      "computation_saved_ratio": 0.9575572519083969
+    },
+    "expert_1": {
+      "total_tokens": 5510,
+      "high_weight_tokens": 5510,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5510,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 4866,
+      "high_weight_tokens": 4866,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4866,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 5177,
+      "high_weight_tokens": 5177,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5177,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 5442,
+      "high_weight_tokens": 5442,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5442,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 2852,
+      "high_weight_tokens": 311,
+      "low_weight_tokens": 2541,
+      "merge_groups": 16,
+      "tokens_after_merge": 327,
+      "computation_saved_ratio": 0.885343618513324
+    },
+    "expert_6": {
+      "total_tokens": 2887,
+      "high_weight_tokens": 284,
+      "low_weight_tokens": 2603,
+      "merge_groups": 16,
+      "tokens_after_merge": 300,
+      "computation_saved_ratio": 0.8960859023207481
+    },
+    "expert_7": {
+      "total_tokens": 2791,
+      "high_weight_tokens": 140,
+      "low_weight_tokens": 2651,
+      "merge_groups": 16,
+      "tokens_after_merge": 156,
+      "computation_saved_ratio": 0.9441060551773558
+    }
+  },
+  "model.layers.7.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3277,
+      "high_weight_tokens": 228,
+      "low_weight_tokens": 3049,
+      "merge_groups": 16,
+      "tokens_after_merge": 244,
+      "computation_saved_ratio": 0.9255416539517851
+    },
+    "expert_1": {
+      "total_tokens": 3670,
+      "high_weight_tokens": 3670,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3670,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3938,
+      "high_weight_tokens": 260,
+      "low_weight_tokens": 3678,
+      "merge_groups": 16,
+      "tokens_after_merge": 276,
+      "computation_saved_ratio": 0.9299136617572372
+    },
+    "expert_3": {
+      "total_tokens": 3745,
+      "high_weight_tokens": 328,
+      "low_weight_tokens": 3417,
+      "merge_groups": 16,
+      "tokens_after_merge": 344,
+      "computation_saved_ratio": 0.9081441922563418
+    },
+    "expert_4": {
+      "total_tokens": 4541,
+      "high_weight_tokens": 4541,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4541,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 4930,
+      "high_weight_tokens": 4930,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4930,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3516,
+      "high_weight_tokens": 314,
+      "low_weight_tokens": 3202,
+      "merge_groups": 16,
+      "tokens_after_merge": 330,
+      "computation_saved_ratio": 0.9061433447098977
+    },
+    "expert_7": {
+      "total_tokens": 5183,
+      "high_weight_tokens": 5183,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5183,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.8.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 2612,
+      "high_weight_tokens": 89,
+      "low_weight_tokens": 2523,
+      "merge_groups": 16,
+      "tokens_after_merge": 105,
+      "computation_saved_ratio": 0.9598009188361409
+    },
+    "expert_1": {
+      "total_tokens": 4788,
+      "high_weight_tokens": 4788,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4788,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3805,
+      "high_weight_tokens": 248,
+      "low_weight_tokens": 3557,
+      "merge_groups": 16,
+      "tokens_after_merge": 264,
+      "computation_saved_ratio": 0.9306176084099869
+    },
+    "expert_3": {
+      "total_tokens": 4356,
+      "high_weight_tokens": 4356,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4356,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 4160,
+      "high_weight_tokens": 4160,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4160,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3401,
+      "high_weight_tokens": 266,
+      "low_weight_tokens": 3135,
+      "merge_groups": 16,
+      "tokens_after_merge": 282,
+      "computation_saved_ratio": 0.9170832108203469
+    },
+    "expert_6": {
+      "total_tokens": 3764,
+      "high_weight_tokens": 288,
+      "low_weight_tokens": 3476,
+      "merge_groups": 16,
+      "tokens_after_merge": 304,
+      "computation_saved_ratio": 0.9192348565356004
+    },
+    "expert_7": {
+      "total_tokens": 5914,
+      "high_weight_tokens": 5914,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5914,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.9.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4262,
+      "high_weight_tokens": 4262,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4262,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3961,
+      "high_weight_tokens": 3961,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3961,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 5874,
+      "high_weight_tokens": 5874,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5874,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3903,
+      "high_weight_tokens": 259,
+      "low_weight_tokens": 3644,
+      "merge_groups": 16,
+      "tokens_after_merge": 275,
+      "computation_saved_ratio": 0.9295413784268511
+    },
+    "expert_4": {
+      "total_tokens": 2637,
+      "high_weight_tokens": 179,
+      "low_weight_tokens": 2458,
+      "merge_groups": 16,
+      "tokens_after_merge": 195,
+      "computation_saved_ratio": 0.926052332195677
+    },
+    "expert_5": {
+      "total_tokens": 3689,
+      "high_weight_tokens": 83,
+      "low_weight_tokens": 3606,
+      "merge_groups": 16,
+      "tokens_after_merge": 99,
+      "computation_saved_ratio": 0.9731634589319599
+    },
+    "expert_6": {
+      "total_tokens": 3143,
+      "high_weight_tokens": 156,
+      "low_weight_tokens": 2987,
+      "merge_groups": 16,
+      "tokens_after_merge": 172,
+      "computation_saved_ratio": 0.9452752147629653
+    },
+    "expert_7": {
+      "total_tokens": 5331,
+      "high_weight_tokens": 5331,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5331,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.10.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5183,
+      "high_weight_tokens": 5183,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5183,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 2743,
+      "high_weight_tokens": 198,
+      "low_weight_tokens": 2545,
+      "merge_groups": 16,
+      "tokens_after_merge": 214,
+      "computation_saved_ratio": 0.9219832300401021
+    },
+    "expert_2": {
+      "total_tokens": 5188,
+      "high_weight_tokens": 5188,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5188,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3649,
+      "high_weight_tokens": 257,
+      "low_weight_tokens": 3392,
+      "merge_groups": 16,
+      "tokens_after_merge": 273,
+      "computation_saved_ratio": 0.9251849821869005
+    },
+    "expert_4": {
+      "total_tokens": 3780,
+      "high_weight_tokens": 3780,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3780,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3790,
+      "high_weight_tokens": 272,
+      "low_weight_tokens": 3518,
+      "merge_groups": 16,
+      "tokens_after_merge": 288,
+      "computation_saved_ratio": 0.9240105540897098
+    },
+    "expert_6": {
+      "total_tokens": 4891,
+      "high_weight_tokens": 4891,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4891,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3576,
+      "high_weight_tokens": 32,
+      "low_weight_tokens": 3544,
+      "merge_groups": 16,
+      "tokens_after_merge": 48,
+      "computation_saved_ratio": 0.9865771812080537
+    }
+  },
+  "model.layers.11.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 6317,
+      "high_weight_tokens": 6317,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6317,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 4107,
+      "high_weight_tokens": 4107,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4107,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3950,
+      "high_weight_tokens": 265,
+      "low_weight_tokens": 3685,
+      "merge_groups": 16,
+      "tokens_after_merge": 281,
+      "computation_saved_ratio": 0.9288607594936709
+    },
+    "expert_3": {
+      "total_tokens": 2299,
+      "high_weight_tokens": 17,
+      "low_weight_tokens": 2282,
+      "merge_groups": 16,
+      "tokens_after_merge": 33,
+      "computation_saved_ratio": 0.9856459330143541
+    },
+    "expert_4": {
+      "total_tokens": 3667,
+      "high_weight_tokens": 540,
+      "low_weight_tokens": 3127,
+      "merge_groups": 16,
+      "tokens_after_merge": 556,
+      "computation_saved_ratio": 0.8483774202345241
+    },
+    "expert_5": {
+      "total_tokens": 3789,
+      "high_weight_tokens": 3789,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3789,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 5174,
+      "high_weight_tokens": 5174,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5174,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3497,
+      "high_weight_tokens": 267,
+      "low_weight_tokens": 3230,
+      "merge_groups": 16,
+      "tokens_after_merge": 283,
+      "computation_saved_ratio": 0.9190734915641979
+    }
+  },
+  "model.layers.12.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3090,
+      "high_weight_tokens": 391,
+      "low_weight_tokens": 2699,
+      "merge_groups": 16,
+      "tokens_after_merge": 407,
+      "computation_saved_ratio": 0.8682847896440129
+    },
+    "expert_1": {
+      "total_tokens": 4590,
+      "high_weight_tokens": 4590,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4590,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 4094,
+      "high_weight_tokens": 264,
+      "low_weight_tokens": 3830,
+      "merge_groups": 16,
+      "tokens_after_merge": 280,
+      "computation_saved_ratio": 0.9316072300928188
+    },
+    "expert_3": {
+      "total_tokens": 5328,
+      "high_weight_tokens": 5328,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5328,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3291,
+      "high_weight_tokens": 371,
+      "low_weight_tokens": 2920,
+      "merge_groups": 16,
+      "tokens_after_merge": 387,
+      "computation_saved_ratio": 0.8824065633546034
+    },
+    "expert_5": {
+      "total_tokens": 6042,
+      "high_weight_tokens": 6042,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6042,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 4179,
+      "high_weight_tokens": 4179,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4179,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 2186,
+      "high_weight_tokens": 46,
+      "low_weight_tokens": 2140,
+      "merge_groups": 16,
+      "tokens_after_merge": 62,
+      "computation_saved_ratio": 0.9716376944190301
+    }
+  },
+  "model.layers.13.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3701,
+      "high_weight_tokens": 89,
+      "low_weight_tokens": 3612,
+      "merge_groups": 16,
+      "tokens_after_merge": 105,
+      "computation_saved_ratio": 0.9716292893812483
+    },
+    "expert_1": {
+      "total_tokens": 5629,
+      "high_weight_tokens": 5629,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5629,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 4569,
+      "high_weight_tokens": 4569,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4569,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 4848,
+      "high_weight_tokens": 4848,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4848,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3201,
+      "high_weight_tokens": 38,
+      "low_weight_tokens": 3163,
+      "merge_groups": 16,
+      "tokens_after_merge": 54,
+      "computation_saved_ratio": 0.9831302717900656
+    },
+    "expert_5": {
+      "total_tokens": 4363,
+      "high_weight_tokens": 4363,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4363,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3545,
+      "high_weight_tokens": 76,
+      "low_weight_tokens": 3469,
+      "merge_groups": 16,
+      "tokens_after_merge": 92,
+      "computation_saved_ratio": 0.9740479548660085
+    },
+    "expert_7": {
+      "total_tokens": 2944,
+      "high_weight_tokens": 47,
+      "low_weight_tokens": 2897,
+      "merge_groups": 16,
+      "tokens_after_merge": 63,
+      "computation_saved_ratio": 0.9786005434782609
+    }
+  },
+  "model.layers.14.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5462,
+      "high_weight_tokens": 5462,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5462,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 4005,
+      "high_weight_tokens": 269,
+      "low_weight_tokens": 3736,
+      "merge_groups": 16,
+      "tokens_after_merge": 285,
+      "computation_saved_ratio": 0.9288389513108615
+    },
+    "expert_2": {
+      "total_tokens": 5224,
+      "high_weight_tokens": 5224,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5224,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3600,
+      "high_weight_tokens": 280,
+      "low_weight_tokens": 3320,
+      "merge_groups": 16,
+      "tokens_after_merge": 296,
+      "computation_saved_ratio": 0.9177777777777778
+    },
+    "expert_4": {
+      "total_tokens": 3431,
+      "high_weight_tokens": 163,
+      "low_weight_tokens": 3268,
+      "merge_groups": 16,
+      "tokens_after_merge": 179,
+      "computation_saved_ratio": 0.9478286213931798
+    },
+    "expert_5": {
+      "total_tokens": 3089,
+      "high_weight_tokens": 170,
+      "low_weight_tokens": 2919,
+      "merge_groups": 16,
+      "tokens_after_merge": 186,
+      "computation_saved_ratio": 0.9397863386209129
+    },
+    "expert_6": {
+      "total_tokens": 3956,
+      "high_weight_tokens": 3956,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3956,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 4033,
+      "high_weight_tokens": 4033,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4033,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.15.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5431,
+      "high_weight_tokens": 5431,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5431,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 4184,
+      "high_weight_tokens": 205,
+      "low_weight_tokens": 3979,
+      "merge_groups": 16,
+      "tokens_after_merge": 221,
+      "computation_saved_ratio": 0.9471797323135756
+    },
+    "expert_2": {
+      "total_tokens": 4188,
+      "high_weight_tokens": 4188,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4188,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 4404,
+      "high_weight_tokens": 4404,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4404,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3867,
+      "high_weight_tokens": 195,
+      "low_weight_tokens": 3672,
+      "merge_groups": 16,
+      "tokens_after_merge": 211,
+      "computation_saved_ratio": 0.9454357382984225
+    },
+    "expert_5": {
+      "total_tokens": 3255,
+      "high_weight_tokens": 141,
+      "low_weight_tokens": 3114,
+      "merge_groups": 16,
+      "tokens_after_merge": 157,
+      "computation_saved_ratio": 0.9517665130568357
+    },
+    "expert_6": {
+      "total_tokens": 4009,
+      "high_weight_tokens": 4009,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4009,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3462,
+      "high_weight_tokens": 345,
+      "low_weight_tokens": 3117,
+      "merge_groups": 16,
+      "tokens_after_merge": 361,
+      "computation_saved_ratio": 0.8957250144425187
+    }
+  },
+  "model.layers.16.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3552,
+      "high_weight_tokens": 3552,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3552,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3459,
+      "high_weight_tokens": 201,
+      "low_weight_tokens": 3258,
+      "merge_groups": 16,
+      "tokens_after_merge": 217,
+      "computation_saved_ratio": 0.9372651055218271
+    },
+    "expert_2": {
+      "total_tokens": 5452,
+      "high_weight_tokens": 5452,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5452,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 5238,
+      "high_weight_tokens": 5238,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5238,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3861,
+      "high_weight_tokens": 137,
+      "low_weight_tokens": 3724,
+      "merge_groups": 16,
+      "tokens_after_merge": 153,
+      "computation_saved_ratio": 0.9603729603729604
+    },
+    "expert_5": {
+      "total_tokens": 3217,
+      "high_weight_tokens": 3217,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3217,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3919,
+      "high_weight_tokens": 169,
+      "low_weight_tokens": 3750,
+      "merge_groups": 16,
+      "tokens_after_merge": 185,
+      "computation_saved_ratio": 0.9527940801224802
+    },
+    "expert_7": {
+      "total_tokens": 4102,
+      "high_weight_tokens": 81,
+      "low_weight_tokens": 4021,
+      "merge_groups": 16,
+      "tokens_after_merge": 97,
+      "computation_saved_ratio": 0.9763529985372988
+    }
+  },
+  "model.layers.17.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3635,
+      "high_weight_tokens": 3635,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3635,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 5832,
+      "high_weight_tokens": 5832,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5832,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 4288,
+      "high_weight_tokens": 128,
+      "low_weight_tokens": 4160,
+      "merge_groups": 16,
+      "tokens_after_merge": 144,
+      "computation_saved_ratio": 0.9664179104477612
+    },
+    "expert_3": {
+      "total_tokens": 4513,
+      "high_weight_tokens": 4513,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4513,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3265,
+      "high_weight_tokens": 486,
+      "low_weight_tokens": 2779,
+      "merge_groups": 16,
+      "tokens_after_merge": 502,
+      "computation_saved_ratio": 0.8462480857580398
+    },
+    "expert_5": {
+      "total_tokens": 3605,
+      "high_weight_tokens": 323,
+      "low_weight_tokens": 3282,
+      "merge_groups": 16,
+      "tokens_after_merge": 339,
+      "computation_saved_ratio": 0.9059639389736477
+    },
+    "expert_6": {
+      "total_tokens": 3237,
+      "high_weight_tokens": 184,
+      "low_weight_tokens": 3053,
+      "merge_groups": 16,
+      "tokens_after_merge": 200,
+      "computation_saved_ratio": 0.9382143960457213
+    },
+    "expert_7": {
+      "total_tokens": 4425,
+      "high_weight_tokens": 4425,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4425,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.18.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3389,
+      "high_weight_tokens": 206,
+      "low_weight_tokens": 3183,
+      "merge_groups": 16,
+      "tokens_after_merge": 222,
+      "computation_saved_ratio": 0.9344939510179994
+    },
+    "expert_1": {
+      "total_tokens": 4149,
+      "high_weight_tokens": 206,
+      "low_weight_tokens": 3943,
+      "merge_groups": 16,
+      "tokens_after_merge": 222,
+      "computation_saved_ratio": 0.9464931308749096
+    },
+    "expert_2": {
+      "total_tokens": 3457,
+      "high_weight_tokens": 3457,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3457,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3719,
+      "high_weight_tokens": 326,
+      "low_weight_tokens": 3393,
+      "merge_groups": 16,
+      "tokens_after_merge": 342,
+      "computation_saved_ratio": 0.9080397956439903
+    },
+    "expert_4": {
+      "total_tokens": 3193,
+      "high_weight_tokens": 161,
+      "low_weight_tokens": 3032,
+      "merge_groups": 16,
+      "tokens_after_merge": 177,
+      "computation_saved_ratio": 0.9445662386470404
+    },
+    "expert_5": {
+      "total_tokens": 4682,
+      "high_weight_tokens": 4682,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4682,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 4056,
+      "high_weight_tokens": 4056,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4056,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 6155,
+      "high_weight_tokens": 6155,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6155,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.19.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3584,
+      "high_weight_tokens": 240,
+      "low_weight_tokens": 3344,
+      "merge_groups": 16,
+      "tokens_after_merge": 256,
+      "computation_saved_ratio": 0.9285714285714286
+    },
+    "expert_1": {
+      "total_tokens": 5985,
+      "high_weight_tokens": 5985,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5985,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3366,
+      "high_weight_tokens": 270,
+      "low_weight_tokens": 3096,
+      "merge_groups": 16,
+      "tokens_after_merge": 286,
+      "computation_saved_ratio": 0.9150326797385621
+    },
+    "expert_3": {
+      "total_tokens": 5896,
+      "high_weight_tokens": 5896,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5896,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3408,
+      "high_weight_tokens": 3408,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3408,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3398,
+      "high_weight_tokens": 394,
+      "low_weight_tokens": 3004,
+      "merge_groups": 16,
+      "tokens_after_merge": 410,
+      "computation_saved_ratio": 0.8793407886992348
+    },
+    "expert_6": {
+      "total_tokens": 3933,
+      "high_weight_tokens": 3933,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3933,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3230,
+      "high_weight_tokens": 424,
+      "low_weight_tokens": 2806,
+      "merge_groups": 16,
+      "tokens_after_merge": 440,
+      "computation_saved_ratio": 0.8637770897832817
+    }
+  },
+  "model.layers.20.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3525,
+      "high_weight_tokens": 463,
+      "low_weight_tokens": 3062,
+      "merge_groups": 16,
+      "tokens_after_merge": 479,
+      "computation_saved_ratio": 0.864113475177305
+    },
+    "expert_1": {
+      "total_tokens": 3737,
+      "high_weight_tokens": 3737,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3737,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 5823,
+      "high_weight_tokens": 5823,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5823,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3611,
+      "high_weight_tokens": 467,
+      "low_weight_tokens": 3144,
+      "merge_groups": 16,
+      "tokens_after_merge": 483,
+      "computation_saved_ratio": 0.8662420382165605
+    },
+    "expert_4": {
+      "total_tokens": 3278,
+      "high_weight_tokens": 354,
+      "low_weight_tokens": 2924,
+      "merge_groups": 16,
+      "tokens_after_merge": 370,
+      "computation_saved_ratio": 0.8871262965222697
+    },
+    "expert_5": {
+      "total_tokens": 3632,
+      "high_weight_tokens": 3632,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3632,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 5966,
+      "high_weight_tokens": 5966,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5966,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3228,
+      "high_weight_tokens": 338,
+      "low_weight_tokens": 2890,
+      "merge_groups": 16,
+      "tokens_after_merge": 354,
+      "computation_saved_ratio": 0.8903345724907064
+    }
+  },
+  "model.layers.21.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3604,
+      "high_weight_tokens": 480,
+      "low_weight_tokens": 3124,
+      "merge_groups": 16,
+      "tokens_after_merge": 496,
+      "computation_saved_ratio": 0.8623751387347391
+    },
+    "expert_1": {
+      "total_tokens": 3023,
+      "high_weight_tokens": 336,
+      "low_weight_tokens": 2687,
+      "merge_groups": 16,
+      "tokens_after_merge": 352,
+      "computation_saved_ratio": 0.883559378101224
+    },
+    "expert_2": {
+      "total_tokens": 4523,
+      "high_weight_tokens": 334,
+      "low_weight_tokens": 4189,
+      "merge_groups": 16,
+      "tokens_after_merge": 350,
+      "computation_saved_ratio": 0.9226177315940747
+    },
+    "expert_3": {
+      "total_tokens": 3507,
+      "high_weight_tokens": 537,
+      "low_weight_tokens": 2970,
+      "merge_groups": 16,
+      "tokens_after_merge": 553,
+      "computation_saved_ratio": 0.8423153692614771
+    },
+    "expert_4": {
+      "total_tokens": 4234,
+      "high_weight_tokens": 4234,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4234,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 5697,
+      "high_weight_tokens": 5697,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5697,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3733,
+      "high_weight_tokens": 3733,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3733,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 4479,
+      "high_weight_tokens": 4479,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4479,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.22.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3596,
+      "high_weight_tokens": 377,
+      "low_weight_tokens": 3219,
+      "merge_groups": 16,
+      "tokens_after_merge": 393,
+      "computation_saved_ratio": 0.8907119021134594
+    },
+    "expert_1": {
+      "total_tokens": 4232,
+      "high_weight_tokens": 4232,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4232,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3718,
+      "high_weight_tokens": 451,
+      "low_weight_tokens": 3267,
+      "merge_groups": 16,
+      "tokens_after_merge": 467,
+      "computation_saved_ratio": 0.8743948359332975
+    },
+    "expert_3": {
+      "total_tokens": 3135,
+      "high_weight_tokens": 327,
+      "low_weight_tokens": 2808,
+      "merge_groups": 16,
+      "tokens_after_merge": 343,
+      "computation_saved_ratio": 0.8905901116427433
+    },
+    "expert_4": {
+      "total_tokens": 4334,
+      "high_weight_tokens": 4334,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4334,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3187,
+      "high_weight_tokens": 423,
+      "low_weight_tokens": 2764,
+      "merge_groups": 16,
+      "tokens_after_merge": 439,
+      "computation_saved_ratio": 0.8622529024160652
+    },
+    "expert_6": {
+      "total_tokens": 5508,
+      "high_weight_tokens": 5508,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5508,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 5090,
+      "high_weight_tokens": 5090,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5090,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.23.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3759,
+      "high_weight_tokens": 643,
+      "low_weight_tokens": 3116,
+      "merge_groups": 16,
+      "tokens_after_merge": 659,
+      "computation_saved_ratio": 0.8246874168661879
+    },
+    "expert_1": {
+      "total_tokens": 4035,
+      "high_weight_tokens": 470,
+      "low_weight_tokens": 3565,
+      "merge_groups": 16,
+      "tokens_after_merge": 486,
+      "computation_saved_ratio": 0.8795539033457249
+    },
+    "expert_2": {
+      "total_tokens": 4767,
+      "high_weight_tokens": 4767,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4767,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 5008,
+      "high_weight_tokens": 5008,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5008,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3047,
+      "high_weight_tokens": 318,
+      "low_weight_tokens": 2729,
+      "merge_groups": 16,
+      "tokens_after_merge": 334,
+      "computation_saved_ratio": 0.8903839842468001
+    },
+    "expert_5": {
+      "total_tokens": 4460,
+      "high_weight_tokens": 4460,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4460,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3634,
+      "high_weight_tokens": 3634,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3634,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 4090,
+      "high_weight_tokens": 415,
+      "low_weight_tokens": 3675,
+      "merge_groups": 16,
+      "tokens_after_merge": 431,
+      "computation_saved_ratio": 0.8946210268948656
+    }
+  },
+  "model.layers.24.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4194,
+      "high_weight_tokens": 452,
+      "low_weight_tokens": 3742,
+      "merge_groups": 16,
+      "tokens_after_merge": 468,
+      "computation_saved_ratio": 0.8884120171673819
+    },
+    "expert_1": {
+      "total_tokens": 4651,
+      "high_weight_tokens": 4651,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4651,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3601,
+      "high_weight_tokens": 334,
+      "low_weight_tokens": 3267,
+      "merge_groups": 16,
+      "tokens_after_merge": 350,
+      "computation_saved_ratio": 0.9028047764509859
+    },
+    "expert_3": {
+      "total_tokens": 5872,
+      "high_weight_tokens": 5872,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5872,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_4": {
+      "total_tokens": 3704,
+      "high_weight_tokens": 3704,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3704,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 4028,
+      "high_weight_tokens": 4028,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4028,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 3465,
+      "high_weight_tokens": 224,
+      "low_weight_tokens": 3241,
+      "merge_groups": 16,
+      "tokens_after_merge": 240,
+      "computation_saved_ratio": 0.9307359307359307
+    },
+    "expert_7": {
+      "total_tokens": 3285,
+      "high_weight_tokens": 376,
+      "low_weight_tokens": 2909,
+      "merge_groups": 16,
+      "tokens_after_merge": 392,
+      "computation_saved_ratio": 0.8806697108066971
+    }
+  },
+  "model.layers.25.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 6064,
+      "high_weight_tokens": 6064,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6064,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3387,
+      "high_weight_tokens": 467,
+      "low_weight_tokens": 2920,
+      "merge_groups": 16,
+      "tokens_after_merge": 483,
+      "computation_saved_ratio": 0.8573959255978743
+    },
+    "expert_2": {
+      "total_tokens": 4892,
+      "high_weight_tokens": 4892,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4892,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3678,
+      "high_weight_tokens": 514,
+      "low_weight_tokens": 3164,
+      "merge_groups": 16,
+      "tokens_after_merge": 530,
+      "computation_saved_ratio": 0.855899945622621
+    },
+    "expert_4": {
+      "total_tokens": 3674,
+      "high_weight_tokens": 3674,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3674,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3105,
+      "high_weight_tokens": 292,
+      "low_weight_tokens": 2813,
+      "merge_groups": 16,
+      "tokens_after_merge": 308,
+      "computation_saved_ratio": 0.900805152979066
+    },
+    "expert_6": {
+      "total_tokens": 3262,
+      "high_weight_tokens": 385,
+      "low_weight_tokens": 2877,
+      "merge_groups": 16,
+      "tokens_after_merge": 401,
+      "computation_saved_ratio": 0.8770692826486818
+    },
+    "expert_7": {
+      "total_tokens": 4738,
+      "high_weight_tokens": 4738,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4738,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.26.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 5786,
+      "high_weight_tokens": 5786,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5786,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3707,
+      "high_weight_tokens": 3707,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3707,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 5140,
+      "high_weight_tokens": 5140,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5140,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3924,
+      "high_weight_tokens": 576,
+      "low_weight_tokens": 3348,
+      "merge_groups": 16,
+      "tokens_after_merge": 592,
+      "computation_saved_ratio": 0.8491335372069317
+    },
+    "expert_4": {
+      "total_tokens": 3691,
+      "high_weight_tokens": 3691,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3691,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3604,
+      "high_weight_tokens": 331,
+      "low_weight_tokens": 3273,
+      "merge_groups": 16,
+      "tokens_after_merge": 347,
+      "computation_saved_ratio": 0.9037180910099889
+    },
+    "expert_6": {
+      "total_tokens": 3597,
+      "high_weight_tokens": 236,
+      "low_weight_tokens": 3361,
+      "merge_groups": 16,
+      "tokens_after_merge": 252,
+      "computation_saved_ratio": 0.9299416180150125
+    },
+    "expert_7": {
+      "total_tokens": 3351,
+      "high_weight_tokens": 342,
+      "low_weight_tokens": 3009,
+      "merge_groups": 16,
+      "tokens_after_merge": 358,
+      "computation_saved_ratio": 0.8931662190390928
+    }
+  },
+  "model.layers.27.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4985,
+      "high_weight_tokens": 4985,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4985,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 4534,
+      "high_weight_tokens": 4534,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4534,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3782,
+      "high_weight_tokens": 3782,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3782,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3540,
+      "high_weight_tokens": 329,
+      "low_weight_tokens": 3211,
+      "merge_groups": 16,
+      "tokens_after_merge": 345,
+      "computation_saved_ratio": 0.902542372881356
+    },
+    "expert_4": {
+      "total_tokens": 5590,
+      "high_weight_tokens": 5590,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5590,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 3576,
+      "high_weight_tokens": 536,
+      "low_weight_tokens": 3040,
+      "merge_groups": 16,
+      "tokens_after_merge": 552,
+      "computation_saved_ratio": 0.8456375838926175
+    },
+    "expert_6": {
+      "total_tokens": 3579,
+      "high_weight_tokens": 305,
+      "low_weight_tokens": 3274,
+      "merge_groups": 16,
+      "tokens_after_merge": 321,
+      "computation_saved_ratio": 0.9103101424979044
+    },
+    "expert_7": {
+      "total_tokens": 3214,
+      "high_weight_tokens": 389,
+      "low_weight_tokens": 2825,
+      "merge_groups": 16,
+      "tokens_after_merge": 405,
+      "computation_saved_ratio": 0.873988799004356
+    }
+  },
+  "model.layers.28.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3190,
+      "high_weight_tokens": 230,
+      "low_weight_tokens": 2960,
+      "merge_groups": 16,
+      "tokens_after_merge": 246,
+      "computation_saved_ratio": 0.922884012539185
+    },
+    "expert_1": {
+      "total_tokens": 5203,
+      "high_weight_tokens": 5203,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5203,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 4880,
+      "high_weight_tokens": 4880,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4880,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3203,
+      "high_weight_tokens": 789,
+      "low_weight_tokens": 2414,
+      "merge_groups": 16,
+      "tokens_after_merge": 805,
+      "computation_saved_ratio": 0.7486731189509834
+    },
+    "expert_4": {
+      "total_tokens": 3832,
+      "high_weight_tokens": 3832,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3832,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 4083,
+      "high_weight_tokens": 580,
+      "low_weight_tokens": 3503,
+      "merge_groups": 16,
+      "tokens_after_merge": 596,
+      "computation_saved_ratio": 0.8540289003183934
+    },
+    "expert_6": {
+      "total_tokens": 4471,
+      "high_weight_tokens": 563,
+      "low_weight_tokens": 3908,
+      "merge_groups": 16,
+      "tokens_after_merge": 579,
+      "computation_saved_ratio": 0.8704987698501454
+    },
+    "expert_7": {
+      "total_tokens": 3938,
+      "high_weight_tokens": 3938,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3938,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.29.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3484,
+      "high_weight_tokens": 415,
+      "low_weight_tokens": 3069,
+      "merge_groups": 16,
+      "tokens_after_merge": 431,
+      "computation_saved_ratio": 0.8762916188289323
+    },
+    "expert_1": {
+      "total_tokens": 4983,
+      "high_weight_tokens": 4983,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4983,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3564,
+      "high_weight_tokens": 3564,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3564,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 2788,
+      "high_weight_tokens": 157,
+      "low_weight_tokens": 2631,
+      "merge_groups": 16,
+      "tokens_after_merge": 173,
+      "computation_saved_ratio": 0.937948350071736
+    },
+    "expert_4": {
+      "total_tokens": 3652,
+      "high_weight_tokens": 703,
+      "low_weight_tokens": 2949,
+      "merge_groups": 16,
+      "tokens_after_merge": 719,
+      "computation_saved_ratio": 0.8031215772179627
+    },
+    "expert_5": {
+      "total_tokens": 3830,
+      "high_weight_tokens": 3830,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3830,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 6505,
+      "high_weight_tokens": 6505,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6505,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 3994,
+      "high_weight_tokens": 690,
+      "low_weight_tokens": 3304,
+      "merge_groups": 16,
+      "tokens_after_merge": 706,
+      "computation_saved_ratio": 0.8232348522784176
+    }
+  },
+  "model.layers.30.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 3477,
+      "high_weight_tokens": 666,
+      "low_weight_tokens": 2811,
+      "merge_groups": 16,
+      "tokens_after_merge": 682,
+      "computation_saved_ratio": 0.8038538970376762
+    },
+    "expert_1": {
+      "total_tokens": 4195,
+      "high_weight_tokens": 4195,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4195,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 3079,
+      "high_weight_tokens": 452,
+      "low_weight_tokens": 2627,
+      "merge_groups": 16,
+      "tokens_after_merge": 468,
+      "computation_saved_ratio": 0.8480025982461838
+    },
+    "expert_3": {
+      "total_tokens": 4222,
+      "high_weight_tokens": 230,
+      "low_weight_tokens": 3992,
+      "merge_groups": 16,
+      "tokens_after_merge": 246,
+      "computation_saved_ratio": 0.9417337754618664
+    },
+    "expert_4": {
+      "total_tokens": 2539,
+      "high_weight_tokens": 75,
+      "low_weight_tokens": 2464,
+      "merge_groups": 16,
+      "tokens_after_merge": 91,
+      "computation_saved_ratio": 0.9641591177628988
+    },
+    "expert_5": {
+      "total_tokens": 4945,
+      "high_weight_tokens": 4945,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4945,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_6": {
+      "total_tokens": 4290,
+      "high_weight_tokens": 4290,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4290,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_7": {
+      "total_tokens": 6053,
+      "high_weight_tokens": 6053,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6053,
+      "computation_saved_ratio": 0.0
+    }
+  },
+  "model.layers.31.block_sparse_moe": {
+    "expert_0": {
+      "total_tokens": 4253,
+      "high_weight_tokens": 4253,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 4253,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_1": {
+      "total_tokens": 3693,
+      "high_weight_tokens": 3693,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 3693,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_2": {
+      "total_tokens": 6262,
+      "high_weight_tokens": 6262,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 6262,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_3": {
+      "total_tokens": 3439,
+      "high_weight_tokens": 1275,
+      "low_weight_tokens": 2164,
+      "merge_groups": 16,
+      "tokens_after_merge": 1291,
+      "computation_saved_ratio": 0.6246001744693225
+    },
+    "expert_4": {
+      "total_tokens": 5621,
+      "high_weight_tokens": 5621,
+      "low_weight_tokens": 0,
+      "merge_groups": 0,
+      "tokens_after_merge": 5621,
+      "computation_saved_ratio": 0.0
+    },
+    "expert_5": {
+      "total_tokens": 2335,
+      "high_weight_tokens": 162,
+      "low_weight_tokens": 2173,
+      "merge_groups": 16,
+      "tokens_after_merge": 178,
+      "computation_saved_ratio": 0.9237687366167023
+    },
+    "expert_6": {
+      "total_tokens": 3123,
+      "high_weight_tokens": 1157,
+      "low_weight_tokens": 1966,
+      "merge_groups": 16,
+      "tokens_after_merge": 1173,
+      "computation_saved_ratio": 0.6243996157540825
+    },
+    "expert_7": {
+      "total_tokens": 4074,
+      "high_weight_tokens": 82,
+      "low_weight_tokens": 3992,
+      "merge_groups": 16,
+      "tokens_after_merge": 98,
+      "computation_saved_ratio": 0.9759450171821306
+    }
+  }
+}

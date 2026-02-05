@@ -31,7 +31,7 @@ def extract_top_25_percent_experts(json_path):
     return result
 
 
-json_path = "expert_gate_sum_t0.22_r1.00.json"
+json_path = "gate_weight_data/input1024_batch4/qwen_3_30b/expert_gate_sum_t0.22_r1.00.json"
 top_experts = extract_top_25_percent_experts(json_path)
 
 for layer, info in top_experts.items():
