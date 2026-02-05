@@ -45,6 +45,15 @@ $ cd ../../
 
 ## How to run
 
+### Courier examples
+```bash 
+# Qwen-3-30B Batch_16 Schedule_FUSION Mapping_WEIGHT
+$ python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expert_stats_t0.22_r1.00.json  --gss_file input1024_batch16/qwen_3_30b/expert_gate_sum_t0.22_r1.00.json --elp_file input1024_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16
+
+# Mixtral-8x7B Batch 16 Schedule_PIMOE Mapping_H2
+$ python courier_main.py  --tfs_file input1024_batch16/mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json  --gss_file input1024_batch16/mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json --elp_file input1024_batch16/mixtral_8x7b/expert_location_path.json --model Mixtral-8x7B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16
+```
+
 ### Run GPU simulator 
 ```bash
 $ export PYTHONPATH=$PYTHONPATH:$PWD
