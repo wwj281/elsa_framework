@@ -31,19 +31,19 @@ class System:
                 with open(expert_token_fusion_stats_path, 'r', encoding='utf-8') as f:
                     self.expert_token_fusion_stats = json.load(f)
             except Exception as e:
-                print(f"[System] Failed to load {expert_token_fusion_stats_path}: {e}")
+                print(f"[System error] Failed to load {expert_token_fusion_stats_path}: {e}")
         if expert_gate_sum_stats_path:
             try:
                 with open(expert_gate_sum_stats_path, 'r', encoding='utf-8') as f:
                     self.expert_gate_sum_stats = json.load(f)
             except Exception as e:
-                print(f"[System] Failed to load {expert_gate_sum_stats_path}: {e}")
+                print(f"[System error] Failed to load {expert_gate_sum_stats_path}: {e}")
         if expert_location_path:
             try:
                 with open(expert_location_path, 'r', encoding='utf-8') as f:
                     self.expert_location = json.load(f)
             except Exception as e:
-                print(f"[System] Failed to load {expert_location_path}: {e}")
+                print(f"[System error] Failed to load {expert_location_path}: {e}")
         scaling_factor = SCALING_FACTOR
         self.hetero_name = hetero_name
         self.mapping_strategy = None
