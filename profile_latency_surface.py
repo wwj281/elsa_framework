@@ -212,9 +212,11 @@ def get_data_dir(model_name: str, seq_length: int, batch_size: int) -> str:
 
     if os.path.exists(full_path):
         return exact_path
-
-    # 如果精确匹配不存在，查找可用的目录
-    return find_best_matching_data_dir(model_name, seq_length, batch_size)
+    else:
+        # 如果精确匹配不存在，查找可用的目录
+        print(f"    [Error] Exact data directory not found: {exact_path}. Searching for best match...")
+        # raise SystemExit()
+        return find_best_matching_data_dir(model_name, seq_length, batch_size)
 
 
 # ==============================================================================
@@ -446,8 +448,11 @@ class LatencySurfaceProfiler:
 
         # Data file paths
         tfs_path = os.path.join("gate_weight_data", tfs_file)
+        print('tfs_path:', tfs_path)
         gss_path = os.path.join("gate_weight_data", gss_file)
+        print('gss_path:', gss_path)
         elp_path = os.path.join("gate_weight_data", elp_file)
+        print('elp_path:', elp_path)
 
         # Create system
         system = System(
@@ -499,7 +504,7 @@ class LatencySurfaceProfiler:
             return perfs
 
         except Exception as e:
-            print(f"  [Error] Simulation failed: {e}")
+            print(f"    [Error] Simulation failed: {e}")
             return []
 
     def parse_perf_results(self, perfs: List) -> Optional[Dict[str, float]]:
@@ -590,13 +595,24 @@ class LatencySurfaceProfiler:
         """
         # 动态获取数据目录
         data_dir = get_data_dir(self.model_name, seq_length, batch_size)
-
+        print(f"    B={batch_size}, S={seq_length} (dir: {data_dir})...")
         # 获取该 (T, P) 对应的数据文件
         tfs_file, gss_file, elp_file = self.get_data_files_for_params(T, P, data_dir)
 
         # 检查文件是否存在
         tfs_path = os.path.join("gate_weight_data", tfs_file)
         if not os.path.exists(tfs_path):
+            print(f"    [Error] File does not exist: {tfs_path}")
+            return None
+
+        gss_path = os.path.join("gate_weight_data", gss_file)
+        if not os.path.exists(gss_path):
+            print(f"    [Error] File does not exist: {gss_path}")
+            return None
+
+        elp_path = os.path.join("gate_weight_data", elp_file)
+        if not os.path.exists(elp_path):
+            print(f"    [Error] File does not exist: {elp_path}")
             return None
 
         # 创建系统
@@ -682,13 +698,6 @@ class LatencySurfaceProfiler:
             # 对每个代表性 (batch, seq) 组合进行profiling
             for batch_size in batch_reps:
                 for seq_length in seq_reps:
-                    # 动态获取数据目录
-                    current_dir = get_data_dir(self.model_name, seq_length, batch_size)
-
-                    if verbose:
-                        print(f"    B={batch_size}, S={seq_length} "
-                              f"(dir: {current_dir})...", end=" ")
-
                     # 调用模拟
                     result = self.profile_configuration(T, P, batch_size, seq_length)
 
@@ -696,10 +705,10 @@ class LatencySurfaceProfiler:
                         all_results.append(result)
                         latencies.append(result.total_latency)
                         if verbose:
-                            print(f"Latency={result.total_latency:.3f}ms")
+                            print(f"    Latency={result.total_latency:.3f}ms")
                     else:
                         if verbose:
-                            print("Skipped (no data)")
+                            print("    Skipped (no data)")
 
             if latencies:
                 config_latencies[(T, P)] = latencies
@@ -1047,12 +1056,12 @@ def main():
         profiler.batch_buckets = [(1, 4), (5, 16)]
         profiler.seq_buckets = [(0, 512), (513, 1024)]
         profiler.batch_representatives = {
-            (1, 4): [1, 4],
-            (5, 16): [8, 16],
+            (1, 4): [1],
+            (5, 16): [16],
         }
         profiler.seq_representatives = {
-            (0, 512): [256, 512],
-            (513, 1024): [768, 1024],
+            (0, 512): [512],
+            (513, 1024): [1024],
         }
 
     # 运行profiling
