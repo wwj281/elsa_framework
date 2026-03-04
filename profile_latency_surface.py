@@ -957,11 +957,11 @@ def parse_args():
         help="Path to feasible region JSON from Phase 1 (optional)"
     )
     parser.add_argument(
-        "--output_lut", type=str, default="results/latency_lut.json",
+        "--output_lut", type=str, default="dwap_phase2_results/latency_lut.json",
         help="Output path for the Look-Up Table JSON"
     )
     parser.add_argument(
-        "--output_csv", type=str, default="results/latency_profiling_detailed.csv",
+        "--output_csv", type=str, default="dwap_phase2_results/latency_profiling_detailed.csv",
         help="Output path for detailed profiling results CSV"
     )
 
