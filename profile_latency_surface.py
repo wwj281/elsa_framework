@@ -7,10 +7,10 @@ This script performs offline profiling for the second phase of DWAP:
 2. Build workload grid (Batch Size x Seq Length buckets)
 3. For each workload bucket (B, S):
    - Dynamically select data directory based on (batch, seq, model)
-   - Traverse (T, P) combinations within R_safe
+   - Traverse (T, M) combinations within R_safe
    - Call the actual simulation system to measure end-to-end latency
    - Record system latency max(T_GPU, T_NMP)
-   - Find optimal configuration (T_opt, P_opt) that minimizes latency
+   - Find optimal configuration (T_opt, M_opt) that minimizes latency
 4. Finalize the results into a static Look-Up Table (LUT) as JSON
 
 Usage:
@@ -227,7 +227,7 @@ def get_data_dir(model_name: str, seq_length: int, batch_size: int) -> str:
 class ProfilingResult:
     """Stores profiling result for a specific configuration."""
     token_fusion_threshold: float  # T
-    expert_merge_percent: float    # P
+    expert_merge_percent: float    # M (expert merge percentage)
     batch_size: int
     seq_length: int
     data_dir: str = ""            # 使用的数据目录
@@ -325,7 +325,7 @@ class LatencySurfaceProfiler:
     Hardware Latency Surface Profiler for DWAP Phase 2.
 
     This class implements the constrained optimization within the feasible region
-    to find optimal (T, P) configurations for each workload bucket.
+    to find optimal (T, M) configurations for each workload bucket.
 
     It directly uses the simulation system from courier_main.py.
     """
@@ -550,7 +550,7 @@ class LatencySurfaceProfiler:
             try:
                 with open(filepath, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                    return [(item['T'], item['P']) for item in data.get('feasible_region', [])]
+                    return [(item['T'], item['M']) for item in data.get('feasible_region', [])]
             except Exception as e:
                 print(f"[Warning] Failed to load feasible region: {e}")
 
@@ -563,19 +563,19 @@ class LatencySurfaceProfiler:
         """
         # Based on available data files in the repository
         T_values = [0.49, 0.80]
-        P_values = [0.50, 1.00]
+        M_values = [0.50, 1.00]
 
-        return list(product(T_values, P_values))
+        return list(product(T_values, M_values))
 
     def get_data_files_for_params(self,
                                   T: float,
-                                  P: float,
+                                  M: float,
                                   data_dir: str) -> Tuple[str, str, str]:
         """
-        Get the data file paths for given (T, P) parameters.
+        Get the data file paths for given (T, M) parameters.
         """
         t_str = f"{T:.2f}"
-        r_str = f"{P:.2f}"
+        r_str = f"{M:.2f}"
 
         tfs_file = f"{data_dir}/per_layer_expert_stats_t{t_str}_r{r_str}.json"
         gss_file = f"{data_dir}/expert_gate_sum_t{t_str}_r{r_str}.json"
@@ -585,19 +585,19 @@ class LatencySurfaceProfiler:
 
     def profile_configuration(self,
                               T: float,
-                              P: float,
+                              M: float,
                               batch_size: int,
                               seq_length: int,
                               lout: int = 2) -> Optional[ProfilingResult]:
         """
-        Profile a single (T, P, batch, seq) configuration.
+        Profile a single (T, M, batch, seq) configuration.
         Data directory is dynamically determined based on parameters.
         """
         # 动态获取数据目录
         data_dir = get_data_dir(self.model_name, seq_length, batch_size)
         print(f"    B={batch_size}, S={seq_length} (dir: {data_dir})...")
-        # 获取该 (T, P) 对应的数据文件
-        tfs_file, gss_file, elp_file = self.get_data_files_for_params(T, P, data_dir)
+        # 获取该 (T, M) 对应的数据文件
+        tfs_file, gss_file, elp_file = self.get_data_files_for_params(T, M, data_dir)
 
         # 检查文件是否存在
         tfs_path = os.path.join("gate_weight_data", tfs_file)
@@ -633,7 +633,7 @@ class LatencySurfaceProfiler:
         # 创建结果对象
         result = ProfilingResult(
             token_fusion_threshold=T,
-            expert_merge_percent=P,
+            expert_merge_percent=M,
             batch_size=batch_size,
             seq_length=seq_length,
             data_dir=data_dir,
@@ -654,7 +654,7 @@ class LatencySurfaceProfiler:
                                 feasible_region: List[Tuple[float, float]],
                                 verbose: bool = True) -> Dict[str, Any]:
         """
-        Profile a single workload bucket to find optimal (T, P) configuration.
+        Profile a single workload bucket to find optimal (T, M) configuration.
         Data directories are dynamically selected for each (batch, seq) sample.
         """
         bucket_key = bucket.get_key()
@@ -687,11 +687,11 @@ class LatencySurfaceProfiler:
         config_count = 0
 
         # 遍历可行域 (约束优化)
-        for T, P in feasible_region:
+        for T, M in feasible_region:
             config_count += 1
 
             if verbose:
-                print(f"\n  Config {config_count}/{total_configs}: T={T:.2f}, P={P:.2f}")
+                print(f"\n  Config {config_count}/{total_configs}: T={T:.2f}, M={M:.2f}")
 
             latencies = []
 
@@ -699,7 +699,7 @@ class LatencySurfaceProfiler:
             for batch_size in batch_reps:
                 for seq_length in seq_reps:
                     # 调用模拟
-                    result = self.profile_configuration(T, P, batch_size, seq_length)
+                    result = self.profile_configuration(T, M, batch_size, seq_length)
 
                     if result is not None:
                         all_results.append(result)
@@ -711,22 +711,22 @@ class LatencySurfaceProfiler:
                             print("    Skipped (no data)")
 
             if latencies:
-                config_latencies[(T, P)] = latencies
+                config_latencies[(T, M)] = latencies
                 if verbose:
                     avg = sum(latencies) / len(latencies)
-                    print(f"    -> Avg latency for (T={T:.2f}, P={P:.2f}): {avg:.3f}ms")
+                    print(f"    -> Avg latency for (T={T:.2f}, M={M:.2f}): {avg:.3f}ms")
 
         # 找最优配置 (最小化平均延迟)
         best_config = None
         best_avg_latency = float('inf')
 
-        for (T, P), latencies in config_latencies.items():
+        for (T, M), latencies in config_latencies.items():
             avg_latency = sum(latencies) / len(latencies)
             if avg_latency < best_avg_latency:
                 best_avg_latency = avg_latency
                 best_config = {
                     'T': T,
-                    'P': P,
+                    'M': M,
                     'avg_latency_ms': avg_latency,
                     'min_latency_ms': min(latencies),
                     'max_latency_ms': max(latencies),
@@ -739,7 +739,7 @@ class LatencySurfaceProfiler:
 
         if verbose and best_config:
             print(f"\n  >>> Optimal Config for {bucket}:")
-            print(f"      T={best_config['T']:.2f}, P={best_config['P']:.2%}")
+            print(f"      T={best_config['T']:.2f}, M={best_config['M']:.2%}")
             print(f"      Avg Latency: {best_config['avg_latency_ms']:.3f} ms")
 
         return {
@@ -859,7 +859,7 @@ class LatencySurfaceProfiler:
         with open(filepath, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
             writer.writerow([
-                'bucket_key', 'T', 'P', 'batch_size', 'seq_length', 'data_dir',
+                'bucket_key', 'T', 'M', 'batch_size', 'seq_length', 'data_dir',
                 's_time_ms', 'g_time_ms', 'total_latency_ms',
                 's_fc_time_ms', 's_comm_time_ms',
                 'g_fc_time_ms', 'g_ff_time_ms', 'g_comm_time_ms'
@@ -1082,7 +1082,7 @@ def main():
         if config:
             print(f"\n  {bucket_key}:")
             print(f"    T = {config['T']:.2f}")
-            print(f"    P = {config['P']:.2%}")
+            print(f"    M = {config['M']:.2%}")
             print(f"    Avg Latency = {config['avg_latency_ms']:.3f} ms")
             print(f"    Min Latency = {config['min_latency_ms']:.3f} ms")
             print(f"    Max Latency = {config['max_latency_ms']:.3f} ms")

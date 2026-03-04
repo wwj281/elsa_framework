@@ -54,6 +54,12 @@ $ python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expe
 $ python courier_main.py  --tfs_file input1024_batch16/mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json  --gss_file input1024_batch16/mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json --elp_file input1024_batch16/mixtral_8x7b/expert_location_path.json --model Mixtral-8x7B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16
 ```
 
+### DWAP Phase2
+```bash 
+# Qwen-3-30B Schedule_FUSION Mapping_WEIGHT
+$ python ./profile_latency_surface.py --model Qwen-3-30B --feasible_region_file ./feasible_region/qwen_3_30b.json 
+```
+
 ### Run GPU simulator 
 ```bash
 $ export PYTHONPATH=$PYTHONPATH:$PWD
