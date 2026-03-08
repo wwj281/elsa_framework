@@ -255,17 +255,18 @@ class System:
         energy_all = []
         ramulator_call_count = 0
         print(f"Schedule strategy: {schedule_strategy}")
+        layer_index = 1 if self.model.name in ['DeepSeek-16B'] else 0
         start_time = sys_time.perf_counter()
         if schedule_strategy == ScheduleStrategyType.NOFUSION:
-            expert_schedule = self.expert_schedule_simulation_no_fusion()
+            expert_schedule = self.expert_schedule_simulation_no_fusion(layer_idx=layer_index)
         elif schedule_strategy == ScheduleStrategyType.PIMOE:
-            expert_schedule = self.expert_schedule_simulation_pimoe()
+            expert_schedule = self.expert_schedule_simulation_pimoe(layer_idx=layer_index)
         elif schedule_strategy == ScheduleStrategyType.FIDDLER:
-            expert_schedule = self.expert_schedule_simulation_fiddler()
+            expert_schedule = self.expert_schedule_simulation_fiddler(layer_idx=layer_index)
         elif schedule_strategy == ScheduleStrategyType.KLOTSKI:
-            expert_schedule = self.expert_schedule_simulation_klotski()
+            expert_schedule = self.expert_schedule_simulation_klotski(layer_idx=layer_index)
         else:
-            expert_schedule = self.expert_schedule_simulation_fused_token()
+            expert_schedule = self.expert_schedule_simulation_fused_token(layer_idx=layer_index)
         end_time = sys_time.perf_counter()
         print(f"Expert schedule simulation time: {end_time - start_time:.6f} s")
         print(f"gpu_expert_ids ({len(expert_schedule['gpu_expert_ids'])}): {expert_schedule['gpu_expert_ids']}")
@@ -1329,7 +1330,7 @@ class System:
             eid = int(key[7:])
             orig_token = stat.get('total_tokens', 0)
             fused_token = stat.get('tokens_after_merge', 0)
-            use_fusion = fused_token > 0 and fused != orig
+            use_fusion = fused_token > 0 and fused_token != orig_token
             cache = expert_time_cache[eid]
 
             if eid in expert_locs_set:
