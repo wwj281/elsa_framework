@@ -258,15 +258,15 @@ class System:
         layer_index = 1 if self.model.name in ['DeepSeek-16B'] else 0
         start_time = sys_time.perf_counter()
         if schedule_strategy == ScheduleStrategyType.NOFUSION:
-            expert_schedule = self.expert_schedule_simulation_no_fusion(layer_idx=layer_index)
+            expert_schedule = self.expert_schedule_simulation_no_fusion(layer_idx=layer_index, batch_size=batch_size, lin=lin)
         elif schedule_strategy == ScheduleStrategyType.PIMOE:
-            expert_schedule = self.expert_schedule_simulation_pimoe(layer_idx=layer_index)
+            expert_schedule = self.expert_schedule_simulation_pimoe(layer_idx=layer_index, batch_size=batch_size, lin=lin)
         elif schedule_strategy == ScheduleStrategyType.FIDDLER:
-            expert_schedule = self.expert_schedule_simulation_fiddler(layer_idx=layer_index)
+            expert_schedule = self.expert_schedule_simulation_fiddler(layer_idx=layer_index, batch_size=batch_size, lin=lin)
         elif schedule_strategy == ScheduleStrategyType.KLOTSKI:
-            expert_schedule = self.expert_schedule_simulation_klotski(layer_idx=layer_index)
+            expert_schedule = self.expert_schedule_simulation_klotski(layer_idx=layer_index, batch_size=batch_size, lin=lin)
         else:
-            expert_schedule = self.expert_schedule_simulation_fused_token(layer_idx=layer_index)
+            expert_schedule = self.expert_schedule_simulation_fused_token(layer_idx=layer_index, batch_size=batch_size, lin=lin)
         end_time = sys_time.perf_counter()
         print(f"Expert schedule simulation time: {end_time - start_time:.6f} s")
         print(f"gpu_expert_ids ({len(expert_schedule['gpu_expert_ids'])}): {expert_schedule['gpu_expert_ids']}")
@@ -647,7 +647,7 @@ class System:
             return None
         return int(threshold)
 
-    def expert_schedule_simulation_fiddler(self, layer_idx=0):
+    def expert_schedule_simulation_fiddler(self, layer_idx=0, batch_size=16, lin=1024):
         """
         专家调度模拟（仅基于original token）：
         1. 获取token阈值，遍历第layer_idx层所有专家，根据original token判断其计算位置（GPU/加速器）。
@@ -661,6 +661,18 @@ class System:
         layer_key = f"model.layers.{layer_idx}.mlp"
         fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
         expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+        expert_num = self.model.num_experts
+        for shared_expert_id in range(self.model.shared_experts):
+            fusion_stats[f"expert_{expert_num+shared_expert_id}"] = {
+                "total_tokens": batch_size*lin,
+                "high_weight_tokens": batch_size*lin,
+                "low_weight_tokens": 0,
+                "merge_groups": 0,
+                "tokens_after_merge": batch_size*lin,
+                "computation_saved_ratio": 0
+            }
+            expert_locs_set.add(expert_num+shared_expert_id)
+
 
         # 预计算硬件常量
         gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
@@ -768,7 +780,7 @@ class System:
             'acc_latency_breakdown': acc_latency_breakdown
         }
     
-    def expert_schedule_simulation_pimoe(self, layer_idx=0):
+    def expert_schedule_simulation_pimoe(self, layer_idx=0, batch_size=16, lin=1024):
         """
         专家调度模拟（基于channel的调度）：
         1. 假设所有专家初始都存储在加速器上，按序号平均分配到各个channel。
@@ -781,6 +793,18 @@ class System:
         layer_key = f"model.layers.{layer_idx}.mlp"
         fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
         expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+        expert_num = self.model.num_experts
+        for shared_expert_id in range(self.model.shared_experts):
+            fusion_stats[f"expert_{expert_num+shared_expert_id}"] = {
+                "total_tokens": batch_size*lin,
+                "high_weight_tokens": batch_size*lin,
+                "low_weight_tokens": 0,
+                "merge_groups": 0,
+                "tokens_after_merge": batch_size*lin,
+                "computation_saved_ratio": 0
+            }
+            expert_locs_set.add(expert_num+shared_expert_id)
+
 
         # 预计算硬件常量
         gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
@@ -957,7 +981,7 @@ class System:
             'channel_latencies': channel_latencies  # 额外返回各channel延迟
         }
     
-    def expert_schedule_simulation_klotski(self, layer_idx=0):
+    def expert_schedule_simulation_klotski(self, layer_idx=0, batch_size=16, lin=1024):
         """
         专家调度模拟（仅基于original token）：
         1. 获取token阈值，遍历第layer_idx层所有专家，所有专家在GPU上计算。
@@ -971,6 +995,18 @@ class System:
         layer_key = f"model.layers.{layer_idx}.mlp"
         fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
         expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+        expert_num = self.model.num_experts
+        for shared_expert_id in range(self.model.shared_experts):
+            fusion_stats[f"expert_{expert_num+shared_expert_id}"] = {
+                "total_tokens": batch_size*lin,
+                "high_weight_tokens": batch_size*lin,
+                "low_weight_tokens": 0,
+                "merge_groups": 0,
+                "tokens_after_merge": batch_size*lin,
+                "computation_saved_ratio": 0
+            }
+            expert_locs_set.add(expert_num+shared_expert_id)
+
 
         # 预计算硬件常量
         gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
@@ -1068,7 +1104,7 @@ class System:
             'acc_latency_breakdown': acc_latency_breakdown
         }
 
-    def expert_schedule_simulation_no_fusion(self, layer_idx=0):
+    def expert_schedule_simulation_no_fusion(self, layer_idx=0, batch_size=16, lin=1024):
         """
         专家调度模拟（仅基于original token）：
         1. 获取token阈值，遍历第layer_idx层所有专家，根据original token判断其计算位置（GPU/加速器）。
@@ -1084,6 +1120,18 @@ class System:
         layer_key = f"model.layers.{layer_idx}.mlp"
         fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
         expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+        expert_num = self.model.num_experts
+        for shared_expert_id in range(self.model.shared_experts):
+            fusion_stats[f"expert_{expert_num+shared_expert_id}"] = {
+                "total_tokens": batch_size*lin,
+                "high_weight_tokens": batch_size*lin,
+                "low_weight_tokens": 0,
+                "merge_groups": 0,
+                "tokens_after_merge": batch_size*lin,
+                "computation_saved_ratio": 0
+            }
+            expert_locs_set.add(expert_num+shared_expert_id)
+
 
         # 预计算硬件常量
         gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
@@ -1254,7 +1302,7 @@ class System:
             'acc_latency_breakdown': acc_latency_breakdown
         }
 
-    def expert_schedule_simulation_fused_token(self, layer_idx=0):
+    def expert_schedule_simulation_fused_token(self, layer_idx=0, batch_size=16, lin=1024):
         """
         专家调度模拟（效率优化版，逻辑不变）：
         1. 获取token阈值，遍历第layer_idx层所有专家，判断其计算位置（GPU/加速器），并记录相关id。
@@ -1270,6 +1318,18 @@ class System:
         layer_key = f"model.layers.{layer_idx}.mlp"
         fusion_stats = self.expert_token_fusion_stats.get(layer_key, {}) if self.expert_token_fusion_stats else {}
         expert_locs_set = set(self.expert_location.get(layer_key, []) if self.expert_location else [])
+        expert_num = self.model.num_experts
+        for shared_expert_id in range(self.model.shared_experts):
+            fusion_stats[f"expert_{expert_num+shared_expert_id}"] = {
+                "total_tokens": batch_size*lin,
+                "high_weight_tokens": batch_size*lin,
+                "low_weight_tokens": 0,
+                "merge_groups": 0,
+                "tokens_after_merge": batch_size*lin,
+                "computation_saved_ratio": 0
+            }
+            expert_locs_set.add(expert_num+shared_expert_id)
+
 
         # 预计算硬件常量
         gpu_flops = self.devices['GPU'].peak_flops * self.devices['GPU'].num_xpu
