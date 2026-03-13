@@ -23,6 +23,7 @@ index 3b781b6..047b3e1 100644
 +  # impl/HBM2.cpp
 +  # impl/HBM3.cpp
 +  impl/DDR4_PIM.cpp
++  impl/LPDDR5_PIM.cpp
  )
  
  target_link_libraries(
