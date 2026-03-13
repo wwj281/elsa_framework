@@ -4,33 +4,33 @@
 namespace Ramulator
 {
 
-  class LPDDR5 : public IDRAM, public Implementation
+  class LPDDR5PIM : public IDRAM, public Implementation
   {
-    RAMULATOR_REGISTER_IMPLEMENTATION(IDRAM, LPDDR5, "LPDDR5", "LPDDR5 Device Model")
+    RAMULATOR_REGISTER_IMPLEMENTATION(IDRAM, LPDDR5PIM, "LPDDR5-PIM", "LPDDR5-PIM Device Model")
 
   public:
     inline static const std::map<std::string, Organization> org_presets = {
-        //   name           density   DQ   Ch Dimm Ra Bg Ba   Ro     Co
-        {"LPDDR5_2Gb_x16", {2 << 10, 16, {1, 1, 1, 4, 4, 1 << 13, 1 << 10}}},
-        {"LPDDR5_4Gb_x16", {4 << 10, 16, {1, 1, 1, 4, 4, 1 << 14, 1 << 10}}},
-        {"LPDDR5_8Gb_x16", {8 << 10, 16, {1, 1, 1, 4, 4, 1 << 15, 1 << 10}}},
-        {"LPDDR5_16Gb_x16", {16 << 10, 16, {1, 1, 1, 4, 4, 1 << 16, 1 << 10}}},
-        {"LPDDR5_32Gb_x16", {32 << 10, 16, {1, 1, 1, 4, 4, 1 << 17, 1 << 10}}},
-        {"LPDDR5_128Gb_x16", {32 << 10, 16, {1, 1, 2, 4, 16, 1 << 16, 1 << 10}}},
+        //   name             density    DQ   Ch Dimm Ra Bg Ba  Ro      Co
+        {"LPDDR5_2Gb_x16",   {2 << 10,   16, {1,  1,  1, 4, 4, 1 << 13, 1 << 10}}},
+        {"LPDDR5_4Gb_x16",   {4 << 10,   16, {1,  1,  1, 4, 4, 1 << 14, 1 << 10}}},
+        {"LPDDR5_8Gb_x16",   {8 << 10,   16, {1,  1,  1, 4, 4, 1 << 15, 1 << 10}}},
+        {"LPDDR5_16Gb_x16",  {16 << 10,  16, {1,  1,  1, 4, 4, 1 << 16, 1 << 10}}},
+        {"LPDDR5_32Gb_x16",  {32 << 10,  16, {1,  1,  2, 4, 4, 1 << 17, 1 << 9}}},
     };
 
     inline static const std::map<std::string, std::vector<int>> timing_presets = {
-        //   name         rate   nBL  nCL  nRCD  nRPab  nRPpb   nRAS  nRC   nWR  nRTP nCWL nCCD nRRD nWTRS nWTRL nFAW  nPPD  nRFCab nRFCpb nREFI nPBR2PBR nPBR2ACT nCS,  tCK_ps
-        {"LPDDR5_6400", {6400, 16, 20, 15, 17, 15, 34, 30, 28, 4, 11, 4, 4, 5, 10, 16, 2, -1, -1, -1, -1, -1, 2, 1250}},
+        //   name        rate   nBL  nCL  nRCD  nRPab  nRPpb   nRAS  nRC   nWR  nRTP nCWL nCCD nRRD nWTRS nWTRL nFAW  nPPD  nRFCab nRFCpb nREFI nPBR2PBR nPBR2ACT nCS,  tCK_ps
+        {"LPDDR5_6400", {6400,   2,  20,   15,   17,    15,     34,  30,    28,   4,  11,  4,   4,     5,   10,  16,    2,    -1,    -1,    -1,    -1,      -1,    2,    1250}},
     };
 
     /************************************************
      *                Organization
      ***********************************************/
-    const int m_internal_prefetch_size = 8;
+    const int m_internal_prefetch_size = 16;
 
     inline static constexpr ImplDef m_levels = {
         "channel",
+        "dimm",
         "rank",
         "bankgroup",
         "bank",
@@ -56,7 +56,11 @@ namespace Ramulator
         "REFpb",
         "RFMab",
         "RFMpb",
-    };
+        // PIM commands
+        "ACTAB", "ACTSB", "ACTPB",
+        "MACAB", "MACSB", "MACPB",
+        "WRGB", "MVSB", "MVGB", "SFM",
+        "SETM", "SETH", "ACC", "AF", "EWMUL", "BARRIER"};
 
     inline static const ImplLUT m_command_scopes = LUT(
         m_commands, m_levels, {
@@ -74,38 +78,77 @@ namespace Ramulator
                                   {"REFpb", "rank"},
                                   {"RFMab", "rank"},
                                   {"RFMpb", "rank"},
+                                  // PIM commadns
+                                  {"ACTAB", "row"},     {"ACTSB", "row"},     {"ACTPB", "row"},
+                                  {"MACAB",  "column"}, {"MACSB",  "column"}, {"MACPB", "column"}, // ACTPB and MACPB are broadcasted to pCHs in a channel
+                                  {"WRGB",  "dimm"},
+                                  {"MVSB",  "bank"},    {"MVGB", "bank"},
+                                  {"SFM",   "channel"},
+                                  {"SETM",  "bank"},    {"SETH", "channel"},
+                                  {"ACC", "dimm"}, {"AF", "dimm"}, {"EWMUL", "dimm"}
                               });
 
     inline static const ImplLUT m_command_meta = LUT<DRAMCommandMeta>(
         m_commands, {
-                        // open?   close?   access?  refresh?
+                        //        open?   close?   access?  refresh?
                         {"ACT-1", {false, false, false, false}},
                         {"ACT-2", {true, false, false, false}},
-                        {"PRE", {false, true, false, false}},
-                        {"PREA", {false, true, false, false}},
+                        {"PRE",   {false, true, false, false}},
+                        {"PREA",  {false, true, false, false}},
                         {"CASRD", {false, false, false, false}},
                         {"CASWR", {false, false, false, false}},
-                        {"RD16", {false, false, true, false}},
-                        {"WR16", {false, false, true, false}},
+                        {"RD16",  {false, false, true, false}},
+                        {"WR16",  {false, false, true, false}},
                         {"RD16A", {false, true, true, false}},
                         {"WR16A", {false, true, true, false}},
                         {"REFab", {false, false, false, true}},
                         {"REFpb", {false, false, false, true}},
                         {"RFMab", {false, false, false, true}},
                         {"RFMpb", {false, false, false, true}},
+                        // PIM commadns
+                        {"ACTAB",  {true,   false,   false,   false}},
+                        {"ACTSB",  {true,   false,   false,   false}},
+                        {"ACTPB",  {true,   false,   false,   false}},
+                        {"MACAB",  {false,  false,   true,    false}},
+                        {"MACSB",  {false,  false,   true,    false}},
+                        {"MACPB",  {false,  false,   true,    false}},
+                        {"WRGB",   {false,  false,   false,   false}},
+                        {"MVSB",   {false,  false,   false,   false}},
+                        {"MVGB",   {false,  false,   false,   false}},
+                        {"SFM",    {false,  false,   false,   false}},
+                        {"SETM",   {false,  false,   false,   false}},
+                        {"SETH",   {false,  false,   false,   false}},
+                        {"ACC",    {false,  false,   false,   false}},
+                        {"AF",     {false,  false,   false,   false}},
+                        {"EWMUL",  {false,  false,   false,   false}},
+                        {"BARRIER",{false,  false,   false,   false}}
                     });
 
     inline static constexpr ImplDef m_requests = {
         "read16", "write16",
-        "all-bank-refresh", "per-bank-refresh"};
+        "all-bank-refresh", "per-bank-refresh",
+        // PIM requests
+        "pim-mac-all-bank", "pim-mac-same-bank", "pim-mac-per-bank",
+        "pim-write-to-gemv-buffer", "pim-move-to-softmax-buffer", "pim-move-to-gemv-buffer",
+        "pim-softmax", "pim-set-model", "pim-set-head",
+        "pim-accumulate", "pim-activation-function", "pim-elementwise-multiply", "pim-barrier"};
 
     inline static const ImplLUT m_request_translations = LUT(
-        m_requests, m_commands, {
-                                    {"read16", "RD16"},
-                                    {"write16", "WR16"},
-                                    {"all-bank-refresh", "REFab"},
-                                    {"per-bank-refresh", "REFpb"},
-                                });
+        m_requests, m_commands, {{"read16", "RD16"}, {"write16", "WR16"}, {"all-bank-refresh", "REFab"}, {"per-bank-refresh", "REFpb"},
+                                 // PIM requests
+                                 {"pim-mac-all-bank", "MACAB"},
+                                 {"pim-mac-same-bank", "MACSB"},
+                                 {"pim-mac-per-bank", "MACPB"},
+                                 {"pim-write-to-gemv-buffer", "WRGB"},
+                                 {"pim-move-to-softmax-buffer", "MVSB"},
+                                 {"pim-move-to-gemv-buffer", "MVGB"},
+                                 {"pim-softmax", "SFM"},
+                                 {"pim-set-model", "SETM"},
+                                 {"pim-set-head", "SETH"},
+                                 {"pim-accumulate", "ACC"},
+                                 {"pim-activation-function", "AF"},
+                                 {"pim-elementwise-multiply", "EWMUL"},
+                                 {"pim-barrier", "BARRIER"}});
 
     /************************************************
      *                   Timing
@@ -133,6 +176,7 @@ namespace Ramulator
     inline static const ImplLUT m_init_states = LUT(
         m_levels, m_states, {
                                 {"channel", "N/A"},
+                                {"dimm", "N/A"},
                                 {"rank", "PowerUp"},
                                 {"bankgroup", "N/A"},
                                 {"bank", "Closed"},
@@ -141,11 +185,11 @@ namespace Ramulator
                             });
 
   public:
-    struct Node : public DRAMNodeBase<LPDDR5>
+    struct Node : public DRAMNodeBase<LPDDR5PIM>
     {
       Clk_t m_final_synced_cycle = -1; // Extra CAS Sync command needed for RD/WR after this cycle
 
-      Node(LPDDR5 *dram, Node *parent, int level, int id) : DRAMNodeBase<LPDDR5>(dram, parent, level, id) {};
+      Node(LPDDR5PIM *dram, Node *parent, int level, int id) : DRAMNodeBase<LPDDR5PIM>(dram, parent, level, id) {};
     };
     std::vector<Node *> m_channels;
 
@@ -209,7 +253,7 @@ namespace Ramulator
     void set_organization()
     {
       // Channel width
-      m_channel_width = param_group("org").param<int>("channel_width").default_val(32);
+      m_channel_width = param_group("org").param<int>("channel_width").default_val(64);
 
       // Organization
       m_organization.count.resize(m_levels.size(), -1);
@@ -248,7 +292,9 @@ namespace Ramulator
       }
 
       // Sanity check: is the calculated chip density the same as the provided one?
-      size_t _density = size_t(m_organization.count[m_levels["bankgroup"]]) *
+      size_t _density = size_t(m_organization.count[m_levels["dimm"]]) *
+                        size_t(m_organization.count[m_levels["rank"]]) *
+                        size_t(m_organization.count[m_levels["bankgroup"]]) *
                         size_t(m_organization.count[m_levels["bank"]]) *
                         size_t(m_organization.count[m_levels["row"]]) *
                         size_t(m_organization.count[m_levels["column"]]) *
@@ -320,32 +366,36 @@ namespace Ramulator
 
       // Refresh timings
       // tRFC table (unit is nanosecond!)
-      constexpr int tRFCab_TABLE[4] = {
-          //  2Gb   4Gb   8Gb  16Gb
+      constexpr int tRFCab_TABLE[5] = {
+          //  2Gb   4Gb   8Gb  16Gb  128Gb
           130,
           180,
           210,
           280,
+          280,
       };
 
-      constexpr int tRFCpb_TABLE[4] = {
-          //  2Gb   4Gb   8Gb  16Gb
+      constexpr int tRFCpb_TABLE[5] = {
+          //  2Gb   4Gb   8Gb  16Gb  128Gb
           60,
           90,
           120,
           140,
+          140,
       };
 
-      constexpr int tPBR2PBR_TABLE[4] = {
-          //  2Gb   4Gb   8Gb  16Gb
+      constexpr int tPBR2PBR_TABLE[5] = {
+          //  2Gb   4Gb   8Gb  16Gb  128Gb
           60,
           90,
           90,
           90,
+          90,
       };
 
-      constexpr int tPBR2ACT_TABLE[4] = {
-          //  2Gb   4Gb   8Gb  16Gb
+      constexpr int tPBR2ACT_TABLE[5] = {
+          //  2Gb   4Gb   8Gb  16Gb  128Gb
+          8,
           8,
           8,
           8,
@@ -366,6 +416,8 @@ namespace Ramulator
           return 2;
         case 16384:
           return 3;
+        case 131072:
+          return 4;
         default:
           return -1;
         }
@@ -410,68 +462,117 @@ namespace Ramulator
 // Populate the timing constraints
 #define V(timing) (m_timing_vals(timing))
       populate_timingcons(this, {
-                                    /*** Channel ***/
-                                    // CAS <-> CAS
-                                    /// Data bus occupancy
-                                    {.level = "channel", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A"}, .latency = V("nBL16")},
-                                    {.level = "channel", .preceding = {"WR16", "WR16A"}, .following = {"WR16", "WR16A"}, .latency = V("nBL16")},
+          /////////////////////////////////
+          ////--         PIM           --//
+          /////////////////////////////////
 
-                                    /*** Rank (or different BankGroup) ***/
-                                    // CAS <-> CAS
-                                    {.level = "rank", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCCD")},
-                                    {.level = "rank", .preceding = {"WR16", "WR16A"}, .following = {"WR16", "WR16A"}, .latency = V("nCCD")},
-                                    /// RD <-> WR, Minimum Read to Write, Assuming tWPRE = 1 tCK
-                                    {.level = "rank", .preceding = {"RD16", "RD16A"}, .following = {"WR16", "WR16A"}, .latency = V("nCL") + V("nBL16") + 2 - V("nCWL")},
-                                    /// WR <-> RD, Minimum Read after Write
-                                    {.level = "rank", .preceding = {"WR16", "WR16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCWL") + V("nBL16") + V("nWTRS")},
-                                    /// CAS <-> CAS between sibling ranks, nCS (rank switching) is needed for new DQS
-                                    {.level = "rank", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A", "WR16", "WR16A"}, .latency = V("nBL16") + V("nCS"), .is_sibling = true},
-                                    {.level = "rank", .preceding = {"WR16", "WR16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCL") + V("nBL16") + V("nCS") - V("nCWL"), .is_sibling = true},
-                                    /// CAS <-> PREab
-                                    {.level = "rank", .preceding = {"RD16"}, .following = {"PREA"}, .latency = V("nRTP")},
-                                    {.level = "rank", .preceding = {"WR16"}, .following = {"PREA"}, .latency = V("nCWL") + V("nBL16") + V("nWR")},
-                                    /// RAS <-> RAS
-                                    {.level = "rank", .preceding = {"ACT-1"}, .following = {"ACT-1", "REFpb"}, .latency = V("nRRD")},
-                                    {.level = "rank", .preceding = {"ACT-1"}, .following = {"ACT-1"}, .latency = V("nFAW"), .window = 4},
-                                    {.level = "rank", .preceding = {"ACT-1"}, .following = {"PREA"}, .latency = V("nRAS")},
-                                    {.level = "rank", .preceding = {"PREA"}, .following = {"ACT-1"}, .latency = V("nRPab")},
-                                    /// RAS <-> REF
-                                    {.level = "rank", .preceding = {"ACT-1"}, .following = {"REFab"}, .latency = V("nRC")},
-                                    {.level = "rank", .preceding = {"PRE"}, .following = {"REFab"}, .latency = V("nRPpb")},
-                                    {.level = "rank", .preceding = {"PREA"}, .following = {"REFab"}, .latency = V("nRPab")},
-                                    {.level = "rank", .preceding = {"RD16A"}, .following = {"REFab"}, .latency = V("nRPpb") + V("nRTP")},
-                                    {.level = "rank", .preceding = {"WR16A"}, .following = {"REFab"}, .latency = V("nCWL") + V("nBL16") + V("nWR") + V("nRPpb")},
-                                    {.level = "rank", .preceding = {"REFab"}, .following = {"REFab", "ACT-1", "REFpb"}, .latency = V("nRFCab")},
-                                    {.level = "rank", .preceding = {"ACT-1"}, .following = {"REFpb"}, .latency = V("nPBR2ACT")},
-                                    {.level = "rank", .preceding = {"REFpb"}, .following = {"REFpb"}, .latency = V("nPBR2PBR")},
+          /*** PIM-MAC-All-Bank ***/ 
+          /// 2-cycle ACT command (for row commands)
+          {.level = "channel", .preceding = {"ACTAB"}, .following = {"ACTAB", "ACT", "PRE", "PREA", "REFab"}, .latency = 2},
+          /// All banks in a dimm 
+          {.level = "dimm", .preceding = {"MACAB"}, .following = {"MACAB"}, .latency = V("nCCD")},          
+          //{.level = "dimm", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nRC")},
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"ACTAB"}, .latency = V("nFAW") * size_t(m_organization.count[m_levels["bankgroup"]]) * size_t(m_organization.count[m_levels["bank"]]) / 4},  
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"MACAB"}, .latency = V("nFAW") * size_t(m_organization.count[m_levels["bankgroup"]]) * size_t(m_organization.count[m_levels["bank"]]) / 4},  
+          {.level = "dimm", .preceding = {"ACTAB"}, .following = {"PREA"}, .latency = V("nRAS")},  
+          {.level = "dimm", .preceding = {"MACAB"}, .following = {"PREA"}, .latency = V("nRTP")},  
+          {.level = "dimm", .preceding = {"PREA"}, .following = {"ACTAB"}, .latency = V("nRPab")},  
+          /// RAS <-> REF
+          {.level = "rank", .preceding = {"ACTAB"}, .following = {"REFab"}, .latency = V("nRC")},          
+          {.level = "rank", .preceding = {"PREA"}, .following = {"REFab"}, .latency = V("nRPab")},          
+          {.level = "rank", .preceding = {"REFab"}, .following = {"ACTAB"}, .latency = V("nRFC")},                   
 
-                                    /*** Same Bank Group ***/
-                                    /// CAS <-> CAS
-                                    {.level = "bankgroup", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCCD")},
-                                    {.level = "bankgroup", .preceding = {"WR16", "WR16A"}, .following = {"WR16", "WR16A"}, .latency = V("nCCD")},
-                                    {.level = "bankgroup", .preceding = {"WR16", "WR16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCWL") + V("nBL16") + V("nWTRL")},
-                                    /// RAS <-> RAS
-                                    {.level = "bankgroup", .preceding = {"ACT-1"}, .following = {"ACT-1"}, .latency = V("nRRD")},
 
-                                    /*** Bank ***/
-                                    {.level = "bank", .preceding = {"ACT-1"}, .following = {"ACT-1"}, .latency = V("nRC")},
-                                    {.level = "bank", .preceding = {"ACT-1"}, .following = {"RD16", "RD16A", "WR16", "WR16A"}, .latency = V("nRCD")},
-                                    {.level = "bank", .preceding = {"ACT-1"}, .following = {"PRE"}, .latency = V("nRAS")},
-                                    {.level = "bank", .preceding = {"PRE"}, .following = {"ACT-1"}, .latency = V("nRPpb")},
-                                    {.level = "bank", .preceding = {"RD16"}, .following = {"PRE"}, .latency = V("nRTP")},
-                                    {.level = "bank", .preceding = {"WR16"}, .following = {"PRE"}, .latency = V("nCWL") + V("nBL16") + V("nWR")},
-                                    {.level = "bank", .preceding = {"RD16A"}, .following = {"ACT-1"}, .latency = V("nRTP") + V("nRPpb")},
-                                    {.level = "bank", .preceding = {"WR16A"}, .following = {"ACT-1"}, .latency = V("nCWL") + V("nBL16") + V("nWR") + V("nRPpb")},
-                                });
+          /*** Data Movement ***/                   // These can be executed simultaneously with MACAB/MACSB/MACPB because their data paths are different from that of MACAB/MACSB/MACPB.
+          // CAS <-> CAS (DQ <-> GEMV unit)
+          /*** Channel ***/ 
+          {.level = "channel", .preceding = {"WRGB"}, .following = {"WRGB"}, .latency = V("nBL")},
+
+          /*** Dimm ***/ 
+          {.level = "dimm", .preceding = {"WRGB"}, .following = {"WRGB"}, .latency = V("nCCD") * 2},
+          {.level = "dimm", .preceding = {"WRGB"}, .following = {"ACTAB", "MACAB"}, .latency = V("nCCD") * 2},
+          // {.level = "pseudochannel", .preceding = {"WRGB", "MVSB", "MVGB", "SFM", "RD", "WR"}, .following = {"WRGB", "MVSB", "MVGB", "SFM", "RD", "WR"}, .latency = V("nBL")},
+          {.level = "dimm", .preceding = {"MVGB"}, .following = {"MVGB", "ACC", "AF"}, .latency = V("nCL")},
+          {.level = "dimm", .preceding = {"ACC"}, .following = {"ACC", "AF"}, .latency = V("nCCD")},
+          {.level = "dimm", .preceding = {"AF"}, .following = {"AF", "EWMUL"}, .latency = V("nCCD")},
+          {.level = "dimm", .preceding = {"EWMUL"}, .following = {"EWMUL", "ACTAB", "MACAB"}, .latency = V("nCCD")},
+          {.level = "dimm", .preceding = {"MVGB"}, .following = {"MVGB"}, .latency = V("nCCD")},
+          
+          /*** Rank ***/ 
+          {.level = "rank", .preceding = {"MVGB"}, .following = {"MACAB"}, .latency = V("nCCD")},    
+
+          /*** Bank Group ***/ 
+          {.level = "bankgroup", .preceding = {"MACAB"}, .following = {"MVGB"}, .latency = V("nCCD")},
+          
+          
+          /////////////////////////////////
+          ////--     DRAM Default      --//
+          ///////////////////////////////// 
+
+          /*** Channel ***/
+          // CAS <-> CAS
+          /// Data bus occupancy
+          {.level = "channel", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A"}, .latency = V("nBL16")},
+          {.level = "channel", .preceding = {"WR16", "WR16A"}, .following = {"WR16", "WR16A"}, .latency = V("nBL16")},
+
+          /*** Rank (or different BankGroup) ***/
+          // CAS <-> CAS
+          {.level = "rank", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCCD")},
+          {.level = "rank", .preceding = {"WR16", "WR16A"}, .following = {"WR16", "WR16A"}, .latency = V("nCCD")},
+          /// RD <-> WR, Minimum Read to Write, Assuming tWPRE = 1 tCK
+          {.level = "rank", .preceding = {"RD16", "RD16A"}, .following = {"WR16", "WR16A"}, .latency = V("nCL") + V("nBL16") + 2 - V("nCWL")},
+          /// WR <-> RD, Minimum Read after Write
+          {.level = "rank", .preceding = {"WR16", "WR16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCWL") + V("nBL16") + V("nWTRS")},
+          /// CAS <-> CAS between sibling ranks, nCS (rank switching) is needed for new DQS
+          {.level = "rank", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A", "WR16", "WR16A"}, .latency = V("nBL16") + V("nCS"), .is_sibling = true},
+          {.level = "rank", .preceding = {"WR16", "WR16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCL") + V("nBL16") + V("nCS") - V("nCWL"), .is_sibling = true},
+          /// CAS <-> PREab
+          {.level = "rank", .preceding = {"RD16"}, .following = {"PREA"}, .latency = V("nRTP")},
+          {.level = "rank", .preceding = {"WR16"}, .following = {"PREA"}, .latency = V("nCWL") + V("nBL16") + V("nWR")},
+          /// RAS <-> RAS
+          {.level = "rank", .preceding = {"ACT-1"}, .following = {"ACT-1", "REFpb"}, .latency = V("nRRD")},
+          {.level = "rank", .preceding = {"ACT-1"}, .following = {"ACT-1"}, .latency = V("nFAW"), .window = 4},
+          {.level = "rank", .preceding = {"ACT-1"}, .following = {"PREA"}, .latency = V("nRAS")},
+          {.level = "rank", .preceding = {"PREA"}, .following = {"ACT-1"}, .latency = V("nRPab")},
+          /// RAS <-> REF
+          {.level = "rank", .preceding = {"ACT-1"}, .following = {"REFab"}, .latency = V("nRC")},
+          {.level = "rank", .preceding = {"PRE"}, .following = {"REFab"}, .latency = V("nRPpb")},
+          {.level = "rank", .preceding = {"PREA"}, .following = {"REFab"}, .latency = V("nRPab")},
+          {.level = "rank", .preceding = {"RD16A"}, .following = {"REFab"}, .latency = V("nRPpb") + V("nRTP")},
+          {.level = "rank", .preceding = {"WR16A"}, .following = {"REFab"}, .latency = V("nCWL") + V("nBL16") + V("nWR") + V("nRPpb")},
+          {.level = "rank", .preceding = {"REFab"}, .following = {"REFab", "ACT-1", "REFpb"}, .latency = V("nRFCab")},
+          {.level = "rank", .preceding = {"ACT-1"}, .following = {"REFpb"}, .latency = V("nPBR2ACT")},
+          {.level = "rank", .preceding = {"REFpb"}, .following = {"REFpb"}, .latency = V("nPBR2PBR")},
+
+          /*** Same Bank Group ***/
+          /// CAS <-> CAS
+          {.level = "bankgroup", .preceding = {"RD16", "RD16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCCD")},
+          {.level = "bankgroup", .preceding = {"WR16", "WR16A"}, .following = {"WR16", "WR16A"}, .latency = V("nCCD")},
+          {.level = "bankgroup", .preceding = {"WR16", "WR16A"}, .following = {"RD16", "RD16A"}, .latency = V("nCWL") + V("nBL16") + V("nWTRL")},
+          /// RAS <-> RAS
+          {.level = "bankgroup", .preceding = {"ACT-1"}, .following = {"ACT-1"}, .latency = V("nRRD")},
+
+          /*** Bank ***/
+          {.level = "bank", .preceding = {"ACT-1"}, .following = {"ACT-1"}, .latency = V("nRC")},
+          {.level = "bank", .preceding = {"ACT-1"}, .following = {"RD16", "RD16A", "WR16", "WR16A"}, .latency = V("nRCD")},
+          {.level = "bank", .preceding = {"ACT-1"}, .following = {"PRE"}, .latency = V("nRAS")},
+          {.level = "bank", .preceding = {"PRE"}, .following = {"ACT-1"}, .latency = V("nRPpb")},
+          {.level = "bank", .preceding = {"RD16"}, .following = {"PRE"}, .latency = V("nRTP")},
+          {.level = "bank", .preceding = {"WR16"}, .following = {"PRE"}, .latency = V("nCWL") + V("nBL16") + V("nWR")},
+          {.level = "bank", .preceding = {"RD16A"}, .following = {"ACT-1"}, .latency = V("nRTP") + V("nRPpb")},
+          {.level = "bank", .preceding = {"WR16A"}, .following = {"ACT-1"}, .latency = V("nCWL") + V("nBL16") + V("nWR") + V("nRPpb")},
+      });
 #undef V
     };
 
     void set_actions()
     {
       m_actions.resize(m_levels.size(), std::vector<ActionFunc_t<Node>>(m_commands.size()));
+      // Pseudo Channel Actions
+      m_actions[m_levels["dimm"]][m_commands["PREA"]] = Lambdas::Action::Channel::PREA<LPDDR5PIM>;
 
       // Rank Actions
-      m_actions[m_levels["rank"]][m_commands["PREA"]] = Lambdas::Action::Rank::PREab<LPDDR5>;
+      m_actions[m_levels["rank"]][m_commands["PREA"]] = Lambdas::Action::Rank::PREab<LPDDR5PIM>;
       m_actions[m_levels["rank"]][m_commands["CASRD"]] = [](Node *node, int cmd, int target_id, Clk_t clk)
       {
         node->m_final_synced_cycle = clk + m_timings["nCL"] + m_timings["nBL16"] + 1;
@@ -494,10 +595,11 @@ namespace Ramulator
         node->m_state = m_states["Pre-Opened"];
         node->m_row_state[target_id] = m_states["Pre-Opened"];
       };
-      m_actions[m_levels["bank"]][m_commands["ACT-2"]] = Lambdas::Action::Bank::ACT<LPDDR5>;
-      m_actions[m_levels["bank"]][m_commands["PRE"]] = Lambdas::Action::Bank::PRE<LPDDR5>;
-      m_actions[m_levels["bank"]][m_commands["RD16A"]] = Lambdas::Action::Bank::PRE<LPDDR5>;
-      m_actions[m_levels["bank"]][m_commands["WR16A"]] = Lambdas::Action::Bank::PRE<LPDDR5>;
+      m_actions[m_levels["bank"]][m_commands["ACT-2"]] = Lambdas::Action::Bank::ACT<LPDDR5PIM>;
+      m_actions[m_levels["bank"]][m_commands["ACTAB"]] = Lambdas::Action::Bank::ACTAB<LPDDR5PIM>;
+      m_actions[m_levels["bank"]][m_commands["PRE"]] = Lambdas::Action::Bank::PRE<LPDDR5PIM>;
+      m_actions[m_levels["bank"]][m_commands["RD16A"]] = Lambdas::Action::Bank::PRE<LPDDR5PIM>;
+      m_actions[m_levels["bank"]][m_commands["WR16A"]] = Lambdas::Action::Bank::PRE<LPDDR5PIM>;
     };
 
     void set_preqs()
@@ -505,8 +607,8 @@ namespace Ramulator
       m_preqs.resize(m_levels.size(), std::vector<PreqFunc_t<Node>>(m_commands.size()));
 
       // Rank Preqs
-      m_preqs[m_levels["rank"]][m_commands["REFab"]] = Lambdas::Preq::Rank::RequireAllBanksClosed<LPDDR5>;
-      m_preqs[m_levels["rank"]][m_commands["RFMab"]] = Lambdas::Preq::Rank::RequireAllBanksClosed<LPDDR5>;
+      m_preqs[m_levels["rank"]][m_commands["REFab"]] = Lambdas::Preq::Rank::RequireAllBanksClosed<LPDDR5PIM>;
+      m_preqs[m_levels["rank"]][m_commands["RFMab"]] = Lambdas::Preq::Rank::RequireAllBanksClosed<LPDDR5PIM>;
 
       m_preqs[m_levels["rank"]][m_commands["REFpb"]] = [this](Node *node, int cmd, const AddrVec_t &addr_vec, Clk_t clk)
       {
@@ -516,7 +618,7 @@ namespace Ramulator
           {
             int num_banks_per_bg = m_organization.count[m_levels["bank"]];
             int flat_bankid = bank->m_node_id + bg->m_node_id * num_banks_per_bg;
-            if (flat_bankid == addr_vec[LPDDR5::m_levels["bank"]] || flat_bankid == addr_vec[LPDDR5::m_levels["bank"]] + 8)
+            if (flat_bankid == addr_vec[LPDDR5PIM::m_levels["bank"]] || flat_bankid == addr_vec[LPDDR5PIM::m_levels["bank"]] + 8)
             {
               switch (node->m_state)
               {
@@ -603,22 +705,25 @@ namespace Ramulator
         }
         }
       };
+      m_preqs[m_levels["bank"]][m_commands["MACAB"]] = Lambdas::Preq::Bank::RequireAllBanksRowOpen<LPDDR5PIM>;
     };
 
     void set_rowhits()
     {
       m_rowhits.resize(m_levels.size(), std::vector<RowhitFunc_t<Node>>(m_commands.size()));
 
-      m_rowhits[m_levels["bank"]][m_commands["RD16"]] = Lambdas::RowHit::Bank::RDWR<LPDDR5>;
-      m_rowhits[m_levels["bank"]][m_commands["WR16"]] = Lambdas::RowHit::Bank::RDWR<LPDDR5>;
+      m_rowhits[m_levels["bank"]][m_commands["RD16"]] = Lambdas::RowHit::Bank::RDWR<LPDDR5PIM>;
+      m_rowhits[m_levels["bank"]][m_commands["WR16"]] = Lambdas::RowHit::Bank::RDWR<LPDDR5PIM>;
+      m_rowhits[m_levels["bank"]][m_commands["MACAB"]] = Lambdas::RowHit::Bank::RDWR<LPDDR5PIM>;
     }
 
     void set_rowopens()
     {
       m_rowopens.resize(m_levels.size(), std::vector<RowhitFunc_t<Node>>(m_commands.size()));
 
-      m_rowopens[m_levels["bank"]][m_commands["RD16"]] = Lambdas::RowOpen::Bank::RDWR<LPDDR5>;
-      m_rowopens[m_levels["bank"]][m_commands["WR16"]] = Lambdas::RowOpen::Bank::RDWR<LPDDR5>;
+      m_rowopens[m_levels["bank"]][m_commands["RD16"]] = Lambdas::RowOpen::Bank::RDWR<LPDDR5PIM>;
+      m_rowopens[m_levels["bank"]][m_commands["WR16"]] = Lambdas::RowOpen::Bank::RDWR<LPDDR5PIM>;
+      m_rowopens[m_levels["bank"]][m_commands["MACAB"]] = Lambdas::RowOpen::Bank::RDWR<LPDDR5PIM>;
     }
 
     void create_nodes()

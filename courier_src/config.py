@@ -166,7 +166,7 @@ def make_xpu_config(gpu_type: GPUType,
         #config['GPU']["L2_MEM_BW_PER_DEVICE"] = 3.8 * 1000 * 1000 * 1000 * 1000
         config['GPU']["L1_CAP_PER_CORE"] = 16384 * 1024
         config['GPU']["L2_CAP_PER_DEVICE"] = 73728 * 1024
-        config['GPU']["INTERFACE_BW"] = 32 * 1000 * 1000 * 1000
+        config['GPU']["INTERFACE_BW"] = 64 * 1000 * 1000 * 1000 * 0.65 # Effective BW is around 65% of theoretical peak BW
         config['GPU']["ENERGY_TABLE"] = ENERGY_TABLE['GPU']
 
         config['CPU']["NUM_DEVICE"] = 2
