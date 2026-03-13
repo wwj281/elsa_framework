@@ -2,7 +2,7 @@ diff --git a/src/dram/CMakeLists.txt b/src/dram/CMakeLists.txt
 index 3b781b6..047b3e1 100644
 --- a/src/dram/CMakeLists.txt
 +++ b/src/dram/CMakeLists.txt
-@@ -6,14 +6,15 @@ target_sources(
+@@ -6,14 +6,16 @@ target_sources(
    
    lambdas/preq.h  lambdas/rowhit.h  lambdas/rowopen.h 
  
