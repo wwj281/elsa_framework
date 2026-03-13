@@ -189,13 +189,15 @@ BW_SCALE = {
         PIMType.BA: 2 * 4 * 4 / 2,
         PIMType.BG: 2 * 4,
         PIMType.BUFFER: 1,
-        PIMType.DDR4: 128
+        PIMType.DDR4: 128,
+        PIMType.LPDDR5: 2 * 4 * 4
     },
     True: {
         PIMType.BA: 9,
         PIMType.BG: 3,
         PIMType.BUFFER: 1,
-        PIMType.DDR4: 128
+        PIMType.DDR4: 128,
+        PIMType.LPDDR5: 2 * 4 * 4
     }
 }
 
@@ -225,6 +227,13 @@ def make_pim_config(pim_type: PIMType,
         config["FLOPS_PER_HBM"] = 64 * 2 * 200 * 1000 * 1000 * 128  # 单Bank一次计算处理操作数 * 计算频率 * DDR4 NMP单Channel Bank数
         config["SOFTMAX_MEM_BW"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
         config["SOFTMAX_FLOPS"] = 64 * 200 * 1000 * 1000 * 128
+    elif pim_type == PIMType.LPDDR5:  # 以下是单Channel的配置
+        config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
+        config[
+            "MEM_BW_PER_HBM"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
+        config["FLOPS_PER_HBM"] = 64 * 2 * 200 * 1000 * 1000 * 32  # 单Bank一次计算处理操作数 * 计算频率 * LPDDR5 NMP单Channel Bank数
+        config["SOFTMAX_MEM_BW"] = 51.2 * 1000 * 1000 * 1000 * internal_bandwidth_scale
+        config["SOFTMAX_FLOPS"] = 64 * 200 * 1000 * 1000 * 64
     else:
         config["MEM_CAPACITY_PER_HBM"] = 16 * 1024 * 1024 * 1024
         config[
