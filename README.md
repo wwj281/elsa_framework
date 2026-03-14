@@ -53,7 +53,7 @@ $ python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expe
 # Mixtral-8x7B Batch 16 Schedule_PIMOE Mapping_H2
 $ python courier_main.py  --tfs_file input1024_batch16/mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json  --gss_file input1024_batch16/mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json --elp_file input1024_batch16/mixtral_8x7b/expert_location_path.json --model Mixtral-8x7B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16
 
-# gpt-oss-120B Batch_16 Schedule_FUSION Mapping_WEIGHT GPU_H100 PIM_LPDDR Channel_16 
+# gpt-oss-120B Batch_16 Schedule_PIMOE Mapping_H2 GPU_H100 PIM_LPDDR Channel_16 
 $ python courier_main.py  --tfs_file input1024_batch16/gpt_oss_120b/per_layer_expert_stats_t0.26_r0.75.json  --gss_file input1024_batch16/gpt_oss_120b/expert_gate_sum_t0.26_r0.75.json --elp_file input1024_batch16/gpt_oss_120b/expert_location_path.json --model Gpt-oss-120B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --gpu H100 --num_channel 16 --pim lpddr5
 ```
 
