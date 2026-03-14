@@ -11,6 +11,7 @@ cd ../../
 cp courier_pim_ramulator_src/DDR4_PIM.cpp ramulator2/src/dram/impl/
 cp courier_pim_ramulator_src/LPDDR5_PIM.cpp ramulator2/src/dram/impl/
 cp courier_pim_ramulator_src/ddr_pim_controller.cpp ramulator2/src/dram_controller/impl/
+cp courier_pim_ramulator_src/lpddr_pim_controller.cpp ramulator2/src/dram_controller/impl/
 cp courier_pim_ramulator_src/pim_scheduler.cpp ramulator2/src/dram_controller/impl/scheduler/
 cp courier_pim_ramulator_src/pim_loadstore_trace.cpp ramulator2/src/frontend/impl/memory_trace/
 cp courier_pim_ramulator_src/PIM_DRAM_system.cpp ramulator2/src/memory_system/impl/
