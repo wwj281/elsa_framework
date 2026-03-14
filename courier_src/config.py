@@ -13,7 +13,8 @@ ENERGY_TABLE = {
         PIMType.BA: {},
         PIMType.BG: {},
         PIMType.BUFFER: {},
-        PIMType.DDR4: {}
+        PIMType.DDR4: {},
+        PIMType.LPDDR5: {}
     }
 }
 ENERGY_TABLE['GPU']['reg'] = 0.0675
@@ -53,27 +54,33 @@ ENERGY_TABLE['PIM'][PIMType.BUFFER]['mem'] = (0.11 + 0.44 + 1.01 + 1.23 +
                                               0.5) * 8  #, 0]
 ENERGY_TABLE['PIM'][PIMType.DDR4]['mem'] = (0.11 +
                                           0.44) * 128
+ENERGY_TABLE['PIM'][PIMType.LPDDR5]['mem'] = (0.11 +
+                                          0.44) * 32                                          
 
 ENERGY_TABLE['PIM'][PIMType.BA]['sram'] = 0.0034
 ENERGY_TABLE['PIM'][PIMType.BG]['sram'] = 0.0034
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['sram'] = 0.0034
 ENERGY_TABLE['PIM'][PIMType.DDR4]['sram'] = 0.0034
+ENERGY_TABLE['PIM'][PIMType.LPDDR5]['sram'] = 0.0034
 
 ENERGY_TABLE['PIM'][PIMType.BA]['alu'] = 0.32
 ENERGY_TABLE['PIM'][PIMType.BG]['alu'] = 0.32
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['alu'] = 0.32
 ENERGY_TABLE['PIM'][PIMType.DDR4]['alu'] = 0.32
+ENERGY_TABLE['PIM'][PIMType.LPDDR5]['alu'] = 0.32
 
 ENERGY_TABLE['PIM'][PIMType.BA]['io'] = [0.3, 0.5, 1.23, 1.01]
 ENERGY_TABLE['PIM'][PIMType.BG]['io'] = [0.3, 0.5, 1.23, 1.01]
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['io'] = [0.3, 0.5, 1.23, 1.01]
 ENERGY_TABLE['PIM'][PIMType.DDR4]['io'] = [0.3, 0.5, 1.23, 1.01]
+ENERGY_TABLE['PIM'][PIMType.LPDDR5]['io'] = [0.3, 0.5, 1.23, 1.01]
 
 # https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10067395
 ENERGY_TABLE['PIM'][PIMType.BA]['comm'] = 10.4
 ENERGY_TABLE['PIM'][PIMType.BG]['comm'] = 10.4
 ENERGY_TABLE['PIM'][PIMType.BUFFER]['comm'] = 10.4
 ENERGY_TABLE['PIM'][PIMType.DDR4]['comm'] = 10.4
+ENERGY_TABLE['PIM'][PIMType.LPDDR5]['comm'] = 10.4
 
 
 def make_xpu_config(gpu_type: GPUType,
@@ -150,7 +157,7 @@ def make_xpu_config(gpu_type: GPUType,
         # TODO: Modify it
         config['CPU']["L1_CAP_PER_CORE"] = 48 * 1024
         config['CPU']["L2_CAP_PER_DEVICE"] = 2 * 1024 * 1024
-        config['CPU']["INTERFACE_BW"] = 4 * 128 * 1000 * 1000 * 1000
+        config['GPU']["INTERFACE_BW"] = 64 * 1000 * 1000 * 1000 * 0.65 # Effective BW is around 65% of theoretical peak BW
         config['CPU']["ENERGY_TABLE"] = ENERGY_TABLE['CPU']
 
     elif gpu_type == GPUType.RTX4090:
@@ -289,6 +296,7 @@ def make_model_config(name, dtype, moe=False):
         moe_model_table['Mixtral-8x7B'] = [32, 4096, 32, 128, 3.5, 1, 8, 2, 0]
         moe_model_table['Qwen-2.7B'] = [24, 2048, 16, 128, 0.6875, 1, 60, 4, 1]
         moe_model_table['Qwen-3-30B'] = [48, 2048, 16, 128, 0.375, 1, 128, 8, 0]
+        moe_model_table['Gpt-oss-120B'] = [36, 2880, 64, 45, 1, 1, 128, 4, 0]
 
         ndec, hdim, nheads, dhead, ff_scale, gqa_size, num_experts, activated_experts, shared_experts = moe_model_table[name]
         config = {

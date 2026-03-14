@@ -214,7 +214,7 @@ def main():
 
     # set system
     dtype = DataType.W16A16 if args.word == 2 else DataType.W8A8
-    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B', 'Qwen-3-30B'] else False
+    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B', 'Qwen-3-30B', 'Gpt-oss-120B'] else False
     modelinfos = make_model_config(args.model, dtype, moe=moe)
     xpu_config = make_xpu_config(gpu_device, num_gpu=num_gpu, mem_cap=gmem_cap)
     expert_token_fusion_stats_path = os.path.join("gate_weight_data", args.tfs_file)
@@ -232,6 +232,8 @@ def main():
             pim_type = PIMType.BUFFER
         elif args.pim == "ddr4":
             pim_type = PIMType.DDR4
+        elif args.pim == "lpddr5":
+            pim_type = PIMType.LPDDR5
         else:
             pim_type = PIMType.BA
         if args.mapping_strategy == 'NAIVE':

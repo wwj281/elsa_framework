@@ -26,6 +26,8 @@ class Ramulator:
             self.df = pd.read_csv(output_log)
         if self.pim_type == PIMType.DDR4:
             self.tCK = 0.625  # ns
+        elif self.pim_type == PIMType.LPDDR5:
+            self.tCK = 1.25
         else:
             self.tCK = 0.769
         self.num_hbm = num_hbm
@@ -67,7 +69,7 @@ class Ramulator:
             line += "      preset: LPDDR5_6400\n"
             line += "\n"
             line += "  Controller:\n"
-            line += "    impl: DDR-PIM\n"
+            line += "    impl: LPDDR-PIM\n"
             line += "    Scheduler:\n"
             line += "      impl: PIM\n"
             line += "    RefreshManager:\n"
@@ -163,12 +165,18 @@ class Ramulator:
                 self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
                 self.moe_intermediate_size, batch_size, dbyte, trace_file, self.num_hbm)
         elif self.mapping_strategy == MappingStrategyType.WEIGHT:
-            trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_weight.py")
+            if self.pim_type == PIMType.LPDDR5:
+                trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_weight_lpddr5.py")
+            else:
+                trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_weight.py")
             trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --token_num {} --num_channels {}".format(
                 self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
                 self.moe_intermediate_size, batch_size, dbyte, trace_file, l, self.num_hbm)
         else:
-            trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_h2.py")
+            if self.pim_type == PIMType.LPDDR5:
+                trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_h2_lpddr5.py")
+            else:
+                trace_exc = os.path.join(self.ramulator_dir, "trace_gen/gen_trace_h2.py")
             trace_args = "--num_experts {} --token_experts {} --shared_experts {} --hidden_size {} --moe_intermediate_size {} --shared_moe_intermediate_size {} --batch_size {} --dbyte {} --output {} --token_num {} --num_channels {}".format(
                 self.num_experts, self.token_experts, self.shared_experts, self.hidden_size, self.moe_intermediate_size,
                 self.moe_intermediate_size, batch_size, dbyte, trace_file, 1, self.num_hbm)
@@ -293,6 +301,13 @@ class Ramulator:
                 giomux_io = (wrgb + mvgb) * 128
                 bgmux_io = (wrgb + mvgb) * 128
                 mem_acc = mac * 128
+            elif pim_type == PIMType.LPDDR5:
+                cycle, mac, mvgb, wrgb, acc, af, ewmul = result
+                si_io = wrgb * 32  
+                tsv_io = (wrgb + mvgb) * 32
+                giomux_io = (wrgb + mvgb) * 32
+                bgmux_io = (wrgb + mvgb) * 32
+                mem_acc = mac * 32
             elif pim_type in [PIMType.BA, PIMType.BG, PIMType.BUFFER]:
                 cycle, mac, sfm, mvgb, mvsb, wrgb = result
                 si_io = wrgb * 32  # 256 bit
@@ -310,6 +325,8 @@ class Ramulator:
                 mem_acc *= 2 * 2 * 4
             elif pim_type == PIMType.DDR4:
                 mem_acc *= 2 * 2 * 8 * 4
+            elif pim_type == PIMType.LPDDR5:
+                mem_acc *= 2 * 4 * 4
             else:
                 mem_acc *= 1
 
@@ -382,6 +399,13 @@ class Ramulator:
                 giomux_io = (wrgb + mvgb) * 128
                 bgmux_io = (wrgb + mvgb) * 128
                 mem_acc = mac * 128
+            elif pim_type == PIMType.LPDDR5:
+                softmax = 0
+                si_io = wrgb * 32  # 256 bit
+                tsv_io = (wrgb + mvgb) * 32
+                giomux_io = (wrgb + mvgb) * 32
+                bgmux_io = (wrgb + mvgb) * 32
+                mem_acc = mac * 32
             else:
                 softmax = int(row.iloc[0]['softmax'])
                 mvsb = int(row.iloc[0]['mvsb'])
@@ -398,6 +422,8 @@ class Ramulator:
                 mem_acc *= 2 * 2 * 4
             elif pim_type == PIMType.DDR4:
                 mem_acc *= 2 * 2 * 8 * 4
+            elif pim_type == PIMType.LPDDR5:
+                mem_acc *= 2 * 4 * 4
             else:
                 mem_acc *= 2
 

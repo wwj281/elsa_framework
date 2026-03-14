@@ -2,11 +2,12 @@ diff --git a/src/dram_controller/CMakeLists.txt b/src/dram_controller/CMakeLists
 index 25ac82e..efd02b8 100644
 --- a/src/dram_controller/CMakeLists.txt
 +++ b/src/dram_controller/CMakeLists.txt
-@@ -9,20 +9,22 @@ target_sources(
+@@ -9,20 +9,23 @@ target_sources(
  
    impl/dummy_controller.cpp
    impl/generic_dram_controller.cpp
 +  impl/ddr_pim_controller.cpp
++  impl/lpddr_pim_controller.cpp
    
    impl/scheduler/generic_scheduler.cpp
 +  impl/scheduler/pim_scheduler.cpp
