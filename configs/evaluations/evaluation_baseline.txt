@@ -1,0 +1,40 @@
+python courier_main.py  --tfs_file input256_batch16/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json --gss_file input256_batch16/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input256_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 256
+
+python courier_main.py  --tfs_file input512_batch16/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input512_batch16/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input512_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 512
+
+python courier_main.py  --tfs_file input1024_batch16/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input1024_batch16/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input1024_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 1024 
+
+
+python courier_main.py  --tfs_file input256_batch16/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json --gss_file input256_batch16/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input256_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 256 
+
+python courier_main.py  --tfs_file input512_batch16/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input512_batch16/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input512_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 512 
+
+python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input1024_batch16/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input1024_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 1024
+
+
+python courier_main.py  --tfs_file input256_batch16/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json --gss_file input256_batch16/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input256_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 256  --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input512_batch16/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input512_batch16/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input512_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 512 --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input1024_batch16/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input1024_batch16/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input1024_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --lin 1024 --pim lpddr5 --gpu H100 --num_channel 16
+
+
+python courier_main.py  --tfs_file input256_batch16/deepseek_16b/per_layer_expert_stats_t0.29_r0.60.json --gss_file input256_batch16/deepseek_16b/expert_gate_sum_t0.29_r0.60.json --elp_file input256_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 256 
+
+python courier_main.py  --tfs_file input512_batch16/deepseek_16b/per_layer_expert_stats_t0.29_r0.60.json  --gss_file input512_batch16/deepseek_16b/expert_gate_sum_t0.29_r0.60.json --elp_file input512_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 512 
+
+python courier_main.py  --tfs_file input1024_batch16/deepseek_16b/per_layer_expert_stats_t0.29_r0.60.json  --gss_file input1024_batch16/deepseek_16b/expert_gate_sum_t0.29_r0.60.json --elp_file input1024_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 1024 
+
+
+python courier_main.py  --tfs_file input256_batch16/qwen_3_30b/per_layer_expert_stats_t0.23_r0.75.json --gss_file input256_batch16/qwen_3_30b/expert_gate_sum_t0.23_r0.75.json --elp_file input256_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 256 
+
+python courier_main.py  --tfs_file input512_batch16/qwen_3_30b/per_layer_expert_stats_t0.25_r0.70.json  --gss_file input512_batch16/qwen_3_30b/expert_gate_sum_t0.25_r0.70.json --elp_file input512_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 512 
+
+python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expert_stats_t0.25_r0.70.json  --gss_file input1024_batch16/qwen_3_30b/expert_gate_sum_t0.25_r0.70.json --elp_file input1024_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 1024 
+
+
+python courier_main.py  --tfs_file input256_batch16/gpt_oss_120b/per_layer_expert_stats_t0.61_r0.85.json --gss_file input256_batch16/gpt_oss_120b/expert_gate_sum_t0.61_r0.85.json --elp_file input256_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 256 --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input512_batch16/gpt_oss_120b/per_layer_expert_stats_t0.61_r0.85.json  --gss_file input512_batch16/gpt_oss_120b/expert_gate_sum_t0.61_r0.85.json --elp_file input512_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 512 --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input1024_batch16/gpt_oss_120b/per_layer_expert_stats_t0.61_r0.85.json  --gss_file input1024_batch16/gpt_oss_120b/expert_gate_sum_t0.61_r0.85.json --elp_file input1024_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16 --lin 1024 --pim lpddr5 --gpu H100 --num_channel 16

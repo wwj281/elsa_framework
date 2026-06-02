@@ -60,7 +60,7 @@ $ python courier_main.py  --tfs_file input1024_batch16/gpt_oss_120b/per_layer_ex
 ### DWAP Phase2
 ```bash 
 # Qwen-3-30B Schedule_FUSION Mapping_WEIGHT
-$ python ./profile_latency_surface.py --model Qwen-3-30B --feasible_region_file ./feasible_region/qwen_3_30b.json 
+$ python scripts/profile/profile_latency_surface.py --model Qwen-3-30B --feasible_region_file configs/feasible_region/qwen_3_30b.json 
 ```
 
 ### Run GPU simulator 

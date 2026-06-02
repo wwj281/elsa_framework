@@ -1,16 +1,53 @@
 import argparse
 import csv
 import os
-from courier_src.system import *
-from courier_src.type import *
-from courier_src.config import *
-from courier_src.ramulator_wrapper import *
+from pathlib import Path
+from courier.system import *
+from courier.type import *
+from courier.config import *
+from courier.ramulator_wrapper import *
 
 RAMULATOR = False
+PROJECT_ROOT = Path(__file__).resolve().parent
+GATE_WEIGHT_ROOT = PROJECT_ROOT / "data" / "gate_weight"
+WORKLOAD_RESULT_ROOT = PROJECT_ROOT / "results" / "workload"
+SUMMARY_RESULT_ROOT = PROJECT_ROOT / "results" / "summaries"
+
+
+def resolve_input_path(path_value: str) -> str:
+    path = Path(path_value)
+    if path.is_absolute():
+        return str(path)
+
+    candidates = [
+        PROJECT_ROOT / path,
+        GATE_WEIGHT_ROOT / path,
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return str(candidate)
+
+    return str(GATE_WEIGHT_ROOT / path)
+
+
+def resolve_output_path(path_value: str) -> str:
+    path = Path(path_value)
+    if path.is_absolute():
+        return str(path)
+
+    parts = path.parts
+    if parts and parts[0] == "result":
+        return str(WORKLOAD_RESULT_ROOT / Path(*parts[1:]))
+    if parts and parts[0] == "results":
+        return str(PROJECT_ROOT / path)
+    if path.name == "output.csv":
+        return str(SUMMARY_RESULT_ROOT / path.name)
+    return str(PROJECT_ROOT / path)
 
 
 def write_csv(logfile, perfs):
     if logfile is not None:
+        Path(logfile).parent.mkdir(parents=True, exist_ok=True)
         firstrow = False
         if not os.path.exists(logfile):
             firstrow = True
@@ -120,6 +157,11 @@ def main():
         type=str,
         default="input1024_batch16/mixtral_8x7b/expert_location_path.json",
         help="expert-location-path file name")
+    parser.add_argument(
+        "--output_file",
+        type=str,
+        default="results/summaries/output.csv",
+        help="output file name")
 
 
     ## set attacc configuration
@@ -208,18 +250,18 @@ def main():
     gmem_cap = args.gmemcap * 1024 * 1024 * 1024
     num_acc = args.num_acc
     num_channel = args.num_channel
-    output_path = "output.csv"
-    if os.path.exists(output_path):
-        os.system("rm " + output_path)
+    output_path = resolve_output_path(args.output_file)
+    # if os.path.exists(output_path):
+    #     os.system("rm " + output_path)
 
     # set system
     dtype = DataType.W16A16 if args.word == 2 else DataType.W8A8
-    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B', 'Qwen-3-30B', 'Gpt-oss-120B'] else False
+    moe = True if args.model in ['DeepSeek-16B', 'Qwen-2.7B', 'Mixtral-8x7B', 'Qwen-3-30B', 'GPT-OSS-120B'] else False
     modelinfos = make_model_config(args.model, dtype, moe=moe)
     xpu_config = make_xpu_config(gpu_device, num_gpu=num_gpu, mem_cap=gmem_cap)
-    expert_token_fusion_stats_path = os.path.join("gate_weight_data", args.tfs_file)
-    expert_gate_sum_stats_path = os.path.join("gate_weight_data", args.gss_file)
-    expert_location_path = os.path.join("gate_weight_data", args.elp_file)
+    expert_token_fusion_stats_path = resolve_input_path(args.tfs_file)
+    expert_gate_sum_stats_path = resolve_input_path(args.gss_file)
+    expert_location_path = resolve_input_path(args.elp_file)
     system = System(xpu_config['GPU'],
                     modelinfos,
                     expert_token_fusion_stats_path=expert_token_fusion_stats_path,

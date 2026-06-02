@@ -1,0 +1,5 @@
+python scripts/profile/profile_latency_surface.py --mapping_strategy H2 --model GPT-OSS-120B --feasible_region_file configs/feasible_region/gpt_oss_120b.json --output_lut results/dwap_phase2/gpt_oss_120b/latency_lut_all.json --output_csv results/dwap_phase2/gpt_oss_120b/latency_profiling_detailed_all.csv --pim lpddr5 --num_channel 16 --gpu H100
+
+python scripts/profile/profile_latency_surface.py --mapping_strategy H2 --model DeepSeek-16B --feasible_region_file configs/feasible_region/deepseek_16b.json --output_lut results/dwap_phase2/deepseek_16b/latency_lut_all.json --output_csv results/dwap_phase2/deepseek_16b/latency_profiling_detailed_all.csv
+
+python scripts/profile/profile_latency_surface.py --mapping_strategy H2 --model Qwen-3-30B --feasible_region_file configs/feasible_region/qwen_3_30b.json --output_lut results/dwap_phase2/qwen_3_30b/latency_lut_all.json --output_csv results/dwap_phase2/qwen_3_30b/latency_profiling_detailed_all.csv

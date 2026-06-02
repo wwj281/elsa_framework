@@ -1,0 +1,58 @@
+python courier_main.py  --tfs_file input256_batch1/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file  input256_batch1/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file  input256_batch1/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 1 --lin 256   --output_file results/workload/input256_batch1/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input256_batch4/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file  input256_batch4/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file  input256_batch4/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 4 --lin 256   --output_file results/workload/input256_batch4/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input256_batch16/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input256_batch16/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input256_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 16 --lin 256 --output_file results/workload/input256_batch16/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input512_batch1/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input512_batch1/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input512_batch1/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 1 --lin 512 --output_file results/workload/input512_batch1/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input512_batch4/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input512_batch4/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input512_batch4/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 4 --lin 512 --output_file results/workload/input512_batch4/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input512_batch16/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input512_batch16/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input512_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 16 --lin 512 --output_file results/workload/input512_batch16/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input1024_batch1/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input1024_batch1/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input1024_batch1/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 1 --lin 1024 --output_file results/workload/input1024_batch1/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input1024_batch4/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input1024_batch4/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input1024_batch4/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 4 --lin 1024 --output_file results/workload/input1024_batch4/deepseek_16b/gpu_result.csv
+
+python courier_main.py  --tfs_file input1024_batch16/deepseek_16b/per_layer_expert_stats_t0.17_r1.00.json  --gss_file input1024_batch16/deepseek_16b/expert_gate_sum_t0.17_r1.00.json --elp_file input1024_batch16/deepseek_16b/expert_location_path.json --model DeepSeek-16B --system dgx --batch 16 --lin 1024 --output_file results/workload/input1024_batch16/deepseek_16b/gpu_result.csv
+
+
+
+python courier_main.py  --tfs_file input256_batch1/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file    input256_batch1/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file    input256_batch1/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 1 --lin 256       --output_file results/workload/input256_batch1/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input256_batch4/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file    input256_batch4/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file    input256_batch4/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 4 --lin 256       --output_file results/workload/input256_batch4/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input256_batch16/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file   input256_batch16/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file   input256_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 16 --lin 256     --output_file results/workload/input256_batch16/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input512_batch1/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input512_batch1/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input512_batch1/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 1 --lin 512 --output_file results/workload/input512_batch1/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input512_batch4/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input512_batch4/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input512_batch4/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 4 --lin 512 --output_file results/workload/input512_batch4/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input512_batch16/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input512_batch16/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input512_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 16 --lin 512 --output_file results/workload/input512_batch16/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input1024_batch1/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input1024_batch1/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input1024_batch1/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 1 --lin 1024 --output_file results/workload/input1024_batch1/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input1024_batch4/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input1024_batch4/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input1024_batch4/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 4 --lin 1024 --output_file results/workload/input1024_batch4/qwen_3_30b/gpu_result.csv
+
+python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expert_stats_t0.15_r0.90.json  --gss_file input1024_batch16/qwen_3_30b/expert_gate_sum_t0.15_r0.90.json --elp_file input1024_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --system dgx --batch 16 --lin 1024 --output_file results/workload/input1024_batch16/qwen_3_30b/gpu_result.csv
+
+
+python courier_main.py  --tfs_file input256_batch1/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file  input256_batch1/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file  input256_batch1/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 1 --lin 256   --output_file results/workload/input256_batch1/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input256_batch4/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file  input256_batch4/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file  input256_batch4/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 4 --lin 256   --output_file results/workload/input256_batch4/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input256_batch16/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input256_batch16/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input256_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 16 --lin 256 --output_file results/workload/input256_batch16/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input512_batch1/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input512_batch1/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input512_batch1/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 1 --lin 512 --output_file results/workload/input512_batch1/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input512_batch4/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input512_batch4/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input512_batch4/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 4 --lin 512 --output_file results/workload/input512_batch4/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input512_batch16/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input512_batch16/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input512_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 16 --lin 512 --output_file results/workload/input512_batch16/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input1024_batch1/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input1024_batch1/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input1024_batch1/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 1 --lin 1024 --output_file results/workload/input1024_batch1/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input1024_batch4/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input1024_batch4/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input1024_batch4/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 4 --lin 1024 --output_file results/workload/input1024_batch4/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+python courier_main.py  --tfs_file input1024_batch16/gpt_oss_120b/per_layer_expert_stats_t0.21_r1.00.json  --gss_file input1024_batch16/gpt_oss_120b/expert_gate_sum_t0.21_r1.00.json --elp_file input1024_batch16/gpt_oss_120b/expert_location_path.json --model GPT-OSS-120B --system dgx --batch 16 --lin 1024 --output_file results/workload/input1024_batch16/gpt_oss_120b/gpu_result.csv --pim lpddr5 --gpu H100 --num_channel 16
+
+

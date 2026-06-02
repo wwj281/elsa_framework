@@ -1,0 +1,11 @@
+# Generated Python cache files
+__pycache__/
+*.py[cod]
+
+# Local datasets and experiment outputs
+data/
+results/
+
+# Local logs and temporary files
+*.log
+*.out
