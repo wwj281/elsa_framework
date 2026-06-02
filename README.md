@@ -1,188 +1,314 @@
-# Simulator for AttAcc
-This repository includes Python-based simulator designed to analyze the transformer-based generation model (TbGM) inference in a heterogeneous system consisting of an xPU and an Attention Accelerator (AttAcc). 
-AttAcc is an accelerator for the attention layer of TbGM, which consists of an HBM-based processing-in-memory (PIM) structure.
-In simulating an xPU and AttAcc system, the simulator outputs the performance and energy usage of the xPU, while the behavior of AttAcc is simulated using a properly modified [Ramulator 2.0](https://github.com/CMU-SAFARI/ramulator2).
-We set the memory device of AttAcc in Ramulator2 to HBM3 and implemented AttAcc\_bank, AttAcc\_BG, and AttAcc\_buffer, which represent AttAcc deploying processing units per bank, per bank group, or per pseudo-channel (on the buffer die), respectively.
-For more details of AttAcc, please check the [paper](https://dl.acm.org/doi/10.1145/3620665.3640422) **AttAcc! Unleashing the Power of PIM for Batched Transformer-based Generative Model Inference** published at [ASPLOS 2024](https://www.asplos-conference.org/asplos2024).
+# Elsa Framework
 
- 
-## Prerequisites
-- Python
-- cmake, g++, and clang++ (for building Ramulator2)
+Elsa Framework is a Python-based simulator workflow for evaluating MoE inference on heterogeneous GPU + PIM/NMP systems. The current main path is the Courier simulator in `courier/`, with Ramulator2 used for memory/PIM timing.
 
-AttAcc simulator is tested under the following system.
+This repository is organized around four daily workflows:
 
-* OS: Ubuntu 22.04.3 LTS (Kernel 6.1.45)
-* Compiler: g++ version 12.3.0
-* python 3.8.8
+- run a single Courier simulation with `courier_main.py`
+- run batches of commands from `configs/evaluations/`
+- profile DWAP Phase 2 latency surfaces with `scripts/profile/profile_latency_surface.py`
+- aggregate raw logs and CSV outputs with scripts under `scripts/aggregate/`
 
-We use a similar build system (CMake) as original Ramulator 2.0, which automatically downloads following external libraries.
-- [argparse](https://github.com/p-ranav/argparse)
-- [spdlog](https://github.com/gabime/spdlog)
-- [yaml-cpp](https://github.com/jbeder/yaml-cpp)
+The project was reorganized from the original `courier_demo` layout. See `docs/STRUCTURE_MIGRATION.md` for a detailed file-by-file migration record.
 
+## Repository Layout
 
-## How to install
-1. Clone the Github repository
+```text
+elsa_framework/
+  courier/                  # current Courier simulator package
+  courier_main.py           # main simulation CLI
+  legacy/                   # old baseline src/ and main.py kept for reference
+  scripts/
+    run/                    # batch runners
+    profile/                # DWAP Phase 2 latency profiling
+    aggregate/              # log/result aggregation scripts
+    setup/                  # Ramulator2 patch/setup helpers
+  configs/
+    evaluations/            # command-list files used by batch runners
+    feasible_region/        # Phase 1 feasible-region JSON files
+  data/
+    gate_weight/            # local expert stats / gate-weight inputs
+  results/
+    raw_logs/
+      courier/              # Courier internal hardware logs
+      process/              # stdout/stderr process logs
+    workload/               # per-workload gpu_result / pimoe_result CSVs
+    merged/                 # source CSVs for merge scripts
+    dwap_phase2/            # latency LUTs and detailed profiling CSVs
+    summaries/              # normalized summary CSV outputs
+  ramulator_patches/        # patch/source overlays copied into ramulator2
+  ramulator2/               # Ramulator2 source/build tree, kept in place
+```
+
+`data/` and `results/` are ignored by Git. They are local experiment inputs and outputs, so cloning the repository does not include those files.
+
+## Requirements
+
+- Python 3
+- `pandas`
+- CMake, `g++`, and `clang++` for building Ramulator2
+- SSH access to GitHub if you are pushing to the remote repository
+
+The code has been used on Ubuntu-like Linux environments. Ramulator2 is included as a submodule/tree in this project layout.
+
+## Setup
+
+Clone the repository and initialize submodules if needed:
 
 ```bash
-$ git clone https://github.com/scale-snu/attacc_simulator.git
-$ cd attacc_simulator
-$ git submodule update --init --recursive
-``` 
+git clone git@github.com:wwj281/elsa_framework.git
+cd elsa_framework
+git submodule update --init --recursive
+```
 
-2. Build Ramulator2
+Prepare Ramulator2 with the Courier PIM patch set:
+
 ```bash
-$ bash set_pim_ramulator.sh 
-$ cd ramulator2
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make -j
-$ cp ramulator2 ../ramulator2
-$ cd ../../
+bash scripts/setup/courier_set_pim_ramulator.sh
+cd ramulator2
+mkdir -p build
+cd build
+cmake ..
+make -j
+cp ramulator2 ../ramulator2
+cd ../..
 ```
 
-## How to run
+For the older AttAcc/HBM3 patch set, use:
 
-### Courier examples
-```bash 
-# Qwen-3-30B Batch_16 Schedule_FUSION Mapping_WEIGHT
-$ python courier_main.py  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expert_stats_t0.22_r1.00.json  --gss_file input1024_batch16/qwen_3_30b/expert_gate_sum_t0.22_r1.00.json --elp_file input1024_batch16/qwen_3_30b/expert_location_path.json --model Qwen-3-30B --schedule_strategy FUSION --mapping_strategy WEIGHT --batch 16
-
-# Mixtral-8x7B Batch 16 Schedule_PIMOE Mapping_H2
-$ python courier_main.py  --tfs_file input1024_batch16/mixtral_8x7b/per_layer_expert_stats_t0.49_r1.00.json  --gss_file input1024_batch16/mixtral_8x7b/expert_gate_sum_t0.49_r1.00.json --elp_file input1024_batch16/mixtral_8x7b/expert_location_path.json --model Mixtral-8x7B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16
-
-# gpt-oss-120B Batch_16 Schedule_PIMOE Mapping_H2 GPU_H100 PIM_LPDDR Channel_16 
-$ python courier_main.py  --tfs_file input1024_batch16/gpt_oss_120b/per_layer_expert_stats_t0.26_r0.75.json  --gss_file input1024_batch16/gpt_oss_120b/expert_gate_sum_t0.26_r0.75.json --elp_file input1024_batch16/gpt_oss_120b/expert_location_path.json --model Gpt-oss-120B --schedule_strategy PIMOE --mapping_strategy H2 --batch 16 --gpu H100 --num_channel 16 --pim lpddr5
-```
-
-### DWAP Phase2
-```bash 
-# Qwen-3-30B Schedule_FUSION Mapping_WEIGHT
-$ python scripts/profile/profile_latency_surface.py --model Qwen-3-30B --feasible_region_file configs/feasible_region/qwen_3_30b.json 
-```
-
-### Run GPU simulator 
 ```bash
-$ export PYTHONPATH=$PYTHONPATH:$PWD
-$ python main.py --system {} --gpu {} --ngpu {} --model {} --lin {} --lout {} --batch {} --pim {} --powerlimit --ffopt --pipeopt
-
-$ python main.py --help
-
-    ## set system configuration
-    parser.add_argument("--system",  type=str, default="dgx",
-            help="dgx(each GPU has 80GB HBM), \
-                  dgx-cpu (In dgx-base, offloading the attention layer to cpu), \
-                  dgx-attacc (dgx-base + attacc")
-    parser.add_argument("--gpu", type=str, default='A100a', 
-            help="GPU type (A100a, A100, and H100), A100a is A100 with HBM3")
-    parser.add_argument("--ngpu", type=int, default=8, 
-            help="number of GPUs")
-    parser.add_argument("--gmemcap",
-                        type=int,
-                        default=80,
-                        help="memory capacity per GPU (GB).  default=80")
-
-
-
-    ## set attacc configuration
-    parser.add_argument("--pim", type=str, default='bank',
-            help="pim mode. list: bank, bg, buffer")
-    parser.add_argument("--powerlimit",  action='store_true', 
-            help="power constraint for PIM ")
-    parser.add_argument("--ffopt",  action='store_true', 
-            help="apply feedforward parallel optimization ")
-    parser.add_argument("--pipeopt",  action='store_true', 
-            help="apply pipeline optimization ")
-
-
-    ## set model and service environment
-    parser.add_argument("--model", type=str, default='GPT-175B', 
-            help="model list: GPT-175B, LLAMA-65B, MT-530B, OPT-66B")
-    parser.add_argument("--word", type=int, default='2', 
-            help="word size (precision): 1(INT8), 2(FP16)")
-    parser.add_argument("--lin",  type=int, default=2048,
-            help="input sequence length")
-    parser.add_argument("--lout",  type=int, default=128,
-            help="number of generated tokens")
-    parser.add_argument("--batch", type=int, default=1,
-            help="batch size, default = 1")
+bash scripts/setup/set_pim_ramulator.sh
 ```
 
-### Examples
-```bash 
-# dgx (A100 with HBM3) example 
-$ python main.py --system dgx --gpu A100a --ngpu 8 --model GPT-175B --lin 2048 --lout 128 --batch 1
+## Data And Results
 
-# 2xdgx (A100 with HBM3) example 
-$ python main.py --system dgx --gpu A100a --ngpu 16 --model GPT-175B --lin 2048 --lout 128 --batch 1
+Input expert/gate-weight data should be placed under:
 
-# dgx-attacc (based HBM3) example 
- ## bank level PIM
-$ python main.py --system dgx-attacc --gpu A100a --ngpu 8 --model GPT-175B --lin 2048 --lout 128 --batch 1 --pim bank --powerlimit --ffopt --pipeopt
-
- ## bank group level PIM
-$ python main.py --system dgx-attacc --gpu A100a --ngpu 8 --model GPT-175B --lin 2048 --lout 128 --batch 1 --pim bg --powerlimit --ffopt --pipeopt
-
- ## buffer level PIM
-$ python main.py --system dgx-attacc --gpu A100a --ngpu 8 --model GPT-175B --lin 2048 --lout 128 --batch 1 --pim buffer --powerlimit --ffopt --pipeopt 
-
+```text
+data/gate_weight/input{seq}_batch{batch}/{model_dir}/
 ```
 
-## Details of the Ramulator for AttAcc
-### How to Run
-1. Generate PIM command traces for the Transformer-based Generative Model.
+For example:
+
+```text
+data/gate_weight/input1024_batch16/qwen_3_30b/
+  per_layer_expert_stats_t0.23_r0.75.json
+  expert_gate_sum_t0.23_r0.75.json
+  expert_location_path.json
+```
+
+`courier_main.py` accepts short paths such as `input1024_batch16/qwen_3_30b/...` and resolves them under `data/gate_weight/`.
+
+Generated outputs are written under `results/`:
+
+- `results/raw_logs/courier/`: Courier internal hardware logs such as `DDR4_C2_MWEIGHT.log`
+- `results/raw_logs/process/`: batch-run stdout/stderr logs
+- `results/workload/`: workload-level `gpu_result.csv` and `pimoe_result.csv`
+- `results/dwap_phase2/`: latency LUT JSON and detailed profiling CSVs
+- `results/summaries/`: normalized aggregate CSVs
+
+## Single Simulation
+
+Run a single Courier simulation from the project root:
+
 ```bash
-$ cd ramulator2
-$ cd trace_gen
-$ python gen_trace_attacc_bank.py
-$ python gen_trace_attacc_bg.py
-$ python gen_trace_attacc_buffer.py
+python courier_main.py \
+  --tfs_file input1024_batch16/qwen_3_30b/per_layer_expert_stats_t0.23_r0.75.json \
+  --gss_file input1024_batch16/qwen_3_30b/expert_gate_sum_t0.23_r0.75.json \
+  --elp_file input1024_batch16/qwen_3_30b/expert_location_path.json \
+  --model Qwen-3-30B \
+  --schedule_strategy FUSION \
+  --mapping_strategy WEIGHT \
+  --batch 16 \
+  --lin 1024 \
+  --output_file results/workload/input1024_batch16/qwen_3_30b/fusion_result.csv
 ```
 
-This produces `attacc_bank.trace`, `attacc_bg.trace`, and `attacc_buffer.trace` which are GPT-175B traces of attention layer in a single decoder for AttAcc\_bank, AttAcc\_BG, AttAcc\_buffer, respectively.
+Useful options:
 
-
-You can change the model, batch, and request configuration by setting arguments as below.
-```python
-  parser.add_argument("-dh", "--dhead", type=int, default=128, 
-                      help="dhead, default= 128")
-  parser.add_argument("-nh", "--nhead", type=int, default=1, 
-                      help="Number of heads, default=1")
-  parser.add_argument("-l", "--seqlen", type=int, default=2048,
-                      help="Sequence length L, default= 2048")
-  parser.add_argument("-maxl", "--maxlen", type=int, default=4096, 
-                      help="maximum L, default= 4096")
-  parser.add_argument("-db", "--dbyte", type=int, default=2, 
-                      help="data type (B), default= 2")
-  parser.add_argument("-o", "--output", type=str, default="attacc_bank.trace", 
-                      help="output path")
-```
-
-2. Run Ramulator-AttAcc
 ```bash
-$ ./ramulator2 -f attacc_bank.yaml
-$ ./ramulator2 -f attacc_bg.yaml
-$ ./ramulator2 -f attacc_buffer.yaml
+python courier_main.py --help
 ```
 
-This will print the total number of DRAM/PIM request and total elapsed memory cycles (`memory_system_cycles`).
+Common model names:
 
-The command log will be generated in `log` directory.
+- `DeepSeek-16B`
+- `Qwen-3-30B`
+- `GPT-OSS-120B`
+- `Mixtral-8x7B`
 
+Common schedule strategies:
 
-### Modeling AttAcc with a Power Contraint
-We reflect the DRAM power constraint to AttAcc by increasing the delay between consecutive MAC commands (`nCCDAB`, `nCCDSB`).
+- `FUSION`
+- `PIMOE`
+- `NOFUSION`
+- `FIDDLER`
+- `KLOTSKI`
 
-We calculate these delay with the activation and read energy.
+Common mapping strategies:
 
-To evaulate AttAcc with no power constraint (NPC), uncomment `preset: HBM3_5.2Gbps_NPC` and comment out `preset: HBM3_5.2Gbps` in yaml config files.
+- `WEIGHT`
+- `H2`
+- `NAIVE`
 
+For GPT-OSS-120B LPDDR5/H100-style runs, include:
 
+```bash
+--pim lpddr5 --gpu H100 --num_channel 16
+```
 
+## Batch Runs
 
-## Contact
-Jaehyun Park jhpark@scale.snu.ac.kr
+Command lists live in:
 
-Jaewan Choi jwchoi@scale.snu.ac.kr
+```text
+configs/evaluations/
+```
+
+Available lists:
+
+- `evaluation.txt`: DWAP latency-surface profiling commands
+- `evaluation_baseline.txt`: baseline Courier commands with log suffixing
+- `evaluation_gpu.txt`: GPU result commands
+- `evaluation_pimoe.txt`: PIMOE result commands
+
+Run DWAP profiling commands sequentially:
+
+```bash
+bash scripts/run/run_eval.sh
+```
+
+Run GPU/PIMOE commands and save named process logs:
+
+```bash
+bash scripts/run/run_eval_pimoe_gpu.sh
+```
+
+Run baseline commands and rename Courier internal logs with workload suffixes:
+
+```bash
+python scripts/run/run_eval_baseline_with_suffix.py
+```
+
+This runner reads `configs/evaluations/evaluation_baseline.txt` by default and renames logs under `results/raw_logs/courier/`.
+
+## DWAP Phase 2 Latency Profiling
+
+List available data directories for a model:
+
+```bash
+python scripts/profile/profile_latency_surface.py \
+  --model Qwen-3-30B \
+  --list_data_dirs
+```
+
+Run a quick smoke test:
+
+```bash
+python scripts/profile/profile_latency_surface.py \
+  --model Qwen-3-30B \
+  --feasible_region_file configs/feasible_region/qwen_3_30b.json \
+  --quick_test
+```
+
+Run the default DWAP Phase 2 profiling grid:
+
+```bash
+python scripts/profile/profile_latency_surface.py \
+  --model Qwen-3-30B \
+  --mapping_strategy H2 \
+  --feasible_region_file configs/feasible_region/qwen_3_30b.json \
+  --output_lut results/dwap_phase2/qwen_3_30b/latency_lut_all.json \
+  --output_csv results/dwap_phase2/qwen_3_30b/latency_profiling_detailed_all.csv
+```
+
+The profiler writes:
+
+- LUT JSON: `latency_lut*.json`
+- detailed rows: `latency_profiling_detailed*.csv`
+
+## Aggregation
+
+Aggregation scripts are grouped under `scripts/aggregate/` and default to the new `results/` layout.
+
+Summarize Courier internal hardware logs:
+
+```bash
+python scripts/aggregate/aggregate_root_log_summary.py
+```
+
+Summarize GPU/PIMOE process logs:
+
+```bash
+python scripts/aggregate/aggregate_log_gpu_pimoe.py
+```
+
+Extract best average latency configs from profiling process logs:
+
+```bash
+python scripts/aggregate/aggregate_log_shadow.py
+```
+
+Collect best latency rows from DWAP Phase 2 CSVs:
+
+```bash
+python scripts/aggregate/aggregate_best_latency_rows.py
+```
+
+Collect first data row from workload result CSVs:
+
+```bash
+python scripts/aggregate/aggregate_gpu_pimoe_first_row.py
+```
+
+Merge normalized result summaries:
+
+```bash
+python scripts/aggregate/merge_result_merge_summaries.py
+```
+
+All summary outputs are written to:
+
+```text
+results/summaries/
+```
+
+## Legacy Baseline
+
+The original baseline code is preserved under:
+
+```text
+legacy/
+```
+
+Use it only when comparing with the old simulator path. The actively maintained path is:
+
+```text
+courier/
+courier_main.py
+scripts/
+```
+
+## Verification
+
+Basic checks:
+
+```bash
+python -m compileall courier courier_main.py scripts legacy
+python courier_main.py --help
+python scripts/profile/profile_latency_surface.py --help
+bash -n scripts/run/run_eval.sh scripts/run/run_eval_pimoe_gpu.sh
+bash -n scripts/setup/set_pim_ramulator.sh scripts/setup/courier_set_pim_ramulator.sh
+```
+
+Data discovery check:
+
+```bash
+python scripts/profile/profile_latency_surface.py --model Qwen-3-30B --list_data_dirs
+```
+
+## Notes
+
+- `data/` and `results/` are intentionally ignored by Git.
+- `ramulator2/` remains in the project root and was not moved during the structure cleanup.
+- `docs/STRUCTURE_MIGRATION.md` contains the detailed migration map from the old project layout.
