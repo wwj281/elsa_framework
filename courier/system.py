@@ -1365,8 +1365,10 @@ class System:
             acc_flops = 1
             acc_bw = 1
         else:
-            acc_flops = self.devices['Acc'].peak_flops * self.devices['Acc'].num_attacc / 2
+            acc_flops = self.devices['Acc'].peak_flops * self.devices['Acc'].num_attacc
             acc_bw = self.devices['Acc'].peak_memory_bandwidth * self.devices['Acc'].num_attacc
+            if self.mapping_strategy == MappingStrategyType.H2: # 采用H2映射方式时，实际算力等于理论算力除以2
+                acc_flops = acc_flops / 2
         gpu_bw = self.devices['GPU'].peak_memory_bandwidth * self.devices['GPU'].num_xpu
         acc_to_gpu_bw = self.devices['GPU'].max_interface_bandwidth / 2
         k, n = self.model.hdim, self.model.hdim * self.model.ff_scale
