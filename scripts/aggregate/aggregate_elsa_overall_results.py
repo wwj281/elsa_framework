@@ -1,3 +1,4 @@
+# 从DWAP2产生的Log文件中收集并聚合运行结果产生结果汇总文件
 import argparse
 import csv
 from pathlib import Path
